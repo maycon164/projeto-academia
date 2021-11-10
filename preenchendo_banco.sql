@@ -96,7 +96,6 @@ DELETE pagamento;
 
 --------------------------------- POR ENQUANTO O SISTEMA NÃO TEM AVALIAÇÕES FEITASA
 
-
 SELECT * FROM aluno_plano;
 
 UPDATE pessoa
@@ -137,6 +136,19 @@ AND ap.cpf_aluno = a.cpf
 AND ap.id_plano = pl.id_plano
 AND pag.id_aluno_plano = ap.id_aluno_plano 
 
+---------------------------------PRA VOCE TENTAR DEPOIS
+
+---QUERY QUE RETORNA nome_aluno, plano, nome_instrutor
+----- TAMBEM NÃO CONSEGUI FAZER ESSE
+SELECT p.nome AS aluno, pl.nome AS plano, p.nome AS instrutor
+FROM pessoa p, plano pl, aluno a, instrutor i, aluno_plano ap, instrutor_plano ip 
+WHERE p.cpf = a.cpf 
+AND p.cpf = i.cpf 
+AND ip.cpf_instrutor = i.cpf 
+AND ip.id_plano = pl.id_plano 
+AND ap.cpf_aluno = a.cpf 
+AND ap.id_plano = pl.id_plano 
+
 ---QUERY QUE RETORNA nome_aluno, plano, data_pagamento, valor_total, nome_instrutor, data_inicio, data_expiracao
 ----- NÃO CONSIGUE FAZER ESSA, TENTAR DEPOIS 
 SELECT p.nome, a.cpf, pl.nome, pag.data_pagamento, pag.valor_total, p.nome as instrutor
@@ -148,8 +160,6 @@ AND ip.cpf_instrutor = i.cpf
 AND pag.id_aluno_plano = ap.id_aluno_plano 
 
 
-SELECT * FROM avaliacao;
-SELECT * FROM pagamento;
 
 exec sp_columns pessoa;
 exec sp_columns instrutor;
