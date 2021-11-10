@@ -54,7 +54,7 @@ CREATE TABLE instrutor_plano(
 
 
 CREATE TABLE aluno_plano(
-	id_aluno_plano INT NOT NULL,
+	id_aluno_plano INT IDENTITY,
 	cpf_aluno VARCHAR(12) NOT NULL,
 	id_plano INT NOT NULL,
 	data_inicio DATE DEFAULT GETDATE(),
@@ -67,6 +67,13 @@ CREATE TABLE aluno_plano(
 	CONSTRAINT ck_data_expiracao
 	CHECK ((data_expiracao) > (data_inicio))
 )
+---- erro com pk rss
+ALTER TABLE aluno_plano 
+DROP CONSTRAINT PK__aluno_pl__16C90C0474FBA02D
+
+DROP TABLE aluno_plano 
+
+DROP TABLE aluno_plano;
 ----- o campo imc deve ser gerado na propria aplicaca
 ----- os campos de altura e medidas (cm), peso(g) serão convertidos na applicação
 
@@ -101,6 +108,12 @@ CREATE TABLE pagamento(
 	PRIMARY KEY(id_pagamento),
 	FOREIGN KEY(id_aluno_plano) REFERENCES aluno_plano(id_aluno_plano)
 )
+---agora erro com fk rsrsr
+ALTER TABLE pagamento
+DROP CONSTRAINT FK__pagamento__id_al__619B8048
+
+DROP TABLE pagamento 
+
 /*ELABORAR MAIS SOBRE A FICHA DE TREINO AS TABELAS 
  * COMOS OS EQUIPAMENTOS
  * GRUPOS MUSCULARES
