@@ -14,6 +14,12 @@ INSERT INTO pessoa (cpf, nome, nascimento, email, telefone, rua, bairro, num) VA
 ('96319340045', 'Karen', '1989-03-21', 'karen@gmail.com', '43355-5988', 'Rua dos Limoes', 'Limoeiro', '171'),
 ('05460595037', 'Renan', '2002-11-21', 'renan@gmail.com', '28260-8490','Rua das Laranjas', 'Laranjeiras', '28')
 
+INSERT INTO pessoa (cpf, nome, sexo, nascimento, email, telefone, bairro, rua, num) VALUES
+('62114601048', 'Eduardo', 'M', '1992-09-26', 'eduardo@gmail.com', '11934124819', 'Socorro', 'Avenida de Penido', '121'),
+('66449896086', 'Rafaela', 'F', '1998-11-09', 'rafaela@gmail.com', '11973982483', 'Vila Carmosina', 'Rua Itamori', '171'),
+('10866672044', 'Gabriela', 'F', '1997-01-16', 'gabi@gmail.com', '11983761201', 'Socorro', 'Avenida de Penido', '15'),
+('16220299094', 'Dayana', 'F', '1990-04-26', 'dayana@gmail.com', '11998354891', 'Jardim Luso', 'Rua Professor Freitas Julião', '19')
+
 
 ---INSTRUTORES
 INSERT INTO instrutor (cpf, ativo, especializacao) VALUES
@@ -32,6 +38,12 @@ INSERT INTO aluno(cpf, ativo) VALUES
 ('98757864039', 0),
 ('95387925052', 1)
 
+
+INSERT INTO aluno (cpf, ativo) VALUES
+('62114601048', 1),
+('66449896086', 1),
+('10866672044', 1),
+('16220299094', 1)
 
 
 ---------------------------------INSERINDO PLANOS
