@@ -20,15 +20,41 @@ public class AlunoControl {
 	public StringProperty numProps = new SimpleStringProperty();
 
 	// PROPERTYS PLANO ESCOLHIDO
-	public StringProperty planoProps = new SimpleStringProperty();
-	public StringProperty precoProps = new SimpleStringProperty();
-	public StringProperty instrutorProps = new SimpleStringProperty();
+	public int idPlano;
+	public double precoPlano;
+	public int duracaoPlano;
+	public String nomeInstrutor;
+
 	public StringProperty dataInicioProps = new SimpleStringProperty();
 	public StringProperty dataFimProps = new SimpleStringProperty();
 	public StringProperty observacaoProps = new SimpleStringProperty();
 
 	// ISSO AQUI É INTERESSANTE
 	// public ObjectProperty<Pessoa>
+
+	public void cadastrar() {
+
+		System.out.println("CPF: " + cpfProps.get());
+		System.out.println("Nome: " + nomeProps.get());
+		System.out.println("Nascimento: " + nascimentoProps.get());
+		System.out.println("Email: " + emailProps.get());
+		System.out.println("Telefone: " + telefoneProps.get());
+		System.out.println("Sexo: " + sexoProps.get());
+		System.out.println("cep: " + cepProps.get());
+		System.out.println("bairro: " + bairroProps.get());
+		System.out.println("rua: " + ruaProps.get());
+		System.out.println("num: " + numProps.get());
+
+		System.out.println("INSTRUTOR: " + nomeInstrutor);
+		System.out.println("id PLANO: " + idPlano);
+		System.out.println("Preco plano: " + precoPlano);
+		System.out.println("duracao Plano: " + duracaoPlano);
+		
+		System.out.println("DATA INICIO: " + dataInicioProps);
+		System.out.println("DATA FIM: " + dataFimProps);
+		System.out.println("OBSERVAÇÕES: " + observacaoProps);
+		
+	}
 
 	public void teste() {
 		System.out.println(sexoProps.get());

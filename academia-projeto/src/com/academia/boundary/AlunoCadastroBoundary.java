@@ -1,5 +1,9 @@
 package com.academia.boundary;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,6 +72,7 @@ public class AlunoCadastroBoundary extends Application {
 	// LABEL DE SELEÇÃO DO PLANO
 	private Label lblPlano = new Label("PLANO: ");
 	private Label lblPreco = new Label("Preço : ");
+	private Label lblDuracao = new Label("Duração (dias): ");
 	private Label lblInstrutores = new Label("Instrutor: ");
 	private Label lblInicio = new Label("Data Inicio: ");
 	private Label lblFim = new Label("Data Expiração: ");
@@ -76,6 +81,7 @@ public class AlunoCadastroBoundary extends Application {
 	// TEXTFIELDS
 	private ChoiceBox<Plano> cbPlano = new ChoiceBox<>();
 	private TextField txtPreco = new TextField();
+	private TextField txtDuracao = new TextField();
 	private ChoiceBox<InstrutorDTO> cbInstrutores = new ChoiceBox<>();
 	private TextField txtDataInicio = new TextField();
 	private TextField txtDataFim = new TextField();
@@ -85,6 +91,9 @@ public class AlunoCadastroBoundary extends Application {
 	private Button btnCadastrar = new Button("CADASTRAR");
 	private Button btnAlterar = new Button("ALTERAR");
 	private Button btnCancelar = new Button("CANCELAR");
+
+	// SIMPLEDATEFORMATER
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	private GridPane gridCadastroAluno = new GridPane();
 
@@ -99,6 +108,7 @@ public class AlunoCadastroBoundary extends Application {
 		scene.getStylesheets().add("style.css");
 
 		this.configurarGridCadastroAluno();
+		this.ajustarTamanhoTextFields();
 
 		this.iniciarChoiceBoxs();
 		this.iniciarControll();
@@ -128,8 +138,16 @@ public class AlunoCadastroBoundary extends Application {
 		// DADOS DE SELEÇÃO DO PLANO
 		gridCadastroAluno.addRow(8, lblDadosPlano);
 		gridCadastroAluno.addRow(9, lblPlano, cbPlano, lblPreco, txtPreco);
-		gridCadastroAluno.addRow(10, lblInstrutores, cbInstrutores);
+		txtPreco.setDisable(true);
+
+		gridCadastroAluno.addRow(10, lblInstrutores, cbInstrutores, lblDuracao, txtDuracao);
+		txtDuracao.setDisable(true);
+
 		gridCadastroAluno.addRow(11, lblInicio, txtDataInicio, lblFim, txtDataFim);
+		// SETANDO UMA DATA DE INICIO (DATA ATUAL)
+		txtDataInicio.setText(sdf.format(new java.util.Date(System.currentTimeMillis())));
+		txtDataFim.setDisable(true);
+
 		gridCadastroAluno.addRow(12, lblObservacoes);
 		gridCadastroAluno.addRow(13, txtaObservacao);
 
@@ -145,7 +163,6 @@ public class AlunoCadastroBoundary extends Application {
 
 		// AJEITANDO O TEXTAREA
 
-		this.ajustarTamanhoTextFields();
 	}
 
 	private void ajustarTamanhoTextFields() {
@@ -177,21 +194,32 @@ public class AlunoCadastroBoundary extends Application {
 		// CADASTRAR UM NOVO CLIENTE E VINCULALO A UM PLANO
 		btnCadastrar.setOnAction(e -> {
 			// LOGICA PARA SALVAR O ITEM
-			alunoControl.teste();
-			System.out.println("BOTÃO CLICK");
+			alunoControl.nomeInstrutor = cbInstrutores.getValue().getNome();
+			alunoControl.idPlano = cbPlano.getValue().getIdPlano();
+			alunoControl.precoPlano = cbPlano.getValue().getPreco();
+			alunoControl.duracaoPlano = cbPlano.getValue().getDuracao();
+			
+			alunoControl.cadastrar();
+			System.out.println("BOTÃO CADASTRAR CLICK");
+		});
+
+		// ATUALIZAR DATA FIM, VERIFICAR SE UM PLANO FOI SELECIONADO
+		txtDataInicio.textProperty().addListener((obs, oldValue, newValue) -> {
+
+			if (newValue.length() == 10) {
+				atualizarDataFim(newValue);
+			}
+
 		});
 
 		// ATUALIZAR O A LISTA DE INSTRUTORES DE ACORDO COM O PLANO
 		cbPlano.getSelectionModel().selectedItemProperty().addListener((event, oldValue, newValue) -> {
 
-			Plano p = cbPlano.getValue();
+			Plano plano = cbPlano.getValue();
 
-			System.out.println(p.getNome());
-			System.out.println(p.getDescricao());
-			System.out.println(p.getPreco());
-			System.out.println(p.getDuracao());
-
-			this.atualizarComboBoxInstrutores(p.getIdPlano());
+			this.atualizarComboBoxInstrutores(plano.getIdPlano());
+			this.preencherCamposPlano(plano);
+			this.atualizarDataFim(txtDataInicio.getText());
 
 		});
 
@@ -203,6 +231,30 @@ public class AlunoCadastroBoundary extends Application {
 
 	}
 
+	private void preencherCamposPlano(Plano plano) {
+		txtPreco.setText(String.valueOf("R$" + plano.getPreco()));
+		txtDuracao.setText(String.valueOf(plano.getDuracao()));
+	}
+
+	private void atualizarDataFim(String data) {
+		if (data.length() == 10) {
+
+			try {
+				Date dataFim = sdf.parse(txtDataInicio.getText());
+				int duracao = Integer.parseInt(txtDuracao.getText());
+
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dataFim);
+				cal.add(Calendar.DATE, duracao);
+				dataFim = cal.getTime();
+
+				txtDataFim.setText(sdf.format(dataFim));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void atualizarComboBoxInstrutores(int idPlano) {
 
 		cbInstrutores.setItems(FXCollections.observableArrayList(instrutorControl.getInstrutoresByPlano(idPlano)));
@@ -210,21 +262,25 @@ public class AlunoCadastroBoundary extends Application {
 
 	private void iniciarControll() {
 
+		// DADOS CADASTRAIS
 		Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
 		Bindings.bindBidirectional(txtNome.textProperty(), alunoControl.nomeProps);
 		Bindings.bindBidirectional(txtEmail.textProperty(), alunoControl.emailProps);
 		Bindings.bindBidirectional(txtTelefone.textProperty(), alunoControl.telefoneProps);
 		Bindings.bindBidirectional(txtNascimento.textProperty(), alunoControl.nascimentoProps);
-
 		Bindings.bindBidirectional(cbSexo.valueProperty(), alunoControl.sexoProps);
 
-		/*
-		 * Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
-		 * Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
-		 * Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
-		 * Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
-		 * Bindings.bindBidirectional(cbPlano.valueProperty(), alunoControl.planoProps);
-		 */
+		// DADOS ENDERECO
+		Bindings.bindBidirectional(txtCep.textProperty(), alunoControl.cepProps);
+		Bindings.bindBidirectional(txtBairro.textProperty(), alunoControl.bairroProps);
+		Bindings.bindBidirectional(txtRua.textProperty(), alunoControl.ruaProps);
+		Bindings.bindBidirectional(txtNum.textProperty(), alunoControl.numProps);
+
+		// DADOS PLANO, ALUNO PLANO
+
+		Bindings.bindBidirectional(txtDataInicio.textProperty(), alunoControl.dataInicioProps);
+		Bindings.bindBidirectional(txtDataFim.textProperty(), alunoControl.dataFimProps);
+		Bindings.bindBidirectional(txtaObservacao.textProperty(), alunoControl.observacaoProps);
 
 	}
 

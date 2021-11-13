@@ -1,21 +1,26 @@
 package com.academia.main;
 
-import java.util.List;
-
-import com.academia.dao.DaoFactory;
-import com.academia.dao.InstrutorDao;
-import com.academia.dto.InstrutorDTO;
+import java.util.Calendar;
+import java.util.Date;
 
 public class TESTEALUNO {
 
 	public static void main(String[] args) {
-
-		InstrutorDao instrutorConn = DaoFactory.getInstrutorDao();
-		List<InstrutorDTO> instrutores = instrutorConn.findAllByPlano(1);
-
-		instrutores.forEach(System.out::println);
-
+		Date data = new Date();
+		System.out.println(data);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(data);
+		cal.add(Calendar.DATE, 24);
+		data = cal.getTime();
+		System.out.println(data);
+		
 		/*
+		 * InstrutorDao instrutorConn = DaoFactory.getInstrutorDao(); List<InstrutorDTO>
+		 * instrutores = instrutorConn.findAllByPlano(1);
+		 * 
+		 * instrutores.forEach(System.out::println);
+		 * 
+		 * 
 		 * PlanoDao planoConn = DaoFactory.getPlanoDao(); List<Plano> planos =
 		 * planoConn.findAll(); System.out.println(planos);
 		 * 
