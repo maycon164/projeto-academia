@@ -29,7 +29,7 @@ public class InstrutorDTO {
 
 	@Override
 	public String toString() {
-		return "InstrutorDTO [cpf=" + cpf + ", nome=" + nome + "]";
+		return nome;
 	}
 
 	

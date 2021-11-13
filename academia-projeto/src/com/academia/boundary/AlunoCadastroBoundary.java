@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.academia.control.AlunoControl;
+import com.academia.control.InstrutorControl;
 import com.academia.control.PlanoControl;
+import com.academia.dto.InstrutorDTO;
 import com.academia.entities.Plano;
 
 import javafx.application.Application;
@@ -21,11 +23,14 @@ import javafx.stage.Stage;
 
 public class AlunoCadastroBoundary extends Application {
 
-	// ALUNO CONTROLL
+	// ALUNO CONTROL
 	private AlunoControl alunoControl = new AlunoControl();
 
-	// PLANO CONTROLL
+	// PLANO CONTROL
 	private PlanoControl planoControl = new PlanoControl();
+
+	// INSTRUTOR CONTROL
+	private InstrutorControl instrutorControl = new InstrutorControl();
 
 	// TEXTOS
 	private Label lblDadosCadastrais = new Label("DADOS PARA CADASTRO");
@@ -71,7 +76,7 @@ public class AlunoCadastroBoundary extends Application {
 	// TEXTFIELDS
 	private ChoiceBox<Plano> cbPlano = new ChoiceBox<>();
 	private TextField txtPreco = new TextField();
-	private ChoiceBox<String> cbInstrutores = new ChoiceBox<>();
+	private ChoiceBox<InstrutorDTO> cbInstrutores = new ChoiceBox<>();
 	private TextField txtDataInicio = new TextField();
 	private TextField txtDataFim = new TextField();
 	private TextArea txtaObservacao = new TextArea();
@@ -180,8 +185,14 @@ public class AlunoCadastroBoundary extends Application {
 		cbPlano.getSelectionModel().selectedItemProperty().addListener((event, oldValue, newValue) -> {
 
 			Plano p = cbPlano.getValue();
+
+			System.out.println(p.getNome());
+			System.out.println(p.getDescricao());
+			System.out.println(p.getPreco());
+			System.out.println(p.getDuracao());
+
 			this.atualizarComboBoxInstrutores(p.getIdPlano());
-			
+
 		});
 
 		/*
@@ -193,7 +204,8 @@ public class AlunoCadastroBoundary extends Application {
 	}
 
 	private void atualizarComboBoxInstrutores(int idPlano) {
-		cbInstrutores.setItems();
+
+		cbInstrutores.setItems(FXCollections.observableArrayList(instrutorControl.getInstrutoresByPlano(idPlano)));
 	}
 
 	private void iniciarControll() {

@@ -36,21 +36,24 @@ public class PlanoDaoImpl implements PlanoDao {
 
 			return planos;
 		} catch (SQLException e) {
-		
+
 			e.printStackTrace();
-		
+
 		} finally {
-			
+
 			DB.closeStatement(ps);
 			DB.closeResultSet(rs);
-		
+
 		}
 
 		return null;
 	}
 
 	private Plano instantiatePlano(ResultSet rs) throws SQLException {
-		return new Plano(rs.getInt("id_plano"), rs.getString("nome"), rs.getString("Descricao"));
+		
+		return new Plano(rs.getInt("id_plano"), rs.getString("nome"), rs.getString("Descricao"), rs.getDouble("preco"),
+				rs.getInt("duracao"));
+		
 	}
 
 }
