@@ -1,0 +1,38 @@
+.root{
+    
+    -fx-font-size: 12.0pt;
+    -fx-font-family: "courier,arial,helvetica";
+    
+}
+
+.grid{
+	-fx-hgap: 10.0px;
+	-fx-vgap: 10.0px;
+	-fx-alignment: "top-center";
+}
+
+.textCentralizado{
+	-fx-underline: "true";
+	-fx-font-size: 14pt;
+	-fx-font-family: "arial";
+	-fx-max-width: "Infinity";
+	-fx-alignment: "top-center";
+	
+}
+
+.textArea{
+	-fx-pref-height: 50pt;	
+}
+
+.txtField{
+	-fx-min-width: 200pt;
+	-fx-min-height: 25pt;
+	
+}
+
+
+
+
+
+
+
