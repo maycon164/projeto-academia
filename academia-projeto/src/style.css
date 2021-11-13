@@ -8,6 +8,7 @@
 .grid{
 	-fx-hgap: 10.0px;
 	-fx-vgap: 10.0px;
+	-fx-padding: 10px;
 	-fx-alignment: "top-center";
 }
 

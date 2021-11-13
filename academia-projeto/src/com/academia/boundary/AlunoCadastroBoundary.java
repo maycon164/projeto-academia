@@ -3,11 +3,15 @@ package com.academia.boundary;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.academia.control.AlunoControl;
+import com.academia.control.PlanoControl;
 import com.academia.entities.Plano;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -15,7 +19,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class AlunoBoundary extends Application {
+public class AlunoCadastroBoundary extends Application {
+
+	// ALUNO CONTROLL
+	private AlunoControl alunoControl = new AlunoControl();
+
+	// PLANO CONTROLL
+	private PlanoControl planoControl = new PlanoControl();
+
 	// TEXTOS
 	private Label lblDadosCadastrais = new Label("DADOS PARA CADASTRO");
 	private Label lblDadosEndereco = new Label("ENDEREÇO DO ALUNO");
@@ -65,20 +76,28 @@ public class AlunoBoundary extends Application {
 	private TextField txtDataFim = new TextField();
 	private TextArea txtaObservacao = new TextArea();
 
+	// BUTTONS
+	private Button btnCadastrar = new Button("CADASTRAR");
+	private Button btnAlterar = new Button("ALTERAR");
+	private Button btnCancelar = new Button("CANCELAR");
+
 	private GridPane gridCadastroAluno = new GridPane();
 
 	public static void main(String[] args) {
-		Application.launch(AlunoBoundary.class, args);
+		Application.launch(AlunoCadastroBoundary.class, args);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
-		this.configurarGridCadastroAluno();
-
 		Scene scene = new Scene(gridCadastroAluno, 1020, 600);
 
 		scene.getStylesheets().add("style.css");
+
+		this.configurarGridCadastroAluno();
+
+		this.iniciarChoiceBoxs();
+		this.iniciarControll();
+		this.iniciarEventos();
 
 		this.configurandoCSS();
 
@@ -108,6 +127,9 @@ public class AlunoBoundary extends Application {
 		gridCadastroAluno.addRow(11, lblInicio, txtDataInicio, lblFim, txtDataFim);
 		gridCadastroAluno.addRow(12, lblObservacoes);
 		gridCadastroAluno.addRow(13, txtaObservacao);
+
+		// BUTTONS
+		gridCadastroAluno.addRow(16, btnCadastrar, btnAlterar, btnCancelar);
 
 		// SETANDO COLUMN SPANS
 		GridPane.setColumnSpan(lblDadosCadastrais, 4);
@@ -143,6 +165,60 @@ public class AlunoBoundary extends Application {
 		// TEXTAREA
 		txtaObservacao.getStyleClass().add("textArea");
 
+	}
+
+	private void iniciarEventos() {
+
+		// CADASTRAR UM NOVO CLIENTE E VINCULALO A UM PLANO
+		btnCadastrar.setOnAction(e -> {
+			// LOGICA PARA SALVAR O ITEM
+			alunoControl.teste();
+			System.out.println("BOTÃO CLICK");
+		});
+
+		// ATUALIZAR O A LISTA DE INSTRUTORES DE ACORDO COM O PLANO
+		cbPlano.getSelectionModel().selectedItemProperty().addListener((event, oldValue, newValue) -> {
+
+			Plano p = cbPlano.getValue();
+			this.atualizarComboBoxInstrutores(p.getIdPlano());
+			
+		});
+
+		/*
+		 * cbPlano.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+		 * 
+		 * });
+		 */
+
+	}
+
+	private void atualizarComboBoxInstrutores(int idPlano) {
+		cbInstrutores.setItems();
+	}
+
+	private void iniciarControll() {
+
+		Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
+		Bindings.bindBidirectional(txtNome.textProperty(), alunoControl.nomeProps);
+		Bindings.bindBidirectional(txtEmail.textProperty(), alunoControl.emailProps);
+		Bindings.bindBidirectional(txtTelefone.textProperty(), alunoControl.telefoneProps);
+		Bindings.bindBidirectional(txtNascimento.textProperty(), alunoControl.nascimentoProps);
+
+		Bindings.bindBidirectional(cbSexo.valueProperty(), alunoControl.sexoProps);
+
+		/*
+		 * Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
+		 * Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
+		 * Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
+		 * Bindings.bindBidirectional(txtCpf.textProperty(), alunoControl.cpfProps);
+		 * Bindings.bindBidirectional(cbPlano.valueProperty(), alunoControl.planoProps);
+		 */
+
+	}
+
+	private void iniciarChoiceBoxs() {
+
+		cbPlano.getItems().addAll(FXCollections.observableArrayList(planoControl.getPlanos()));
 	}
 
 }
