@@ -5,18 +5,17 @@ import java.util.List;
 
 public class Aluno extends Pessoa {
 
-	private boolean ativo;
-	private String observacao;
+
+	private boolean ativo = true;
+	private String observacao = "";
 
 	private List<Plano> assinaturas;
 	private List<Pagamento> pagamento;
 	private List<Avaliacao> avaliacoes;
 
 	public Aluno(String cpf, String nome, Date nascimento, String email, String telefone, Character sexo, String bairro,
-			String rua, String num) {
-
-		super(cpf, nome, nascimento, email, telefone, sexo, bairro, rua, num);
-
+			String rua, String num, Date data_matricula) {
+		super(cpf, nome, nascimento, email, telefone, sexo, bairro, rua, num, data_matricula);
 	}
 
 	public boolean isAtivo() {
@@ -58,4 +57,14 @@ public class Aluno extends Pessoa {
 	public void setAvaliacoes(List<Avaliacao> avaliacoes) {
 		this.avaliacoes = avaliacoes;
 	}
+
+	@Override
+	public String toString() {
+		return super.toString()
+				+"\nAluno [ativo=" + ativo + ", observacao=" + observacao + ", assinaturas=" + assinaturas + ", pagamento="
+				+ pagamento + ", avaliacoes=" + avaliacoes + "]";
+	}
+
+
+	
 }

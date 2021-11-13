@@ -9,10 +9,10 @@ public interface AlunoDao {
 
 	void insert(Aluno aluno);
 
-	Aluno findById();
+	Aluno findById(String cpf);
 
 	List<AlunoDTO> findAll();
 
-	List<AlunoDTO> findAllByPlano();
+	List<AlunoDTO> findAllByParameter(String parameter);
 
 }
