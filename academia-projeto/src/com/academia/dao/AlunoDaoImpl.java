@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.academia.db.DB;
 import com.academia.dto.AlunoDTO;
+import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
 
@@ -161,6 +162,43 @@ public class AlunoDaoImpl implements AlunoDao {
 	public List<AlunoDTO> findAllByParameter(String parameter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<AlunoPlanoDTO> findAllAlunoPlano() {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String sql = "SELECT * FROM vw_aluno_plano ";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+			List<AlunoPlanoDTO> alunosPlanos = new ArrayList<>();
+
+			while (rs.next()) {
+				alunosPlanos.add(instantiateAlunoPlanoDTO(rs));
+			}
+
+			return alunosPlanos;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			DB.closeStatement(ps);
+			DB.closeResultSet(rs);
+
+		}
+
+		return null;
+	}
+
+	private AlunoPlanoDTO instantiateAlunoPlanoDTO(ResultSet rs) throws SQLException {
+
+		return new AlunoPlanoDTO(rs.getString("aluno"), rs.getString("cpf"), rs.getString("plano"),
+				rs.getInt("id_plano"), rs.getInt("duracao"), rs.getDate("data_inicio"), rs.getDate("data_expiracao"));
+
 	}
 
 	private AlunoDTO instantiateAlunoDTO(ResultSet rs) throws SQLException {

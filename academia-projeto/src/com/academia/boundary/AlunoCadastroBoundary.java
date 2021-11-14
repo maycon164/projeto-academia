@@ -149,7 +149,7 @@ public class AlunoCadastroBoundary extends Application {
 		gridCadastroAluno.addRow(15, messageError);
 
 		// BUTTONS
-		gridCadastroAluno.addRow(16, btnCadastrar, btnAlterar, btnCancelar);
+		gridCadastroAluno.addRow(16, btnCadastrar, btnCancelar);
 
 		// SETANDO COLUMN SPANS
 		GridPane.setColumnSpan(lblDadosCadastrais, 4);
@@ -206,6 +206,10 @@ public class AlunoCadastroBoundary extends Application {
 
 			System.out.println("BOTÃO CADASTRAR CLICK");
 
+		});
+		
+		btnCancelar.setOnAction(event -> {
+			System.out.println("CANCELAR..... VOLTANDO A TELA INICIAL");
 		});
 
 		// ATUALIZAR O A LISTA DE INSTRUTORES DE ACORDO COM O PLANO

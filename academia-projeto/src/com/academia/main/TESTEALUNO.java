@@ -1,8 +1,10 @@
 package com.academia.main;
 
+import java.util.List;
+
 import com.academia.dao.AlunoDao;
 import com.academia.dao.DaoFactory;
-import com.academia.entities.Aluno;
+import com.academia.dto.AlunoPlanoDTO;
 
 public class TESTEALUNO {
 
@@ -10,9 +12,11 @@ public class TESTEALUNO {
 
 		AlunoDao alunoConn = DaoFactory.getAlunoDao();
 
-		Aluno aluno = alunoConn.findById("12345");
-		System.out.println(aluno);
-		
+		List<AlunoPlanoDTO> alunosPlanos = alunoConn.findAllAlunoPlano();
+		System.out.println(alunosPlanos);
+
+		// Aluno aluno = alunoConn.findById("12345");
+		// System.out.println(aluno);
 		/*
 		 * Endereco end = null; if(end == null) { try { end = Utils.pegarCep("asdasas");
 		 * } catch (CepNotFound | IOException e) { System.out.println("PEGOU");
