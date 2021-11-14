@@ -12,6 +12,9 @@
 	-fx-alignment: "top-center";
 }
 
+.gridGerenciarAlunos{
+	}
+
 .textCentralizado{
 	-fx-underline: "true";
 	-fx-font-size: 14.0pt;
@@ -28,7 +31,16 @@
 .txtField{
 	-fx-min-width: 200.0pt;
 	-fx-min-height: 23.0pt;
+}
 
+.txtPesquisa{
+	-fx-min-width: 400.0pt;
+}
+
+.margin{
+	 -fx-padding: 20.0px;
+    -fx-border-insets: 20.0px;
+    -fx-background-insets: 10.0px;
 }
 
 .messageError{

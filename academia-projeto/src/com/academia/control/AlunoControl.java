@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.academia.dao.AlunoDao;
 import com.academia.dao.DaoFactory;
+import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
 import com.academia.entities.Endereco;
@@ -17,7 +18,10 @@ import com.academia.util.Utils;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.SceneAntialiasing;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 
 public class AlunoControl {
 
@@ -51,11 +55,18 @@ public class AlunoControl {
 	public StringProperty dataFimProps = new SimpleStringProperty("");
 	public StringProperty observacaoProps = new SimpleStringProperty("");
 
+	// LISTAS
+	private ObservableList<AlunoPlanoDTO> alunosPlanos = FXCollections
+			.observableArrayList(alunoConn.findAllAlunoPlano());
+	private FilteredList<AlunoPlanoDTO> filteredAlunosPlanos = new FilteredList<AlunoPlanoDTO>(alunosPlanos,
+			aluno -> true);
+	private SortedList<AlunoPlanoDTO> sortedAlunosPlanos = new SortedList<>(filteredAlunosPlanos);
+
 	// PROPERTY MESSAGE ERROR
 	public StringProperty messageErrorProps = new SimpleStringProperty();
 
-	// ISSO AQUI É INTERESSANTE
-	// public ObjectProperty<Pessoa>
+	// CAMPO DE PESQUISA
+	public StringProperty pesquisaProps = new SimpleStringProperty("");
 
 	public AlunoControl() {
 		this.iniciarEventos();
@@ -82,7 +93,7 @@ public class AlunoControl {
 				assinatura = this.assinaturaFromBoundary();
 
 				if (assinatura != null) {
-					
+
 					assinatura.setAluno(aluno);
 					alunoConn.assinarPlano(assinatura);
 
@@ -156,7 +167,7 @@ public class AlunoControl {
 			}
 		});
 
-		// CONSUMINDO DADOS DE UMA API
+		// CONSUMINDO DADOS API VIA CEP
 		cepProps.addListener((obs, oldValue, newValue) -> {
 			if (newValue.length() == 8) {
 
@@ -173,6 +184,26 @@ public class AlunoControl {
 				}
 
 			}
+		});
+
+		// ORDENAR LISTA CAMPO PESQUISAR
+		pesquisaProps.addListener((obs, oldValue, newValue) -> {
+
+			filteredAlunosPlanos.setPredicate(p -> {
+				if (newValue.isEmpty() || newValue == null) {
+					return true;
+				}
+
+				String parametro = newValue.toLowerCase();
+
+				if (p.getAluno().toLowerCase().contains(parametro)) {
+					return true;
+				}
+
+				return false;
+
+			});
+
 		});
 
 	}
@@ -229,5 +260,9 @@ public class AlunoControl {
 
 		return assinatura;
 
+	}
+
+	public ObservableList<AlunoPlanoDTO> getAlunosPlanosDTO() {
+		return sortedAlunosPlanos;
 	}
 }
