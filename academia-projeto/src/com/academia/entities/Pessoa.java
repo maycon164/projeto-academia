@@ -11,20 +11,21 @@ public class Pessoa {
 	private String telefone;
 	private Character sexo;
 
+	private String cep;
 	private String bairro;
 	private String rua;
 	private String num;
 	private Date data_matricula;
-	
-	public Pessoa(String cpf, String nome, Date nascimento, String email, String telefone, Character sexo,
+
+	public Pessoa(String cpf, String nome, Date nascimento, String email, String telefone, Character sexo, String cep,
 			String bairro, String rua, String num, Date data_matricula) {
-		super();
 		this.cpf = cpf;
 		this.nome = nome;
 		this.nascimento = nascimento;
 		this.email = email;
 		this.telefone = telefone;
 		this.sexo = sexo;
+		this.cep = cep;
 		this.bairro = bairro;
 		this.rua = rua;
 		this.num = num;
@@ -83,6 +84,14 @@ public class Pessoa {
 		return bairro;
 	}
 
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
 	public void setBairro(String bairro) {
 		this.bairro = bairro;
 	}
@@ -114,8 +123,10 @@ public class Pessoa {
 	@Override
 	public String toString() {
 		return "Pessoa [cpf=" + cpf + ", nome=" + nome + ", nascimento=" + nascimento + ", email=" + email
-				+ ", telefone=" + telefone + ", sexo=" + sexo + ", bairro=" + bairro + ", rua=" + rua + ", num=" + num
-				+ ", data_matricula=" + data_matricula + "]";
+				+ ", telefone=" + telefone + ", sexo=" + sexo + ", cep=" + cep + ", bairro=" + bairro + ", rua=" + rua
+				+ ", num=" + num + ", data_matricula=" + data_matricula + "]";
 	}
+
+
 
 }

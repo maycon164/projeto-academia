@@ -1,22 +1,38 @@
 package com.academia.main;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.io.IOException;
+
+import com.academia.entities.Endereco;
+import com.academia.exception.CepNotFound;
+import com.academia.util.Utils;
 
 public class TESTEALUNO {
 
-	public static void main(String[] args) {
-		Date data = new Date();
-		System.out.println(data);
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(data);
-		cal.add(Calendar.DATE, 24);
-		data = cal.getTime();
-		System.out.println(data);
+	public static void main(String[] args){
+		
+		Endereco end = null;
+		if(end == null) {
+			try {
+				 end = Utils.pegarCep("asdasas");
+			} catch (CepNotFound | IOException e) {
+				System.out.println("PEGOU");
+				System.out.println(e.getMessage());
+			}	
+		}
+		
+		System.out.println("teste: " + end);
 		
 		/*
-		 * InstrutorDao instrutorConn = DaoFactory.getInstrutorDao(); List<InstrutorDTO>
-		 * instrutores = instrutorConn.findAllByPlano(1);
+		 * 
+		 * Date data = new Date(); System.out.println(data); Calendar cal =
+		 * Calendar.getInstance(); cal.setTime(data); cal.add(Calendar.DATE, 24); data =
+		 * cal.getTime(); System.out.println(data);
+		 * 
+		 * AlunoDao alunoConn = DaoFactory.getAlunoDao();
+		 * 
+		 * 
+		 * /* InstrutorDao instrutorConn = DaoFactory.getInstrutorDao();
+		 * List<InstrutorDTO> instrutores = instrutorConn.findAllByPlano(1);
 		 * 
 		 * instrutores.forEach(System.out::println);
 		 * 

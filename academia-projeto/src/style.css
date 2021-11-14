@@ -2,19 +2,19 @@
     
     -fx-font-size: 12.0pt;
     -fx-font-family: "courier,arial,helvetica";
-    
+    -fx-background: "white";
 }
 
 .grid{
 	-fx-hgap: 10.0px;
 	-fx-vgap: 10.0px;
-	-fx-padding: 10px;
+	-fx-padding: 10.0px;
 	-fx-alignment: "top-center";
 }
 
 .textCentralizado{
 	-fx-underline: "true";
-	-fx-font-size: 14pt;
+	-fx-font-size: 14.0pt;
 	-fx-font-family: "arial";
 	-fx-max-width: "Infinity";
 	-fx-alignment: "top-center";
@@ -22,14 +22,19 @@
 }
 
 .textArea{
-	-fx-pref-height: 50pt;	
+	-fx-pref-height: 50.0pt;	
 }
 
 .txtField{
-	-fx-min-width: 200pt;
-	-fx-min-height: 25pt;
-	
+	-fx-min-width: 200.0pt;
+	-fx-min-height: 23.0pt;
+
 }
+
+.messageError{
+	-fx-text-fill: red;
+}
+
 
 
 

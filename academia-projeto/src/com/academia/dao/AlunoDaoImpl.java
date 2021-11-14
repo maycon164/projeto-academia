@@ -55,19 +55,20 @@ public class AlunoDaoImpl implements AlunoDao {
 
 		try {
 			String sql = "INSERT INTO pessoa "
-					+ "(cpf, nome, nascimento, email, telefone, bairro, rua, num, sexo, data_matricula) "
-					+ " VALUES (?,?,?,?,?,?,?,?,?,?)";
+					+ "(cpf, nome, nascimento, email, telefone, cep, bairro, rua, num, sexo, data_matricula) "
+					+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, aluno.getCpf());
 			ps.setString(2, aluno.getNome());
 			ps.setDate(3, new java.sql.Date(aluno.getNascimento().getTime()));
 			ps.setString(4, aluno.getEmail());
 			ps.setString(5, aluno.getTelefone());
-			ps.setString(6, aluno.getBairro());
-			ps.setString(7, aluno.getRua());
-			ps.setString(8, aluno.getNum());
-			ps.setString(9, aluno.getSexo().toString());
-			ps.setDate(10, (aluno.getData_matricula() == null) ? new java.sql.Date(System.currentTimeMillis())
+			ps.setString(6, aluno.getCep());
+			ps.setString(7, aluno.getBairro());
+			ps.setString(8, aluno.getRua());
+			ps.setString(9, aluno.getNum());
+			ps.setString(10, aluno.getSexo().toString());
+			ps.setDate(11, (aluno.getData_matricula() == null) ? new java.sql.Date(System.currentTimeMillis())
 					: new java.sql.Date(aluno.getData_matricula().getTime()));
 			ps.execute();
 
@@ -139,10 +140,9 @@ public class AlunoDaoImpl implements AlunoDao {
 	private Aluno instantiateAluno(ResultSet rs) throws SQLException {
 
 		Aluno aluno = new Aluno(rs.getString("cpf"), rs.getString("aluno"), rs.getDate("nascimento"),
-				rs.getString("email"), rs.getString("telefone"), rs.getString("sexo").charAt(0), rs.getString("bairro"),
-				rs.getString("rua"), rs.getString("num"), rs.getDate("data_matricula"));
-		aluno.setAtivo(rs.getBoolean("ativo"));
-		aluno.setObservacao(rs.getString("observacoes"));
+				rs.getString("email"), rs.getString("telefone"), rs.getString("sexo").charAt(0), rs.getString("cep"),
+				rs.getString("bairro"), rs.getString("rua"), rs.getString("num"), rs.getDate("data_matricula"),
+				rs.getBoolean("ativo"), rs.getString("observacoes"));
 
 		return aluno;
 	}

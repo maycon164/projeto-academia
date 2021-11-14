@@ -1,9 +1,5 @@
 package com.academia.boundary;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,14 +83,15 @@ public class AlunoCadastroBoundary extends Application {
 	private TextField txtDataFim = new TextField();
 	private TextArea txtaObservacao = new TextArea();
 
+	// LABEL DE ERROR MESSAGE
+	private Label messageError = new Label("ERROR MESSAGE");
+
 	// BUTTONS
 	private Button btnCadastrar = new Button("CADASTRAR");
 	private Button btnAlterar = new Button("ALTERAR");
 	private Button btnCancelar = new Button("CANCELAR");
 
-	// SIMPLEDATEFORMATER
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
+	// GRID PRINCIPAL
 	private GridPane gridCadastroAluno = new GridPane();
 
 	public static void main(String[] args) {
@@ -145,11 +142,11 @@ public class AlunoCadastroBoundary extends Application {
 
 		gridCadastroAluno.addRow(11, lblInicio, txtDataInicio, lblFim, txtDataFim);
 		// SETANDO UMA DATA DE INICIO (DATA ATUAL)
-		txtDataInicio.setText(sdf.format(new java.util.Date(System.currentTimeMillis())));
 		txtDataFim.setDisable(true);
 
 		gridCadastroAluno.addRow(12, lblObservacoes);
 		gridCadastroAluno.addRow(13, txtaObservacao);
+		gridCadastroAluno.addRow(15, messageError);
 
 		// BUTTONS
 		gridCadastroAluno.addRow(16, btnCadastrar, btnAlterar, btnCancelar);
@@ -160,7 +157,7 @@ public class AlunoCadastroBoundary extends Application {
 		GridPane.setColumnSpan(lblDadosPlano, 4);
 		GridPane.setColumnSpan(lblObservacoes, 4);
 		GridPane.setColumnSpan(txtaObservacao, 4);
-
+		GridPane.setColumnSpan(messageError, 4);
 		// AJEITANDO O TEXTAREA
 
 	}
@@ -184,6 +181,9 @@ public class AlunoCadastroBoundary extends Application {
 		lblDadosPlano.getStyleClass().add("textCentralizado");
 		lblObservacoes.getStyleClass().add("textCentralizado");
 
+		// MESSAGE ERROR
+		messageError.getStyleClass().add("messageError");
+
 		// TEXTAREA
 		txtaObservacao.getStyleClass().add("textArea");
 
@@ -193,22 +193,18 @@ public class AlunoCadastroBoundary extends Application {
 
 		// CADASTRAR UM NOVO CLIENTE E VINCULALO A UM PLANO
 		btnCadastrar.setOnAction(e -> {
-			// LOGICA PARA SALVAR O ITEM
-			alunoControl.nomeInstrutor = cbInstrutores.getValue().getNome();
-			alunoControl.idPlano = cbPlano.getValue().getIdPlano();
-			alunoControl.precoPlano = cbPlano.getValue().getPreco();
-			alunoControl.duracaoPlano = cbPlano.getValue().getDuracao();
-			
-			alunoControl.cadastrar();
-			System.out.println("BOTÃO CADASTRAR CLICK");
-		});
 
-		// ATUALIZAR DATA FIM, VERIFICAR SE UM PLANO FOI SELECIONADO
-		txtDataInicio.textProperty().addListener((obs, oldValue, newValue) -> {
+			// ENVIAR O ID DO PLANO
+			if(cbPlano.getValue() != null) {
+				alunoControl.idPlano = cbPlano.getValue().getIdPlano();
+				// alunoControl.instrutorNome = cbInstrutores.getValue().getNome();
 
-			if (newValue.length() == 10) {
-				atualizarDataFim(newValue);
+				alunoControl.cadastrar();
+			}else {
+				messageError.setText("SELECIONE UM PLANO");
 			}
+
+			System.out.println("BOTÃO CADASTRAR CLICK");
 
 		});
 
@@ -219,8 +215,7 @@ public class AlunoCadastroBoundary extends Application {
 
 			this.atualizarComboBoxInstrutores(plano.getIdPlano());
 			this.preencherCamposPlano(plano);
-			this.atualizarDataFim(txtDataInicio.getText());
-
+			alunoControl.atualizarDataFim(txtDataInicio.getText());
 		});
 
 		/*
@@ -234,25 +229,6 @@ public class AlunoCadastroBoundary extends Application {
 	private void preencherCamposPlano(Plano plano) {
 		txtPreco.setText(String.valueOf("R$" + plano.getPreco()));
 		txtDuracao.setText(String.valueOf(plano.getDuracao()));
-	}
-
-	private void atualizarDataFim(String data) {
-		if (data.length() == 10) {
-
-			try {
-				Date dataFim = sdf.parse(txtDataInicio.getText());
-				int duracao = Integer.parseInt(txtDuracao.getText());
-
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(dataFim);
-				cal.add(Calendar.DATE, duracao);
-				dataFim = cal.getTime();
-
-				txtDataFim.setText(sdf.format(dataFim));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	private void atualizarComboBoxInstrutores(int idPlano) {
@@ -277,10 +253,15 @@ public class AlunoCadastroBoundary extends Application {
 		Bindings.bindBidirectional(txtNum.textProperty(), alunoControl.numProps);
 
 		// DADOS PLANO, ALUNO PLANO
+		Bindings.bindBidirectional(txtDuracao.textProperty(), alunoControl.duracaoProps);
+		Bindings.bindBidirectional(txtPreco.textProperty(), alunoControl.precoProps);
 
 		Bindings.bindBidirectional(txtDataInicio.textProperty(), alunoControl.dataInicioProps);
 		Bindings.bindBidirectional(txtDataFim.textProperty(), alunoControl.dataFimProps);
 		Bindings.bindBidirectional(txtaObservacao.textProperty(), alunoControl.observacaoProps);
+
+		// MESSAGE ERROR
+		Bindings.bindBidirectional(messageError.textProperty(), alunoControl.messageErrorProps);
 
 	}
 
