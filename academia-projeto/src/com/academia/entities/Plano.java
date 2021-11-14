@@ -17,6 +17,10 @@ public class Plano {
 		this.duracao = duracao;
 	}
 
+	public Plano() {
+
+	}
+
 	public int getIdPlano() {
 		return idPlano;
 	}

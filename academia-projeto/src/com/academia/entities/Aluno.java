@@ -8,7 +8,7 @@ public class Aluno extends Pessoa {
 	private boolean ativo = true;
 	private String observacao = "";
 
-	private List<Plano> assinaturas;
+	private List<Assinatura> assinaturas;
 	private List<Pagamento> pagamento;
 	private List<Avaliacao> avaliacoes;
 
@@ -17,6 +17,10 @@ public class Aluno extends Pessoa {
 		super(cpf, nome, nascimento, email, telefone, sexo, cep, bairro, rua, num, data_matricula);
 		this.ativo = ativo;
 		this.observacao = observacao;
+
+	}
+
+	public Aluno() {
 
 	}
 
@@ -36,11 +40,11 @@ public class Aluno extends Pessoa {
 		this.observacao = observacao;
 	}
 
-	public List<Plano> getAssinaturas() {
+	public List<Assinatura> getAssinaturas() {
 		return assinaturas;
 	}
 
-	public void setAssinaturas(List<Plano> assinaturas) {
+	public void setAssinaturas(List<Assinatura> assinaturas) {
 		this.assinaturas = assinaturas;
 	}
 
@@ -62,11 +66,8 @@ public class Aluno extends Pessoa {
 
 	@Override
 	public String toString() {
-		return super.toString() 
-				+ "\nAluno [ativo=" + ativo + ", observacao=" + observacao + ", assinaturas=" + assinaturas + ", pagamento="
-				+ pagamento + ", avaliacoes=" + avaliacoes + "]";
+		return super.toString() + "\nAluno [ativo=" + ativo + ", observacao=" + observacao + ", assinaturas="
+				+ assinaturas + ", pagamento=" + pagamento + ", avaliacoes=" + avaliacoes + "]";
 	}
-
-	
 
 }

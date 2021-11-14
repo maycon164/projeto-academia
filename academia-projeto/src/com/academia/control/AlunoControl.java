@@ -5,16 +5,24 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.academia.dao.AlunoDao;
+import com.academia.dao.DaoFactory;
 import com.academia.entities.Aluno;
+import com.academia.entities.Assinatura;
 import com.academia.entities.Endereco;
+import com.academia.entities.Plano;
 import com.academia.exception.CepNotFound;
 import com.academia.exception.EmptyFieldException;
 import com.academia.util.Utils;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.SceneAntialiasing;
 
 public class AlunoControl {
+
+	// ALUNO CONNEXÃO
+	private AlunoDao alunoConn = DaoFactory.getAlunoDao();
 
 	// FORMATAR DATAS
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -56,11 +64,38 @@ public class AlunoControl {
 	public void cadastrar() {
 
 		try {
-			this.validarCampos();
-			this.alunoFromBoundary();
 
-			messageErrorProps.set("Cadastrado Com Sucesso");
-			this.limparCampos();
+			this.validarCampos();
+
+			Aluno aluno = null;
+			Assinatura assinatura = null;
+
+			try {
+
+				aluno = this.alunoFromBoundary();
+
+				if (aluno != null) {
+					alunoConn.insert(aluno);
+					System.out.println(aluno);
+				}
+
+				assinatura = this.assinaturaFromBoundary();
+
+				if (assinatura != null) {
+					
+					assinatura.setAluno(aluno);
+					alunoConn.assinarPlano(assinatura);
+
+				}
+
+				messageErrorProps.set("Cadastrado Com Sucesso");
+				this.limparCampos();
+
+			} catch (ParseException e) {
+
+				messageErrorProps.set("INFORME A DATA(dd/MM/yyyy)");
+			}
+
 		} catch (EmptyFieldException e) {
 
 			messageErrorProps.set(e.getMessage());
@@ -96,19 +131,19 @@ public class AlunoControl {
 		telefoneProps.set("");
 		nascimentoProps.set("");
 		sexoProps.set("");
-		
+
 		cepProps.set("");
 		bairroProps.set("");
 		ruaProps.set("");
 		cepProps.set("");
 		numProps.set("");
-	
+
 		idPlano = null;
 		duracaoProps.set("");
 		dataInicioProps.set(sdf.format(new Date()));
 		dataFimProps.set("");
 		precoProps.set("");
-		
+
 		observacaoProps.set("");
 	}
 
@@ -161,32 +196,38 @@ public class AlunoControl {
 		}
 	}
 
-	private Aluno alunoFromBoundary() {
-		System.out.println("------------- DADOS CADASTRAIS ALUNO -------------");
-		System.out.println("CPF: " + cpfProps.get());
-		System.out.println("Nome: " + nomeProps.get());
-		System.out.println("Nascimento: " + nascimentoProps.get());
-		System.out.println("Email: " + emailProps.get());
-		System.out.println("Telefone: " + telefoneProps.get());
-		System.out.println("Sexo: " + sexoProps.get());
+	private Aluno alunoFromBoundary() throws ParseException {
 
-		System.out.println("------------- DADOS DE ENDERECO -------------");
-		System.out.println("cep: " + cepProps.get());
-		System.out.println("bairro: " + bairroProps.get());
-		System.out.println("rua: " + ruaProps.get());
-		System.out.println("num: " + numProps.get());
+		Aluno aluno = new Aluno();
 
-		System.out.println("------------- INSTRUTOR E PLANO -------------");
-		System.out.println("INSTRUTOR: " + instrutorNome);
-		System.out.println("id PLANO: " + idPlano);
-		System.out.println("Preco plano: " + precoProps.get());
-		System.out.println("duracao Plano: " + duracaoProps.get());
+		aluno.setCpf(cpfProps.get());
+		aluno.setNome(nomeProps.get());
+		aluno.setNascimento(sdf.parse(nascimentoProps.get()));
+		aluno.setEmail(emailProps.get());
+		aluno.setTelefone(telefoneProps.get());
+		aluno.setSexo(sexoProps.get().charAt(0));
 
-		System.out.println("DATA INICIO: " + dataInicioProps.get());
-		System.out.println("DATA FIM: " + dataFimProps.get());
-		System.out.println("OBSERVAÇÕES: " + observacaoProps.get());
+		aluno.setCep(cepProps.get());
+		aluno.setBairro(bairroProps.get());
+		aluno.setRua(ruaProps.get());
+		aluno.setNum(numProps.get());
+		aluno.setObservacao(observacaoProps.get());
 
-		return null;
+		return aluno;
 	}
 
+	private Assinatura assinaturaFromBoundary() throws ParseException {
+
+		// NÃO SEI SE ESSA É A MELHOR FORMA
+		Assinatura assinatura = new Assinatura();
+
+		Plano plano = new Plano();
+		plano.setIdPlano(idPlano);
+		assinatura.setPlano(plano);
+		assinatura.setDataInicio(sdf.parse(dataInicioProps.get()));
+		assinatura.setDataExpiracao(sdf.parse(dataFimProps.get()));
+
+		return assinatura;
+
+	}
 }

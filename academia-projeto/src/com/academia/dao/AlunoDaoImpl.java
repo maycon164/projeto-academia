@@ -10,6 +10,7 @@ import java.util.List;
 import com.academia.db.DB;
 import com.academia.dto.AlunoDTO;
 import com.academia.entities.Aluno;
+import com.academia.entities.Assinatura;
 
 public class AlunoDaoImpl implements AlunoDao {
 
@@ -70,6 +71,7 @@ public class AlunoDaoImpl implements AlunoDao {
 			ps.setString(10, aluno.getSexo().toString());
 			ps.setDate(11, (aluno.getData_matricula() == null) ? new java.sql.Date(System.currentTimeMillis())
 					: new java.sql.Date(aluno.getData_matricula().getTime()));
+
 			ps.execute();
 
 			// SE CONSEGUIU INSERIR A PESSOA AGORA PRECISSO REGISTRAR COMO ALUNO
@@ -79,8 +81,11 @@ public class AlunoDaoImpl implements AlunoDao {
 			ps.setBoolean(2, aluno.isAtivo());
 			ps.setString(3, aluno.getObservacao());
 
-			ps.execute();
-			System.out.println("INSERIDO COM SUCESSO");
+			int rows = ps.executeUpdate();
+
+			if (rows > 0) {
+				System.out.println("Aluno Inserido com Sucesso");
+			}
 
 		} catch (SQLException e) {
 
@@ -92,6 +97,33 @@ public class AlunoDaoImpl implements AlunoDao {
 
 		}
 
+	}
+
+	@Override
+	public Assinatura assinarPlano(Assinatura assinatura) {
+		PreparedStatement ps = null;
+
+		try {
+			String sql = "INSERT INTO aluno_plano (cpf_aluno, id_plano, data_inicio, data_expiracao) VALUES (?, ?, ?, ?)";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, assinatura.getAluno().getCpf());
+			ps.setInt(2, assinatura.getPlano().getIdPlano());
+			ps.setDate(3, new java.sql.Date(assinatura.getDataInicio().getTime()));
+			ps.setDate(4, new java.sql.Date(assinatura.getDataExpiracao().getTime()));
+
+			int rows = ps.executeUpdate();
+
+			if (rows > 0) {
+				System.out.println("ASSINATURA VINCULAD AO CPF DO ALUNO");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.closeStatement(ps);
+		}
+
+		return null;
 	}
 
 	@Override

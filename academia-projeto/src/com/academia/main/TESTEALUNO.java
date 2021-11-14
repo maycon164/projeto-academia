@@ -1,28 +1,26 @@
 package com.academia.main;
 
-import java.io.IOException;
-
-import com.academia.entities.Endereco;
-import com.academia.exception.CepNotFound;
-import com.academia.util.Utils;
+import com.academia.dao.AlunoDao;
+import com.academia.dao.DaoFactory;
+import com.academia.entities.Aluno;
 
 public class TESTEALUNO {
 
-	public static void main(String[] args){
-		
-		Endereco end = null;
-		if(end == null) {
-			try {
-				 end = Utils.pegarCep("asdasas");
-			} catch (CepNotFound | IOException e) {
-				System.out.println("PEGOU");
-				System.out.println(e.getMessage());
-			}	
-		}
-		
-		System.out.println("teste: " + end);
+	public static void main(String[] args) {
+
+		AlunoDao alunoConn = DaoFactory.getAlunoDao();
+
+		Aluno aluno = alunoConn.findById("12345");
+		System.out.println(aluno);
 		
 		/*
+		 * Endereco end = null; if(end == null) { try { end = Utils.pegarCep("asdasas");
+		 * } catch (CepNotFound | IOException e) { System.out.println("PEGOU");
+		 * System.out.println(e.getMessage()); } }
+		 * 
+		 * System.out.println("teste: " + end);
+		 * 
+		 * /*
 		 * 
 		 * Date data = new Date(); System.out.println(data); Calendar cal =
 		 * Calendar.getInstance(); cal.setTime(data); cal.add(Calendar.DATE, 24); data =
@@ -40,9 +38,7 @@ public class TESTEALUNO {
 		 * PlanoDao planoConn = DaoFactory.getPlanoDao(); List<Plano> planos =
 		 * planoConn.findAll(); System.out.println(planos);
 		 * 
-		 * /* AlunoDao alunoConn = DaoFactory.getAlunoDao();
-		 * 
-		 * Aluno aluno = alunoConn.findById("10866672044");
+		 * /*
 		 * 
 		 * System.out.println(aluno);
 		 * 

@@ -32,6 +32,10 @@ public class Pessoa {
 		this.data_matricula = data_matricula;
 	}
 
+	public Pessoa() {
+
+	}
+
 	public String getCpf() {
 		return cpf;
 	}
@@ -126,7 +130,5 @@ public class Pessoa {
 				+ ", telefone=" + telefone + ", sexo=" + sexo + ", cep=" + cep + ", bairro=" + bairro + ", rua=" + rua
 				+ ", num=" + num + ", data_matricula=" + data_matricula + "]";
 	}
-
-
 
 }
