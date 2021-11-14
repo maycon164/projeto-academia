@@ -1,7 +1,7 @@
 USE academiadb;
 
 
-----------------------------------------CRIANDO VIWES
+----------------------------------------CRIANDO VIEWS
 ---------VIEWS ALUNO
 CREATE VIEW vw_aluno AS
 SELECT p.nome AS aluno, p.cpf, p.sexo, a.ativo, p.nascimento, p.email, 
@@ -22,21 +22,38 @@ SELECT * FROM vw_instrutor;
 
 -----VIEWS INSTRUTORES E PLANOS
 CREATE VIEW vw_instrutor_plano AS
-SELECT vwi.instrutor, pl.nome, pl.preco, pl.duracao
+SELECT vwi.instrutor, vwi.cpf, pl.nome AS plano, pl.id_plano, pl.preco, pl.duracao
 FROM vw_instrutor vwi, plano pl, instrutor_plano ip
 WHERE ip.cpf_instrutor = vwi.cpf
 AND ip.id_plano = pl.id_plano
+
 SELECT * FROM vw_instrutor_plano vip;
+
+-----FUNCTION PARA RETORNAR INSTRUTORESDTO DE UM PLANO (id_plano)
+
+CREATE FUNCTION func_instrutoresDTO_por_plano(@id_plano AS INT)
+RETURNS TABLE
+AS 
+RETURN (
+	SELECT vip.cpf, vip.instrutor, vip.plano
+	FROM vw_instrutor_plano vip
+	WHERE vip.id_plano = @id_plano
+);
+
+SELECT * FROM plano;
+
+SELECT * FROM [dbo].[func_instrutoresDTO_por_plano](2);
+
 
 ---------VIEW ALUNO E PLANO
 
 CREATE VIEW vw_aluno_plano AS
-SELECT vwa.aluno, vwa.cpf, pl.nome, pl.duracao, ap.data_inicio, ap.data_expiracao
+SELECT vwa.aluno, vwa.cpf, pl.nome AS plano, pl.id_plano, pl.duracao, ap.data_inicio, ap.data_expiracao
 FROM vw_aluno vwa, plano pl, aluno_plano ap
 WHERE ap.cpf_aluno = vwa.cpf
 AND ap.id_plano = pl.id_plano
 
-SELECT * FROM aluno_plano ap 
+SELECT * FROM vw_aluno_plano vap;
 exec sp_columns plano;
 
 
@@ -48,6 +65,17 @@ FROM vw_aluno va;
 
 SELECT * FROM vw_aluno_dto vad 
 
+
+------------------------------------- FIM POR ENQUANTO -------------------------------------
+
+SELECT
+	*
+FROM
+	vw_instrutor vi 
+SELECT
+	*
+FROM
+	vw_instrutor_plano vip ;
 
 --------FUNCTION PARA INSERIR UM ALUNO
 
@@ -61,21 +89,37 @@ CREATE FUNCTION inserirAluno(
 	@rua VARCHAR(100),
 	@num VARCHAR(5),
 	@sexo CHARACTER(1),
-	@data_matricula DATE,
-	
+	@data_matricula DATE,	
 	@ativo BIT,
 	@observacoes VARCHAR(200)
 )
-
 RETURNS VARCHAR(12)
 BEGIN
-	
-	INSERT INTO pessoa(cpf, nome, nascimento, email, telefone, bairro, rua, num, sexo, data_matricula) VALUES 
-	(@cpf, @nome, @nascimento, @email, @telefone, @bairro, @rua, @num, @sexo, @data_matricula)
-	
+	INSERT
+	INTO
+	pessoa(cpf,
+	nome,
+	nascimento,
+	email,
+	telefone,
+	bairro,
+	rua,
+	num,
+	sexo,
+	data_matricula)
+VALUES 
+	(@cpf,
+@nome,
+@nascimento,
+@email,
+@telefone,
+@bairro,
+@rua,
+@num,
+@sexo,
+@data_matricula)
 	RETURN @cpf
 END
-
 DROP FUNCTION dbo.inserirAluno;
 
 SELECT dbo.inserirAluno('05460595037', 'MAYKHITARIAN', '2020-02-21', 'maycasso@gmail.com',
@@ -94,17 +138,8 @@ BEGIN
 END
 	
 DROP FUNCTION TRIM;
-SELECT TRIM('       AS MAYCON        ');
 
-
-SELECT ap.id_aluno_plano AS id, a.cpf, p.nome, pl.nome AS plano, pl.preco, pl.duracao AS dias,
-CONVERT(CHAR(11), ap.data_inicio, 103) AS inicio, 
-CONVERT(CHAR(11),ap.data_expiracao, 103 ) as expira
-FROM pessoa p, aluno a, plano pl, aluno_plano ap 
-WHERE p.cpf = a.cpf
-AND pl.id_plano = ap.id_plano 
-AND a.cpf = ap.cpf_aluno
-
+SELECT * FROM vw_aluno_plano vap 
 
 SELECT * FROM instrutor_plano ip;
 SELECT * FROM plano p;
@@ -133,10 +168,15 @@ INSERT INTO instrutor (cpf, ativo, especializacao) VALUES
 ('97676760070', 1, 'Dança e Consciência Corporal.'),
 ('01362539031', 1, 'Fundamentos da Dança')
 
+1 MUSCULAÇÃO, 2 BOXE, 3 NATAÇÃO, 4 GINASTICA
+INSERT INTO instrutor_plano(cpf_instrutor, id_plano)VALUES
+('44570562000', 4),
+('97676760070', 4),
+('01362539031', 2)
 
-
-SELECT * FROM pessoa;
-
+SELECT * FROM instrutor_plano ip 
+SELECT * FROM vw_instrutor_plano vip 
+SELECT * FROM plano
 exec sp_columns pessoa;
 exec sp_columns aluno;
 exec sp_columns plano;
