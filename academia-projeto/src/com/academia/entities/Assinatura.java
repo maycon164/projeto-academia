@@ -2,7 +2,7 @@ package com.academia.entities;
 
 import java.util.Date;
 
-public class Assinatura {
+public class Assinatura implements Comparable<Assinatura> {
 
 	private Integer id;
 	private Plano plano;
@@ -61,6 +61,10 @@ public class Assinatura {
 
 	public void setDataExpiracao(Date dataExpiracao) {
 		this.dataExpiracao = dataExpiracao;
+	}
+
+	public int compareTo(Assinatura other) {
+		return this.id.compareTo(other.getId());
 	}
 
 }

@@ -5,13 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.academia.db.DB;
 import com.academia.dto.AlunoDTO;
 import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
+import com.academia.exception.CpfRegisteredException;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 public class AlunoDaoImpl implements AlunoDao {
 
@@ -31,13 +35,20 @@ public class AlunoDaoImpl implements AlunoDao {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, cpf);
 			rs = ps.executeQuery();
+			Aluno aluno = null;
 
 			if (rs.next()) {
-				Aluno aluno = instantiateAluno(rs);
-				return aluno;
+				aluno = instantiateAluno(rs);
 			}
 
-			return null;
+			// agora preciso vincular as "Assinaturas do cara";
+			Set<Assinatura> assinaturas;
+
+			if (true) {
+				assinaturas = this.findAllAssinaturasFromAluno(cpf);
+			}
+
+			return aluno;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -50,9 +61,38 @@ public class AlunoDaoImpl implements AlunoDao {
 		return null;
 	}
 
+	private Set<Assinatura> findAllAssinaturasFromAluno(String cpf) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String sql = "SELECT * FROM vw_aluno_plano WHERE cpf = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cpf);
+			rs = ps.executeQuery();
+
+			Set<Assinatura> assinaturas = new HashSet<>();
+
+			while (rs.next()) {
+				assinaturas.add(instantiateAssinatura(rs));
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		return null;
+	}
+
+	private Assinatura instantiateAssinatura(ResultSet rs) {
+		
+		return new Assinatura();
+		
+	}
+
 	@Override
 	// NA VERDADE É O PROCESSO DE INSERIR PESSOA
-	public void insert(Aluno aluno) {
+	public void insert(Aluno aluno) throws CpfRegisteredException {
 		PreparedStatement ps = null;
 
 		try {
@@ -88,9 +128,14 @@ public class AlunoDaoImpl implements AlunoDao {
 				System.out.println("Aluno Inserido com Sucesso");
 			}
 
+		} catch (SQLServerException e) {
+
+			// ERRO AO INSERIR (PRIMARY KEY DUPLICADA);
+			throw new CpfRegisteredException("Cpf já cadastrado");
+
 		} catch (SQLException e) {
 
-			e.printStackTrace();
+			System.out.println("PROBLEMAS COM O SQL: " + e.getMessage());
 
 		} finally {
 
@@ -215,6 +260,12 @@ public class AlunoDaoImpl implements AlunoDao {
 				rs.getBoolean("ativo"), rs.getString("observacoes"));
 
 		return aluno;
+	}
+
+	@Override
+	public void deleteById(String cpf) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

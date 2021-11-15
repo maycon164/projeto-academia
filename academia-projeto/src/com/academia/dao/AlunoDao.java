@@ -6,18 +6,22 @@ import com.academia.dto.AlunoDTO;
 import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
+import com.academia.exception.CpfRegisteredException;
 
 public interface AlunoDao {
 
-	void insert(Aluno aluno);
+	void insert(Aluno aluno) throws CpfRegisteredException;
+
 	Aluno findById(String cpf);
 
+	void deleteById(String cpf);
+
 	List<AlunoDTO> findAll();
-	
+
 	List<AlunoPlanoDTO> findAllAlunoPlano();
-	
+
 	List<AlunoDTO> findAllByParameter(String parameter);
-	
+
 	Assinatura assinarPlano(Assinatura assinatura);
-	
+
 }

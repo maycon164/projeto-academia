@@ -1,20 +1,22 @@
 package com.academia.entities;
 
-public class Plano {
+public class Plano implements Comparable<Plano> {
 
-	private int idPlano;
+	private Integer idPlano;
 	private String nome;
 	private String descricao;
 	private Double preco;
-	private int duracao;
+	private Integer duracao;
 
 	public Plano(int idPlano, String nome, String descricao, Double preco, int duracao) {
+
 		super();
 		this.idPlano = idPlano;
 		this.nome = nome;
 		this.descricao = descricao;
 		this.preco = preco;
 		this.duracao = duracao;
+
 	}
 
 	public Plano() {
@@ -64,6 +66,11 @@ public class Plano {
 	@Override
 	public String toString() {
 		return nome;
+	}
+
+	@Override
+	public int compareTo(Plano other) {
+		return this.idPlano.compareTo(other.getIdPlano());
 	}
 
 }

@@ -6,16 +6,18 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.academia.dao.AlunoDao;
-import com.academia.dao.DaoFactory;
 import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
 import com.academia.entities.Endereco;
 import com.academia.entities.Plano;
 import com.academia.exception.CepNotFound;
+import com.academia.exception.CpfRegisteredException;
 import com.academia.exception.EmptyFieldException;
+import com.academia.factory.DaoFactory;
 import com.academia.util.Utils;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -47,8 +49,8 @@ public class AlunoControl {
 
 	// PROPERTYS PLANO ESCOLHIDO
 	public Integer idPlano;
-	public String instrutorNome;
-
+	
+			
 	public StringProperty precoProps = new SimpleStringProperty("");
 	public StringProperty duracaoProps = new SimpleStringProperty("");
 	public StringProperty dataInicioProps = new SimpleStringProperty(sdf.format(new Date()));
@@ -68,6 +70,15 @@ public class AlunoControl {
 	// CAMPO DE PESQUISA
 	public StringProperty pesquisaProps = new SimpleStringProperty("");
 
+	// ALUNO PARA ALTERAÇÃO
+	private Aluno aluno = null;
+
+	public AlunoControl(Aluno aluno) {
+		this.iniciarEventos();
+		this.aluno = aluno;
+
+	}
+
 	public AlunoControl() {
 		this.iniciarEventos();
 	}
@@ -77,8 +88,6 @@ public class AlunoControl {
 		try {
 
 			this.validarCampos();
-
-			Aluno aluno = null;
 			Assinatura assinatura = null;
 
 			try {
@@ -105,6 +114,9 @@ public class AlunoControl {
 			} catch (ParseException e) {
 
 				messageErrorProps.set("INFORME A DATA(dd/MM/yyyy)");
+			} catch (CpfRegisteredException e) {
+
+				messageErrorProps.set(e.getMessage());
 			}
 
 		} catch (EmptyFieldException e) {
@@ -264,5 +276,34 @@ public class AlunoControl {
 
 	public ObservableList<AlunoPlanoDTO> getAlunosPlanosDTO() {
 		return sortedAlunosPlanos;
+	}
+
+	public void setAluno(String cpf) {
+		this.cepProps.set("083737100");
+		this.aluno = alunoConn.findById(cpf);
+		System.out.println(aluno);
+		this.setarDados();
+	}
+
+	private void setarDados() {
+
+		this.cpfProps.set(aluno.getCpf());
+		this.nomeProps.set(aluno.getNome());
+		this.emailProps.set(aluno.getEmail());
+		this.telefoneProps.set(aluno.getTelefone());
+		this.nascimentoProps.set(sdf.format(aluno.getNascimento()));
+		this.cepProps.set(aluno.getCep());
+		this.bairroProps.set(aluno.getBairro());
+		this.ruaProps.set(aluno.getRua());
+		this.numProps.set(aluno.getNum());
+
+		if (aluno.getSexo() == 'M') {
+			sexoProps.set("Masculino");
+		} else {
+			sexoProps.set("Feminino");
+		}
+		this.observacaoProps.set(aluno.getObservacao());
+
+		
 	}
 }

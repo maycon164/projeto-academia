@@ -3,8 +3,8 @@ package com.academia.main;
 import java.util.List;
 
 import com.academia.dao.AlunoDao;
-import com.academia.dao.DaoFactory;
 import com.academia.dto.AlunoPlanoDTO;
+import com.academia.factory.DaoFactory;
 
 public class TESTEALUNO {
 

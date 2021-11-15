@@ -1,5 +1,11 @@
-package com.academia.dao;
+package com.academia.factory;
 
+import com.academia.dao.AlunoDao;
+import com.academia.dao.AlunoDaoImpl;
+import com.academia.dao.InstrutorDao;
+import com.academia.dao.InstrutorDaoImpl;
+import com.academia.dao.PlanoDao;
+import com.academia.dao.PlanoDaoImpl;
 import com.academia.db.DB;
 
 public class DaoFactory {

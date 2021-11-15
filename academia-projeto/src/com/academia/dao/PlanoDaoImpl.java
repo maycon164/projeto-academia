@@ -56,4 +56,10 @@ public class PlanoDaoImpl implements PlanoDao {
 		
 	}
 
+	@Override
+	public Plano findById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

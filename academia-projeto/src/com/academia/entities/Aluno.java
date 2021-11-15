@@ -9,6 +9,7 @@ public class Aluno extends Pessoa {
 	private String observacao = "";
 
 	private List<Assinatura> assinaturas;
+	
 	private List<Pagamento> pagamento;
 	private List<Avaliacao> avaliacoes;
 

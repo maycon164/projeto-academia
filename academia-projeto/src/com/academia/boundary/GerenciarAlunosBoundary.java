@@ -7,6 +7,7 @@ import com.academia.control.AlunoControl;
 import com.academia.control.PlanoControl;
 import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Plano;
+import com.academia.factory.ControlerFactory;
 
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -15,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -23,17 +25,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class GerenciarAlunosBoundary extends Application {
 
 	// CONTROLL
-	private AlunoControl alunoControl = new AlunoControl();
-	private PlanoControl planoControl = new PlanoControl();
+	private AlunoControl alunoControl = ControlerFactory.getAlunoControl();
+	private PlanoControl planoControl = ControlerFactory.getPlanoControl();
 
 	// GRID E OUTROS PANES
 	private VBox vboxAlunoPlano = new VBox();
-	FlowPane fpPesquisa = new FlowPane();
+	private FlowPane fpPesquisa = new FlowPane();
+	private FlowPane fpBotoes = new FlowPane();
 
 	// TABLE VIEW
 	private TableView<AlunoPlanoDTO> tblAlunoPlano = new TableView<>();
@@ -47,8 +51,15 @@ public class GerenciarAlunosBoundary extends Application {
 	// CHOICEBOX
 	private ChoiceBox<Plano> cbPlano = new ChoiceBox<>();
 
+	// BUTTONS
+	private Button btnDetalhes = new Button("DETALHES");
+	private Button btnExcluir = new Button("EXCLUIR");
+
 	// SIMPLE DATE FORMAT
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+	// PARENT STAGE
+	private Stage parentStage = null;
 
 	public static void main(String[] args) {
 		Application.launch(GerenciarAlunosBoundary.class, args);
@@ -56,7 +67,7 @@ public class GerenciarAlunosBoundary extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
+		this.parentStage = primaryStage;
 		Scene scene = new Scene(vboxAlunoPlano, 1020, 1000);
 		scene.getStylesheets().add("style.css");
 
@@ -64,10 +75,42 @@ public class GerenciarAlunosBoundary extends Application {
 		this.iniciarTabelaAlunoPlano();
 		this.configurarVboxAlunoPlano();
 		this.iniciarChoiceBoxPlano();
+		this.iniciarEventos();
 		this.configurarCss();
 
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		parentStage.setScene(scene);
+		parentStage.show();
+	}
+
+	private void iniciarEventos() {
+		// EVENTO DE ORDENAR O FILTERED LIST
+		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+
+			System.out.println("SELECIONADO: " + cbPlano.getValue().getNome());
+
+		});
+
+		// EVENTO DE TROCA DE TELA
+		btnDetalhes.setOnAction((event) -> {
+			System.out.println("CLICKOU");
+
+			String cpf = tblAlunoPlano.getSelectionModel().getSelectedItem().getCpf();
+			System.out.println(cpf);
+
+			AlunoCadastroBoundary tela2 = new AlunoCadastroBoundary();
+			Scene scene = tela2.render();
+
+			alunoControl.setAluno(cpf);
+
+			Stage stage2 = new Stage();
+			stage2.setTitle("ALTERAR DADOS ALUNO");
+			stage2.initModality(Modality.APPLICATION_MODAL);
+			stage2.initOwner(parentStage);
+			stage2.setScene(scene);
+
+			stage2.show();
+
+		});
 	}
 
 	private void configurarVboxAlunoPlano() {
@@ -80,15 +123,21 @@ public class GerenciarAlunosBoundary extends Application {
 
 		// CAMPOS DE PESQUISA
 		FlowPane.setMargin(cbPlano, new Insets(0d, 0d, 0d, 20d));
-		fpPesquisa.getChildren().addAll(new Label("Pesquisar: "),txtPesquisa, cbPlano);
+		fpPesquisa.getChildren().addAll(new Label("Pesquisar: "), txtPesquisa, cbPlano);
 
-		vboxAlunoPlano.getChildren().addAll(lblGerenciamentoDeAluno, fpPesquisa, tblAlunoPlano);
+		// BOTOES
+		fpBotoes.getChildren().addAll(btnDetalhes, btnExcluir);
+		FlowPane.setMargin(btnDetalhes, new Insets(0d, 10d, 0d, 10d));
+		FlowPane.setMargin(btnExcluir, new Insets(0d, 10d, 0d, 10d));
+
+		vboxAlunoPlano.getChildren().addAll(lblGerenciamentoDeAluno, fpPesquisa, tblAlunoPlano, fpBotoes);
 
 	}
 
 	private void configurarCss() {
 		lblGerenciamentoDeAluno.getStyleClass().addAll("textCentralizado", "margin");
 		fpPesquisa.getStyleClass().addAll("textCentralizado", "margin");
+		fpBotoes.getStyleClass().addAll("textCentralizado", "margin");
 		txtPesquisa.getStyleClass().addAll("txtPesquisa");
 	}
 
@@ -125,7 +174,7 @@ public class GerenciarAlunosBoundary extends Application {
 	private void iniciarChoiceBoxPlano() {
 		cbPlano.getItems().addAll(FXCollections.observableArrayList(planoControl.getPlanos()));
 	}
-	
+
 	private void iniciarControl() {
 		Bindings.bindBidirectional(txtPesquisa.textProperty(), alunoControl.pesquisaProps);
 	}

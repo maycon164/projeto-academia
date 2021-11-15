@@ -8,8 +8,8 @@ import com.academia.control.InstrutorControl;
 import com.academia.control.PlanoControl;
 import com.academia.dto.InstrutorDTO;
 import com.academia.entities.Plano;
+import com.academia.factory.ControlerFactory;
 
-import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -19,17 +19,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
-public class AlunoCadastroBoundary extends Application {
+public class AlunoCadastroBoundary {
 
-	// ALUNO CONTROL
-	private AlunoControl alunoControl = new AlunoControl();
-
-	// PLANO CONTROL
-	private PlanoControl planoControl = new PlanoControl();
-
-	// INSTRUTOR CONTROL
+	// ALUNO CONTROL // PLANO CONTROL // INSTRUTOR CONTROL
+	private AlunoControl alunoControl = ControlerFactory.getAlunoControl();
+	private PlanoControl planoControl = ControlerFactory.getPlanoControl();
 	private InstrutorControl instrutorControl = new InstrutorControl();
 
 	// TEXTOS
@@ -94,16 +89,30 @@ public class AlunoCadastroBoundary extends Application {
 	// GRID PRINCIPAL
 	private GridPane gridCadastroAluno = new GridPane();
 
-	public static void main(String[] args) {
-		Application.launch(AlunoCadastroBoundary.class, args);
+	// SCENE
+	private Scene scene = new Scene(gridCadastroAluno, 1080, 900);
+
+	/*
+	 * public static void main(String[] args) {
+	 * Application.launch(AlunoCadastroBoundary.class, args); }
+	 * 
+	 * @Override public void start(Stage primaryStage) throws Exception {
+	 * 
+	 * this.iniciarTela();
+	 * 
+	 * primaryStage.setScene(scene);
+	 * primaryStage.setTitle("GERENCIAMENTO DE ALUNOS"); primaryStage.show(); }
+	 */
+
+	public Scene render() {
+
+		this.iniciarTela();
+
+		return this.scene;
 	}
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		Scene scene = new Scene(gridCadastroAluno, 1020, 600);
-
+	private void iniciarTela() {
 		scene.getStylesheets().add("style.css");
-
 		this.configurarGridCadastroAluno();
 		this.ajustarTamanhoTextFields();
 
@@ -112,10 +121,6 @@ public class AlunoCadastroBoundary extends Application {
 		this.iniciarEventos();
 
 		this.configurandoCSS();
-
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("GERENCIAMENTO DE ALUNOS");
-		primaryStage.show();
 	}
 
 	private void configurarGridCadastroAluno() {
@@ -195,19 +200,19 @@ public class AlunoCadastroBoundary extends Application {
 		btnCadastrar.setOnAction(e -> {
 
 			// ENVIAR O ID DO PLANO
-			if(cbPlano.getValue() != null) {
+			if (cbPlano.getValue() != null) {
 				alunoControl.idPlano = cbPlano.getValue().getIdPlano();
 				// alunoControl.instrutorNome = cbInstrutores.getValue().getNome();
 
 				alunoControl.cadastrar();
-			}else {
+			} else {
 				messageError.setText("SELECIONE UM PLANO");
 			}
 
 			System.out.println("BOTÃO CADASTRAR CLICK");
 
 		});
-		
+
 		btnCancelar.setOnAction(event -> {
 			System.out.println("CANCELAR..... VOLTANDO A TELA INICIAL");
 		});
@@ -259,11 +264,16 @@ public class AlunoCadastroBoundary extends Application {
 		// DADOS PLANO, ALUNO PLANO
 		Bindings.bindBidirectional(txtDuracao.textProperty(), alunoControl.duracaoProps);
 		Bindings.bindBidirectional(txtPreco.textProperty(), alunoControl.precoProps);
-
 		Bindings.bindBidirectional(txtDataInicio.textProperty(), alunoControl.dataInicioProps);
 		Bindings.bindBidirectional(txtDataFim.textProperty(), alunoControl.dataFimProps);
 		Bindings.bindBidirectional(txtaObservacao.textProperty(), alunoControl.observacaoProps);
 
+		//Bindings.bindBidirectional(cbPlano.valueProperty(), alunoControl.bairroProps);
+		
+		Plano p = new Plano();
+		p.setIdPlano(1);
+		cbPlano.setValue(p);
+		
 		// MESSAGE ERROR
 		Bindings.bindBidirectional(messageError.textProperty(), alunoControl.messageErrorProps);
 

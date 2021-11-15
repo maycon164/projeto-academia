@@ -8,4 +8,6 @@ public interface PlanoDao {
 	
 	List<Plano> findAll();
 	
+	Plano findById(int id);
+	
 }
