@@ -17,7 +17,6 @@ import com.academia.exception.EmptyFieldException;
 import com.academia.factory.DaoFactory;
 import com.academia.util.Utils;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -49,8 +48,8 @@ public class AlunoControl {
 
 	// PROPERTYS PLANO ESCOLHIDO
 	public Integer idPlano;
-	
-			
+	public String nomePlano;
+
 	public StringProperty precoProps = new SimpleStringProperty("");
 	public StringProperty duracaoProps = new SimpleStringProperty("");
 	public StringProperty dataInicioProps = new SimpleStringProperty(sdf.format(new Date()));
@@ -58,10 +57,12 @@ public class AlunoControl {
 	public StringProperty observacaoProps = new SimpleStringProperty("");
 
 	// LISTAS
+
 	private ObservableList<AlunoPlanoDTO> alunosPlanos = FXCollections
 			.observableArrayList(alunoConn.findAllAlunoPlano());
-	private FilteredList<AlunoPlanoDTO> filteredAlunosPlanos = new FilteredList<AlunoPlanoDTO>(alunosPlanos,
-			aluno -> true);
+
+	private FilteredList<AlunoPlanoDTO> filteredAlunosPlanos = new FilteredList<>(alunosPlanos);
+
 	private SortedList<AlunoPlanoDTO> sortedAlunosPlanos = new SortedList<>(filteredAlunosPlanos);
 
 	// PROPERTY MESSAGE ERROR
@@ -104,9 +105,12 @@ public class AlunoControl {
 				if (assinatura != null) {
 
 					assinatura.setAluno(aluno);
+					aluno.setAssinatura(assinatura);
 					alunoConn.assinarPlano(assinatura);
 
 				}
+
+				alunosPlanos.add(AlunoPlanoDTO.from(aluno));
 
 				messageErrorProps.set("Cadastrado Com Sucesso");
 				this.limparCampos();
@@ -266,6 +270,8 @@ public class AlunoControl {
 
 		Plano plano = new Plano();
 		plano.setIdPlano(idPlano);
+		plano.setNome(nomePlano);
+		plano.setDuracao(Integer.parseInt(duracaoProps.get()));
 		assinatura.setPlano(plano);
 		assinatura.setDataInicio(sdf.parse(dataInicioProps.get()));
 		assinatura.setDataExpiracao(sdf.parse(dataFimProps.get()));
@@ -304,6 +310,5 @@ public class AlunoControl {
 		}
 		this.observacaoProps.set(aluno.getObservacao());
 
-		
 	}
 }

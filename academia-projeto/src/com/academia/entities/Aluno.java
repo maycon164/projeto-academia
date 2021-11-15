@@ -8,8 +8,8 @@ public class Aluno extends Pessoa {
 	private boolean ativo = true;
 	private String observacao = "";
 
-	private List<Assinatura> assinaturas;
-	
+	private Assinatura assinatura;
+
 	private List<Pagamento> pagamento;
 	private List<Avaliacao> avaliacoes;
 
@@ -41,12 +41,12 @@ public class Aluno extends Pessoa {
 		this.observacao = observacao;
 	}
 
-	public List<Assinatura> getAssinaturas() {
-		return assinaturas;
+	public Assinatura getAssinatura() {
+		return assinatura;
 	}
 
-	public void setAssinaturas(List<Assinatura> assinaturas) {
-		this.assinaturas = assinaturas;
+	public void setAssinatura(Assinatura assinatura) {
+		this.assinatura = assinatura;
 	}
 
 	public List<Pagamento> getPagamento() {
@@ -68,7 +68,7 @@ public class Aluno extends Pessoa {
 	@Override
 	public String toString() {
 		return super.toString() + "\nAluno [ativo=" + ativo + ", observacao=" + observacao + ", assinaturas="
-				+ assinaturas + ", pagamento=" + pagamento + ", avaliacoes=" + avaliacoes + "]";
+				+ assinatura + ", pagamento=" + pagamento + ", avaliacoes=" + avaliacoes + "]";
 	}
 
 }

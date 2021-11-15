@@ -2,7 +2,9 @@ package com.academia.dto;
 
 import java.util.Date;
 
-public class AlunoPlanoDTO {
+import com.academia.entities.Aluno;
+
+public class AlunoPlanoDTO implements Comparable<AlunoPlanoDTO> {
 
 	private String aluno;
 	private String cpf;
@@ -87,6 +89,20 @@ public class AlunoPlanoDTO {
 				+ ", duracao=" + duracao + ", dataInicio=" + dataInicio + ", dataExpiracao=" + dataExpiracao + "]";
 	}
 
-	
-	
+	@Override
+	public int compareTo(AlunoPlanoDTO other) {
+		return this.cpf.compareTo(other.getCpf());
+	}
+
+	public static AlunoPlanoDTO from(Aluno aluno) {
+
+		if (aluno != null) {
+			return new AlunoPlanoDTO(aluno.getNome(), aluno.getCpf(), aluno.getAssinatura().getPlano().getNome(),
+					aluno.getAssinatura().getPlano().getIdPlano(), aluno.getAssinatura().getPlano().getDuracao(),
+					aluno.getAssinatura().getDataInicio(), aluno.getAssinatura().getDataExpiracao());
+		}
+
+		return null;
+	}
+
 }

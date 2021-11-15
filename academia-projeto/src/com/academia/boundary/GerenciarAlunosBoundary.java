@@ -9,7 +9,6 @@ import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Plano;
 import com.academia.factory.ControlerFactory;
 
-import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -28,7 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class GerenciarAlunosBoundary extends Application {
+public class GerenciarAlunosBoundary {
 
 	// CONTROLL
 	private AlunoControl alunoControl = ControlerFactory.getAlunoControl();
@@ -61,15 +60,27 @@ public class GerenciarAlunosBoundary extends Application {
 	// PARENT STAGE
 	private Stage parentStage = null;
 
-	public static void main(String[] args) {
-		Application.launch(GerenciarAlunosBoundary.class, args);
+	/*
+	 * public static void main(String[] args) {
+	 * Application.launch(GerenciarAlunosBoundary.class, args); }
+	 * 
+	 * @Override public void start(Stage primaryStage) throws Exception {
+	 * this.parentStage = primaryStage; Scene scene = new Scene(vboxAlunoPlano,
+	 * 1020, 1000); scene.getStylesheets().add("style.css");
+	 * 
+	 * this.iniciarTela(); parentStage.setScene(scene); parentStage.show(); }
+	 * 
+	 */
+
+	public GerenciarAlunosBoundary() {
+		this.iniciarTela();
 	}
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		this.parentStage = primaryStage;
-		Scene scene = new Scene(vboxAlunoPlano, 1020, 1000);
-		scene.getStylesheets().add("style.css");
+	public VBox render() {
+		return vboxAlunoPlano;
+	}
+
+	private void iniciarTela() {
 
 		this.iniciarControl();
 		this.iniciarTabelaAlunoPlano();
@@ -78,8 +89,6 @@ public class GerenciarAlunosBoundary extends Application {
 		this.iniciarEventos();
 		this.configurarCss();
 
-		parentStage.setScene(scene);
-		parentStage.show();
 	}
 
 	private void iniciarEventos() {
@@ -93,23 +102,9 @@ public class GerenciarAlunosBoundary extends Application {
 		// EVENTO DE TROCA DE TELA
 		btnDetalhes.setOnAction((event) -> {
 			System.out.println("CLICKOU");
-
 			String cpf = tblAlunoPlano.getSelectionModel().getSelectedItem().getCpf();
-			System.out.println(cpf);
-
-			AlunoCadastroBoundary tela2 = new AlunoCadastroBoundary();
-			Scene scene = tela2.render();
-
 			alunoControl.setAluno(cpf);
-
-			Stage stage2 = new Stage();
-			stage2.setTitle("ALTERAR DADOS ALUNO");
-			stage2.initModality(Modality.APPLICATION_MODAL);
-			stage2.initOwner(parentStage);
-			stage2.setScene(scene);
-
-			stage2.show();
-
+			// PRECISO TROCAR DE TELA AGORA
 		});
 	}
 

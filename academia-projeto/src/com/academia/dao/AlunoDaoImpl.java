@@ -85,9 +85,9 @@ public class AlunoDaoImpl implements AlunoDao {
 	}
 
 	private Assinatura instantiateAssinatura(ResultSet rs) {
-		
+
 		return new Assinatura();
-		
+
 	}
 
 	@Override
@@ -162,6 +162,8 @@ public class AlunoDaoImpl implements AlunoDao {
 			if (rows > 0) {
 				System.out.println("ASSINATURA VINCULAD AO CPF DO ALUNO");
 			}
+
+			return assinatura;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -265,7 +267,7 @@ public class AlunoDaoImpl implements AlunoDao {
 	@Override
 	public void deleteById(String cpf) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

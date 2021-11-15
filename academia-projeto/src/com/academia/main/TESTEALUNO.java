@@ -24,8 +24,6 @@ public class TESTEALUNO {
 		 * 
 		 * System.out.println("teste: " + end);
 		 * 
-		 * /*
-		 * 
 		 * Date data = new Date(); System.out.println(data); Calendar cal =
 		 * Calendar.getInstance(); cal.setTime(data); cal.add(Calendar.DATE, 24); data =
 		 * cal.getTime(); System.out.println(data);

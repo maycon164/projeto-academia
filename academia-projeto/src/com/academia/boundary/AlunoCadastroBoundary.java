@@ -104,11 +104,12 @@ public class AlunoCadastroBoundary {
 	 * primaryStage.setTitle("GERENCIAMENTO DE ALUNOS"); primaryStage.show(); }
 	 */
 
-	public Scene render() {
-
+	public AlunoCadastroBoundary() {
 		this.iniciarTela();
+	}
 
-		return this.scene;
+	public GridPane render() {
+		return this.gridCadastroAluno;
 	}
 
 	private void iniciarTela() {
@@ -202,6 +203,7 @@ public class AlunoCadastroBoundary {
 			// ENVIAR O ID DO PLANO
 			if (cbPlano.getValue() != null) {
 				alunoControl.idPlano = cbPlano.getValue().getIdPlano();
+				alunoControl.nomePlano = cbPlano.getValue().getNome();
 				// alunoControl.instrutorNome = cbInstrutores.getValue().getNome();
 
 				alunoControl.cadastrar();
@@ -268,12 +270,13 @@ public class AlunoCadastroBoundary {
 		Bindings.bindBidirectional(txtDataFim.textProperty(), alunoControl.dataFimProps);
 		Bindings.bindBidirectional(txtaObservacao.textProperty(), alunoControl.observacaoProps);
 
-		//Bindings.bindBidirectional(cbPlano.valueProperty(), alunoControl.bairroProps);
-		
+		// Bindings.bindBidirectional(cbPlano.valueProperty(),
+		// alunoControl.bairroProps);
+
 		Plano p = new Plano();
 		p.setIdPlano(1);
 		cbPlano.setValue(p);
-		
+
 		// MESSAGE ERROR
 		Bindings.bindBidirectional(messageError.textProperty(), alunoControl.messageErrorProps);
 
@@ -282,6 +285,11 @@ public class AlunoCadastroBoundary {
 	private void iniciarChoiceBoxs() {
 
 		cbPlano.getItems().addAll(FXCollections.observableArrayList(planoControl.getPlanos()));
+	}
+
+	public Scene getScene() {
+		this.iniciarTela();
+		return scene;
 	}
 
 }
