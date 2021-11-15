@@ -5,20 +5,26 @@ USE academiadb;
 ---------VIEWS ALUNO
 CREATE VIEW vw_aluno AS
 SELECT p.nome AS aluno, p.cpf, p.sexo, a.ativo, p.nascimento, p.email, 
-p.telefone, p.bairro, p.rua, p.num, p.data_matricula, a.observacoes 
+p.telefone, p.cep, p.bairro, p.rua, p.num, p.data_matricula, a.observacoes 
 FROM pessoa p, aluno a
 WHERE p.cpf = a.cpf;
 
 SELECT * FROM vw_aluno;
-	
+
+SELECT * FROM aluno_plano ap;
+
+
+
 --------VIEWS INSTRUTORES
 CREATE VIEW vw_instrutor AS
 SELECT p.nome AS instrutor, p.cpf, p.sexo, i.ativo, p.nascimento, p.email, 
-p.telefone, p.bairro, p.rua, p.num, i.especializacao
+p.telefone, p.cep, p.bairro, p.rua, p.num, i.especializacao
 FROM pessoa p, instrutor i
 WHERE p.cpf = i.cpf 
 
 SELECT * FROM vw_instrutor;
+
+DROP VIEW vw_instrutor
 
 -----VIEWS INSTRUTORES E PLANOS
 CREATE VIEW vw_instrutor_plano AS
@@ -54,8 +60,10 @@ WHERE ap.cpf_aluno = vwa.cpf
 AND ap.id_plano = pl.id_plano
 
 SELECT * FROM vw_aluno_plano vap;
+
 exec sp_columns plano;
 
+SELECT * FROM aluno_plano ap 
 
 --------VIEW ALUNO DTO
 CREATE VIEW vw_aluno_dto AS
@@ -142,9 +150,14 @@ DROP FUNCTION TRIM;
 SELECT * FROM vw_aluno_plano vap 
 
 SELECT * FROM instrutor_plano ip;
-SELECT * FROM plano p;
+SELECT * FROM aluno_plano ap;
+
+SELECT * FROM plano;
 SELECT * FROM aluno;
 SELECT * FROM pessoa;
+
+ALTER TABLE pessoa
+ADD cep VARCHAR(8)
 
 SELECT * FROM aluno;
 
@@ -177,6 +190,14 @@ INSERT INTO instrutor_plano(cpf_instrutor, id_plano)VALUES
 SELECT * FROM instrutor_plano ip 
 SELECT * FROM vw_instrutor_plano vip 
 SELECT * FROM plano
+
+INSERT INTO plano(nome, descricao, preco, duracao) VALUES
+('Zumba', 'movimentos de diversas danças latinas com o objetivo de emagrecer e modelar o corpo. Criado ainda no ano de 2001',
+100.99, 50),
+('Crossfit', 'promover melhora da capacidade cardiorrespiratória, condicionamento físico e resistência muscular por meio da combinação de exercícios funcionais,',
+200.99, 60),
+('Muay Thai', 'Essa Luta dispõe de movimentos que ajudam na perda de massa gorda e ganho de massa magra')
+
 exec sp_columns pessoa;
 exec sp_columns aluno;
 exec sp_columns plano;
