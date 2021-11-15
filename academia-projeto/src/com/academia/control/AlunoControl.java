@@ -2,7 +2,6 @@ package com.academia.control;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import com.academia.dao.AlunoDao;
@@ -131,6 +130,10 @@ public class AlunoControl {
 
 	}
 
+	public void alterar() {
+		System.out.println("AGORA AQUI VEM A LÓGICA PARA ALTERAR.....");
+	}
+	
 	private void validarCampos() throws EmptyFieldException {
 
 		if (cpfProps.get().isEmpty() || nomeProps.get().isEmpty() || nascimentoProps.get().isEmpty()
@@ -151,7 +154,7 @@ public class AlunoControl {
 
 	}
 
-	private void limparCampos() {
+	public void limparCampos() {
 		cpfProps.set("");
 		nomeProps.set("");
 		emailProps.set("");
@@ -228,17 +231,10 @@ public class AlunoControl {
 		if (data.length() == 10) {
 
 			try {
-				Date dataFim = sdf.parse(dataInicioProps.get());
-				int duracao = Integer.parseInt(duracaoProps.get());
-
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(dataFim);
-				cal.add(Calendar.DATE, duracao);
-				dataFim = cal.getTime();
-
+				Date dataFim = Utils.somarData(sdf.parse(dataInicioProps.get()), Integer.parseInt(duracaoProps.get()));
 				dataFimProps.set(sdf.format(dataFim));
 			} catch (ParseException e) {
-				e.printStackTrace();
+				messageErrorProps.set("Informe a data no formato dd/MM/yyyy");
 			}
 		}
 	}
@@ -285,10 +281,11 @@ public class AlunoControl {
 	}
 
 	public void setAluno(String cpf) {
-		this.cepProps.set("083737100");
+
 		this.aluno = alunoConn.findById(cpf);
 		System.out.println(aluno);
 		this.setarDados();
+
 	}
 
 	private void setarDados() {

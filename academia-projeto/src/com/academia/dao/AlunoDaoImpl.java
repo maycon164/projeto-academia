@@ -84,12 +84,6 @@ public class AlunoDaoImpl implements AlunoDao {
 		return null;
 	}
 
-	private Assinatura instantiateAssinatura(ResultSet rs) {
-
-		return new Assinatura();
-
-	}
-
 	@Override
 	// NA VERDADE É O PROCESSO DE INSERIR PESSOA
 	public void insert(Aluno aluno) throws CpfRegisteredException {
@@ -267,6 +261,12 @@ public class AlunoDaoImpl implements AlunoDao {
 	@Override
 	public void deleteById(String cpf) {
 		// TODO Auto-generated method stub
+
+	}
+
+	private Assinatura instantiateAssinatura(ResultSet rs) {
+
+		return new Assinatura();
 
 	}
 

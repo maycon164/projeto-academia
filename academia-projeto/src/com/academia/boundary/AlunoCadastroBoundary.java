@@ -25,7 +25,7 @@ public class AlunoCadastroBoundary {
 	// ALUNO CONTROL // PLANO CONTROL // INSTRUTOR CONTROL
 	private AlunoControl alunoControl = ControlerFactory.getAlunoControl();
 	private PlanoControl planoControl = ControlerFactory.getPlanoControl();
-	private InstrutorControl instrutorControl = new InstrutorControl();
+	private InstrutorControl instrutorControl = ControlerFactory.getInstrutorControl();
 
 	// TEXTOS
 	private Label lblDadosCadastrais = new Label("DADOS PARA CADASTRO");
@@ -89,23 +89,26 @@ public class AlunoCadastroBoundary {
 	// GRID PRINCIPAL
 	private GridPane gridCadastroAluno = new GridPane();
 
-	// SCENE
-	private Scene scene = new Scene(gridCadastroAluno, 1080, 900);
-
-	/*
-	 * public static void main(String[] args) {
-	 * Application.launch(AlunoCadastroBoundary.class, args); }
-	 * 
-	 * @Override public void start(Stage primaryStage) throws Exception {
-	 * 
-	 * this.iniciarTela();
-	 * 
-	 * primaryStage.setScene(scene);
-	 * primaryStage.setTitle("GERENCIAMENTO DE ALUNOS"); primaryStage.show(); }
-	 */
-
 	public AlunoCadastroBoundary() {
 		this.iniciarTela();
+	}
+
+	public void iniciarCadastrar() {
+		messageError.setText("PRONTO PARA CADASTRAR");
+		lblDadosCadastrais.setText("DADOS PARA CADASTRO");
+		txtCpf.setDisable(false);
+		alunoControl.limparCampos();
+		btnAlterar.setDisable(true);
+
+	}
+
+	public void iniciarAlterar() {
+		messageError.setText("PRONTO PARA ALTERAÇÕES");
+		lblDadosCadastrais.setText("DADOS PARA ALTERAÇÃO");
+		txtCpf.setDisable(true);
+		btnCadastrar.setDisable(true);
+		btnAlterar.setDisable(false);
+
 	}
 
 	public GridPane render() {
@@ -113,7 +116,6 @@ public class AlunoCadastroBoundary {
 	}
 
 	private void iniciarTela() {
-		scene.getStylesheets().add("style.css");
 		this.configurarGridCadastroAluno();
 		this.ajustarTamanhoTextFields();
 
@@ -155,7 +157,7 @@ public class AlunoCadastroBoundary {
 		gridCadastroAluno.addRow(15, messageError);
 
 		// BUTTONS
-		gridCadastroAluno.addRow(16, btnCadastrar, btnCancelar);
+		gridCadastroAluno.addRow(16, btnCadastrar, btnAlterar, btnCancelar);
 
 		// SETANDO COLUMN SPANS
 		GridPane.setColumnSpan(lblDadosCadastrais, 4);
@@ -211,8 +213,6 @@ public class AlunoCadastroBoundary {
 				messageError.setText("SELECIONE UM PLANO");
 			}
 
-			System.out.println("BOTÃO CADASTRAR CLICK");
-
 		});
 
 		btnCancelar.setOnAction(event -> {
@@ -229,11 +229,12 @@ public class AlunoCadastroBoundary {
 			alunoControl.atualizarDataFim(txtDataInicio.getText());
 		});
 
-		/*
-		 * cbPlano.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-		 * 
-		 * });
-		 */
+		// BOTAO DE ALTERAR
+		btnAlterar.setOnAction(event -> {
+			// CHAMADA PARA O CONTROL
+			alunoControl.alterar();
+			messageError.setText("Alterado Com Sucesso");
+		});
 
 	}
 
@@ -285,11 +286,6 @@ public class AlunoCadastroBoundary {
 	private void iniciarChoiceBoxs() {
 
 		cbPlano.getItems().addAll(FXCollections.observableArrayList(planoControl.getPlanos()));
-	}
-
-	public Scene getScene() {
-		this.iniciarTela();
-		return scene;
 	}
 
 }

@@ -22,10 +22,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 public class GerenciarAlunosBoundary {
 
@@ -57,21 +56,6 @@ public class GerenciarAlunosBoundary {
 	// SIMPLE DATE FORMAT
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-	// PARENT STAGE
-	private Stage parentStage = null;
-
-	/*
-	 * public static void main(String[] args) {
-	 * Application.launch(GerenciarAlunosBoundary.class, args); }
-	 * 
-	 * @Override public void start(Stage primaryStage) throws Exception {
-	 * this.parentStage = primaryStage; Scene scene = new Scene(vboxAlunoPlano,
-	 * 1020, 1000); scene.getStylesheets().add("style.css");
-	 * 
-	 * this.iniciarTela(); parentStage.setScene(scene); parentStage.show(); }
-	 * 
-	 */
-
 	public GerenciarAlunosBoundary() {
 		this.iniciarTela();
 	}
@@ -101,10 +85,20 @@ public class GerenciarAlunosBoundary {
 
 		// EVENTO DE TROCA DE TELA
 		btnDetalhes.setOnAction((event) -> {
-			System.out.println("CLICKOU");
+
 			String cpf = tblAlunoPlano.getSelectionModel().getSelectedItem().getCpf();
 			alunoControl.setAluno(cpf);
-			// PRECISO TROCAR DE TELA AGORA
+			
+			// PRECISA RENDERIZAR COM OS CAMPOS PREENCHIDOS, BTNALTER DISPONIVEL, TXTCPF DISABLE
+			AlunoCadastroBoundary exemplo = new AlunoCadastroBoundary();
+			
+			exemplo.iniciarAlterar();
+			
+			Scene scene = vboxAlunoPlano.getScene();
+			BorderPane bpPrincipal = (BorderPane) scene.getRoot();
+
+			bpPrincipal.setCenter(exemplo.render());
+
 		});
 	}
 

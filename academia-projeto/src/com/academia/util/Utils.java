@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.academia.entities.Endereco;
 import com.academia.exception.CepNotFound;
@@ -61,6 +63,17 @@ public class Utils {
 			System.out.println(e.getMessage());
 		}
 		return null;
+	}
+	
+	public static Date somarData(Date dataInicio, Integer dias) {
+		Date dataFim; 
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dataInicio);
+		cal.add(Calendar.DATE, dias);
+		dataFim = cal.getTime();
+		
+		return dataFim;
 	}
 
 }

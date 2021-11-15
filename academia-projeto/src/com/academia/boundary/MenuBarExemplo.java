@@ -29,10 +29,12 @@ public class MenuBarExemplo extends Application {
 		Menu menuGerenciar = new Menu("Gerenciar");
 
 		MenuItem itemCadastrarAluno = new MenuItem("CADASTRAR ALUNO");
+
 		itemCadastrarAluno.setOnAction(event -> {
-			System.out.println("BOTAO CLICK");
+			alunoCadastroBoundary.iniciarCadastrar();
 			pane.setCenter(alunoCadastroBoundary.render());
 		});
+
 		menuCadastros.getItems().add(itemCadastrarAluno);
 
 		MenuItem itemGerenciarAlunos = new MenuItem("GERENCIAR ALUNOS");
@@ -40,13 +42,15 @@ public class MenuBarExemplo extends Application {
 			System.out.println("BOTAO CLICK");
 			pane.setCenter(gerenciarAlunosBoundary.render());
 		});
+
 		menuGerenciar.getItems().add(itemGerenciarAlunos);
-		
+
 		menuBar.getMenus().addAll(menuCadastros, menuGerenciar);
 
 		Scene scene = new Scene(pane, 500, 500);
 		scene.getStylesheets().add("style.css");
-		
+
+		primaryStage.setMaximized(true);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
