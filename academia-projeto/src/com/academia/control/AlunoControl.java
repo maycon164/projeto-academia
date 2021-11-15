@@ -133,7 +133,7 @@ public class AlunoControl {
 	public void alterar() {
 		System.out.println("AGORA AQUI VEM A LÓGICA PARA ALTERAR.....");
 	}
-	
+
 	private void validarCampos() throws EmptyFieldException {
 
 		if (cpfProps.get().isEmpty() || nomeProps.get().isEmpty() || nascimentoProps.get().isEmpty()
@@ -283,7 +283,6 @@ public class AlunoControl {
 	public void setAluno(String cpf) {
 
 		this.aluno = alunoConn.findById(cpf);
-		System.out.println(aluno);
 		this.setarDados();
 
 	}
@@ -306,6 +305,12 @@ public class AlunoControl {
 			sexoProps.set("Feminino");
 		}
 		this.observacaoProps.set(aluno.getObservacao());
+		
+		// ALUNO PRECISA TRAZER A ASSINATURA JUNTO COM O PLANO
+		this.precoProps.set("R$" + String.valueOf(aluno.getAssinatura().getPlano().getPreco()));
+		this.duracaoProps.set(String.valueOf(aluno.getAssinatura().getPlano().getDuracao()));
+		this.dataInicioProps.set(sdf.format(aluno.getAssinatura().getDataInicio()));
+		this.dataFimProps.set(sdf.format(aluno.getAssinatura().getDataExpiracao()));
 
 	}
 }

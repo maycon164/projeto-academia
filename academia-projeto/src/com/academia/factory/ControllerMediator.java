@@ -4,7 +4,7 @@ import com.academia.control.AlunoControl;
 import com.academia.control.InstrutorControl;
 import com.academia.control.PlanoControl;
 
-public class ControlerFactory {
+public class ControllerMediator {
 
 	private static AlunoControl alunoControl = null;
 	private static PlanoControl planoControl = null;

@@ -7,7 +7,7 @@ import com.academia.control.AlunoControl;
 import com.academia.control.PlanoControl;
 import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Plano;
-import com.academia.factory.ControlerFactory;
+import com.academia.factory.ControllerMediator;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -29,8 +29,8 @@ import javafx.scene.layout.VBox;
 public class GerenciarAlunosBoundary {
 
 	// CONTROLL
-	private AlunoControl alunoControl = ControlerFactory.getAlunoControl();
-	private PlanoControl planoControl = ControlerFactory.getPlanoControl();
+	private AlunoControl alunoControl = ControllerMediator.getAlunoControl();
+	private PlanoControl planoControl = ControllerMediator.getPlanoControl();
 
 	// GRID E OUTROS PANES
 	private VBox vboxAlunoPlano = new VBox();

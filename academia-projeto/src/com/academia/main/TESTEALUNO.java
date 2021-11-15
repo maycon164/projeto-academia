@@ -2,22 +2,31 @@ package com.academia.main;
 
 import java.util.List;
 
-import com.academia.dao.AlunoDao;
-import com.academia.dto.AlunoPlanoDTO;
+import com.academia.dao.PlanoDao;
+import com.academia.entities.Plano;
 import com.academia.factory.DaoFactory;
 
 public class TESTEALUNO {
 
 	public static void main(String[] args) {
 
-		AlunoDao alunoConn = DaoFactory.getAlunoDao();
+		PlanoDao planoConn = DaoFactory.getPlanoDao();
+		List<Plano> planos = planoConn.findAll();
+		
+		Plano plano = planoConn.findById(1);
+		
+		System.out.println("Nome: " + plano.getNome());
+		System.out.println("Descrição: " + plano.getDescricao());
+		System.out.println("Duração: " + plano.getDuracao());
+		System.out.println("Preço: " + plano.getPreco());
 
-		List<AlunoPlanoDTO> alunosPlanos = alunoConn.findAllAlunoPlano();
-		System.out.println(alunosPlanos);
-
-		// Aluno aluno = alunoConn.findById("12345");
-		// System.out.println(aluno);
 		/*
+		 * /* AlunoDao alunoConn = DaoFactory.getAlunoDao();
+		 * 
+		 * List<AlunoPlanoDTO> alunosPlanos = alunoConn.findAllAlunoPlano();
+		 * System.out.println(alunosPlanos);
+		 * 
+		 * Aluno aluno = alunoConn.findById("12345"); // System.out.println(aluno); /*
 		 * Endereco end = null; if(end == null) { try { end = Utils.pegarCep("asdasas");
 		 * } catch (CepNotFound | IOException e) { System.out.println("PEGOU");
 		 * System.out.println(e.getMessage()); } }

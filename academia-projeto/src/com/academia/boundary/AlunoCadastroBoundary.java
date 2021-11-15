@@ -8,11 +8,10 @@ import com.academia.control.InstrutorControl;
 import com.academia.control.PlanoControl;
 import com.academia.dto.InstrutorDTO;
 import com.academia.entities.Plano;
-import com.academia.factory.ControlerFactory;
+import com.academia.factory.ControllerMediator;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -23,9 +22,9 @@ import javafx.scene.layout.GridPane;
 public class AlunoCadastroBoundary {
 
 	// ALUNO CONTROL // PLANO CONTROL // INSTRUTOR CONTROL
-	private AlunoControl alunoControl = ControlerFactory.getAlunoControl();
-	private PlanoControl planoControl = ControlerFactory.getPlanoControl();
-	private InstrutorControl instrutorControl = ControlerFactory.getInstrutorControl();
+	private AlunoControl alunoControl = ControllerMediator.getAlunoControl();
+	private PlanoControl planoControl = ControllerMediator.getPlanoControl();
+	private InstrutorControl instrutorControl = ControllerMediator.getInstrutorControl();
 
 	// TEXTOS
 	private Label lblDadosCadastrais = new Label("DADOS PARA CADASTRO");

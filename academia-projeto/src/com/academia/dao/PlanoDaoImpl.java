@@ -50,15 +50,34 @@ public class PlanoDaoImpl implements PlanoDao {
 	}
 
 	private Plano instantiatePlano(ResultSet rs) throws SQLException {
-		
+
 		return new Plano(rs.getInt("id_plano"), rs.getString("nome"), rs.getString("Descricao"), rs.getDouble("preco"),
 				rs.getInt("duracao"));
-		
+
 	}
 
 	@Override
 	public Plano findById(int id) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String sql = "SELECT * FROM plano WHERE id_plano = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+			Plano plano = null;
+
+			if (rs.next()) {
+				plano = instantiatePlano(rs);
+			}
+
+			return plano;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 
