@@ -1,19 +1,41 @@
 package com.academia.main;
 
-import com.academia.dao.AlunoDao;
+import com.academia.dao.PlanoDao;
+import com.academia.entities.Plano;
 import com.academia.factory.DaoFactory;
 
 public class TESTEALUNO {
 
 	public static void main(String[] args) {
-		AlunoDao alunoConn = DaoFactory.getAlunoDao();
-		boolean excluir = alunoConn.deleteByCpf("9111111");
-		System.out.println(excluir);
 
-		// System.out.println(a.getAssinatura());
-		// System.out.println(a.getAssinatura().getPlano());
+		PlanoDao planoConn = DaoFactory.getPlanoDao();
+		Plano plano = new Plano();
+		plano.setNome("RONALDO");
+		plano.setDescricao("RONALDINHO GAUCHO");
+		plano.setPreco(100d);
+		plano.setDuracao(10);
+
+		plano = planoConn.insert(plano);
+		System.out.println("Id Plano: " + plano.getIdPlano());
+		System.out.println("Nome: " + plano.getNome());
+		System.out.println("Descrição: " + plano.getDescricao());
+		System.out.println("Duração: " + plano.getDuracao());
+		System.out.println("Preço: " + plano.getPreco());
 
 		/*
+		 * List<Plano> planos1 = planoConn.findAll(); List<Plano> planos2 =
+		 * planoConn.findAll();
+		 * 
+		 * // TESTE 1 planos1.add(new Plano(101, "CICLISMO", "TESTE", 99.99, 100));
+		 * 
+		 * System.out.println(planos1); System.out.println(planos2);
+		 * 
+		 * // System.out.println(a.getAssinatura()); //
+		 * System.out.println(a.getAssinatura().getPlano());
+		 * 
+		 * /* AlunoDao alunoConn = DaoFactory.getAlunoDao(); boolean excluir =
+		 * alunoConn.deleteByCpf("9111111"); System.out.println(excluir);
+		 * 
 		 * PlanoDao planoConn = DaoFactory.getPlanoDao(); List<Plano> planos =
 		 * planoConn.findAll();
 		 * 

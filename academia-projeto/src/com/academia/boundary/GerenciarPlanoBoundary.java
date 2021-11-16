@@ -4,10 +4,13 @@ import com.academia.control.PlanoControl;
 import com.academia.entities.Plano;
 import com.academia.factory.ControllerMediator;
 
+import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
@@ -18,8 +21,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-public class GerenciarPlanoBoundary {
+public class GerenciarPlanoBoundary extends Application {
 
 	// CONTROL
 	PlanoControl planoControl = ControllerMediator.getPlanoControl();
@@ -52,22 +56,26 @@ public class GerenciarPlanoBoundary {
 	// TABLEVIEW
 	private TableView<Plano> tblPlanos = new TableView<>();
 
+	public static void main(String[] args) {
+		Application.launch(GerenciarPlanoBoundary.class, args);
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		this.iniciarTela();
+
+		Scene scene = new Scene(splitGerenciamentoPlano, 500, 500);
+		scene.getStylesheets().add("style.css");
+		primaryStage.setMaximized(true);
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+
 	/*
-	 * public static void main(String[] args) {
-	 * Application.launch(GerenciarPlanoBoundary.class, args); }
+	 * public GerenciarPlanoBoundary() { iniciarTela();
 	 * 
-	 * @Override public void start(Stage primaryStage) throws Exception {
-	 * this.iniciarTela();
-	 * 
-	 * Scene scene = new Scene(splitGerenciamentoPlano, 500, 500);
-	 * scene.getStylesheets().add("style.css"); primaryStage.setScene(scene);
-	 * primaryStage.show(); }
+	 * }
 	 */
-	
-	  public GerenciarPlanoBoundary() { iniciarTela();
-	  
-	  }
-	 
 
 	public SplitPane render() {
 		return splitGerenciamentoPlano;
@@ -75,10 +83,29 @@ public class GerenciarPlanoBoundary {
 
 	private void iniciarTela() {
 		iniciarCss();
+		iniciarEventos();
 		iniciarTabelaPlano();
 		iniciarSplitPane();
 		iniciarGridGerenciamentoPlano();
 		iniciarVboxTableViewPlanos();
+		iniciarControler();
+	}
+
+	private void iniciarEventos() {
+		
+		btnCadastrar.setOnAction(event -> {
+			System.out.println("CADASTRAR.....");
+			planoControl.cadastrar();
+		});
+		
+	}
+
+	private void iniciarControler() {
+
+		Bindings.bindBidirectional(txtNome.textProperty(), planoControl.nomeProps);
+		Bindings.bindBidirectional(txtPreco.textProperty(), planoControl.precoProps);
+		Bindings.bindBidirectional(txtDuracao.textProperty(), planoControl.duracaoProps);
+		Bindings.bindBidirectional(txtDescricao.textProperty(), planoControl.descricaoProps);
 	}
 
 	private void iniciarSplitPane() {
@@ -110,10 +137,10 @@ public class GerenciarPlanoBoundary {
 		gridCadastroPlano.addRow(4, lblPreco, txtPreco);
 		gridCadastroPlano.addRow(5, lblDescricao);
 		gridCadastroPlano.addRow(6, txtDescricao);
-		
+
 		gridCadastroPlano.addRow(7, new Label(""));
 		gridCadastroPlano.addRow(8, new Label(""));
-		
+
 		gridCadastroPlano.addRow(9, btnCadastrar, btnAlterar, btnCancelar);
 
 		GridPane.setColumnSpan(lblGerenciamentoPlanos, 4);
