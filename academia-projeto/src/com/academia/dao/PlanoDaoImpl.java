@@ -141,4 +141,28 @@ public class PlanoDaoImpl implements PlanoDao {
 		return null;
 	}
 
+	@Override
+	public boolean deleteById(Integer id) {
+		PreparedStatement ps = null;
+		try {
+			String sql = "DELETE plano WHERE id_plano = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+
+			int rows = ps.executeUpdate();
+
+			if (rows > 0) {
+				return true;
+			}
+
+			return false;
+		} catch (SQLException e) {
+			System.out.println("HOUVE UM ERRO AQUI");
+			e.printStackTrace();
+		} finally {
+			DB.closeStatement(ps);
+		}
+		return false;
+	}
+
 }

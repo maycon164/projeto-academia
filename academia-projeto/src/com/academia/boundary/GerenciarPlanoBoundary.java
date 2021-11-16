@@ -6,12 +6,14 @@ import com.academia.factory.ControllerMediator;
 
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -23,7 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class GerenciarPlanoBoundary extends Application {
+public class GerenciarPlanoBoundary  {
 
 	// CONTROL
 	PlanoControl planoControl = ControllerMediator.getPlanoControl();
@@ -40,6 +42,7 @@ public class GerenciarPlanoBoundary extends Application {
 	private Label lblDescricao = new Label("Descrição: ");
 	private Label lblPreco = new Label("Preço: ");
 	private Label lblDuracao = new Label("Duração(DIAS): ");
+	private Label messageError = new Label("");
 
 	// TEXTFIELDS
 	private TextField txtNome = new TextField();
@@ -56,26 +59,23 @@ public class GerenciarPlanoBoundary extends Application {
 	// TABLEVIEW
 	private TableView<Plano> tblPlanos = new TableView<>();
 
-	public static void main(String[] args) {
-		Application.launch(GerenciarPlanoBoundary.class, args);
-	}
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		this.iniciarTela();
-
-		Scene scene = new Scene(splitGerenciamentoPlano, 500, 500);
-		scene.getStylesheets().add("style.css");
-		primaryStage.setMaximized(true);
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
-
 	/*
-	 * public GerenciarPlanoBoundary() { iniciarTela();
+	 * public static void main(String[] args) {
+	 * Application.launch(GerenciarPlanoBoundary.class, args); }
 	 * 
-	 * }
+	 * @Override public void start(Stage primaryStage) throws Exception {
+	 * this.iniciarTela();
+	 * 
+	 * Scene scene = new Scene(splitGerenciamentoPlano, 500, 500);
+	 * scene.getStylesheets().add("style.css"); primaryStage.setMaximized(true);
+	 * primaryStage.setScene(scene); primaryStage.show(); }
 	 */
+
+	
+	  public GerenciarPlanoBoundary() { iniciarTela();
+	  
+	  }
+	 
 
 	public SplitPane render() {
 		return splitGerenciamentoPlano;
@@ -92,12 +92,47 @@ public class GerenciarPlanoBoundary extends Application {
 	}
 
 	private void iniciarEventos() {
-		
+
+		// CADASTRAR UM NOVO PLANO
 		btnCadastrar.setOnAction(event -> {
-			System.out.println("CADASTRAR.....");
+
 			planoControl.cadastrar();
+
 		});
-		
+
+		btnExcluir.setOnAction(event -> {
+			
+			Plano plano = tblPlanos.getSelectionModel().getSelectedItem();
+			
+			Alert dialogoExe = new Alert(Alert.AlertType.CONFIRMATION);
+			ButtonType btnSim = new ButtonType("Sim");
+			ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+			dialogoExe.setTitle("Excluir Registro");
+			dialogoExe.setHeaderText("Deseja Excluir o Plano " + plano.getNome() + "?");
+			dialogoExe.getButtonTypes().setAll(btnSim, btnCancelar);
+			
+			dialogoExe.showAndWait().ifPresent(b -> {
+
+				if (b == btnSim) {					
+					boolean excluir = planoControl.excluir(plano);
+
+					if (excluir) {
+						Alert dialogoInfo = new Alert(Alert.AlertType.INFORMATION);
+						dialogoInfo.setTitle("EXCLUSÃO DE ALUNO");
+						dialogoInfo.setHeaderText("AVISO");
+						dialogoInfo.setContentText("O PLANO COM O id " + plano.getIdPlano() + " FOI EXCLUÍDO");
+						dialogoInfo.showAndWait();
+					}
+
+				} else if (b == btnCancelar) {
+					System.out.println("CANCELOU OPÇÃO DE CANCELAR");
+				}
+			});
+			
+	
+			
+		});
 	}
 
 	private void iniciarControler() {
@@ -106,6 +141,8 @@ public class GerenciarPlanoBoundary extends Application {
 		Bindings.bindBidirectional(txtPreco.textProperty(), planoControl.precoProps);
 		Bindings.bindBidirectional(txtDuracao.textProperty(), planoControl.duracaoProps);
 		Bindings.bindBidirectional(txtDescricao.textProperty(), planoControl.descricaoProps);
+		Bindings.bindBidirectional(messageError.textProperty(), planoControl.messageError);
+
 	}
 
 	private void iniciarSplitPane() {
@@ -139,10 +176,12 @@ public class GerenciarPlanoBoundary extends Application {
 		gridCadastroPlano.addRow(6, txtDescricao);
 
 		gridCadastroPlano.addRow(7, new Label(""));
-		gridCadastroPlano.addRow(8, new Label(""));
+
+		gridCadastroPlano.addRow(8, messageError);
 
 		gridCadastroPlano.addRow(9, btnCadastrar, btnAlterar, btnCancelar);
 
+		GridPane.setColumnSpan(messageError, 4);
 		GridPane.setColumnSpan(lblGerenciamentoPlanos, 4);
 		GridPane.setColumnSpan(txtDescricao, 4);
 	}
@@ -160,7 +199,7 @@ public class GerenciarPlanoBoundary extends Application {
 		precoCol.setCellValueFactory(new PropertyValueFactory<>("preco"));
 
 		tblPlanos.getColumns().setAll(nomeCol, duracaoCol, precoCol);
-		tblPlanos.setItems(FXCollections.observableArrayList(planoControl.getPlanos()));
+		tblPlanos.setItems(planoControl.getPlanos());
 
 	}
 
@@ -172,6 +211,8 @@ public class GerenciarPlanoBoundary extends Application {
 		lblTodosPlanos.getStyleClass().add("textCentralizado");
 
 		txtDescricao.getStyleClass().add("textArea");
+
+		messageError.getStyleClass().add("messageError");
 
 	}
 }

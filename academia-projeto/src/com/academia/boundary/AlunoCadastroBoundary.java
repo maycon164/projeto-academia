@@ -286,7 +286,8 @@ public class AlunoCadastroBoundary {
 
 	private void iniciarChoiceBoxs() {
 
-		cbPlano.getItems().addAll(FXCollections.observableArrayList(planoControl.getPlanos()));
+		cbPlano.setItems(planoControl.getPlanos());
+
 	}
 
 }

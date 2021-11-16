@@ -134,7 +134,7 @@ public class AlunoControl {
 		System.out.println("AGORA AQUI VEM A LÓGICA PARA ALTERAR.....");
 	}
 
-	public boolean deletar(AlunoPlanoDTO item) {
+	public boolean excluir(AlunoPlanoDTO item) {
 
 		if (alunoConn.deleteByCpf(item.getCpf())) {
 			alunosPlanos.remove(item);
@@ -254,8 +254,6 @@ public class AlunoControl {
 			}
 		}
 	}
-
-
 
 	private Aluno alunoFromBoundary() throws ParseException {
 

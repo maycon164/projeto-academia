@@ -11,4 +11,6 @@ public interface PlanoDao {
 	Plano findById(int id);
 
 	Plano insert(Plano plano);
+
+	boolean deleteById(Integer id);
 }

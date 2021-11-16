@@ -11,7 +11,6 @@ import com.academia.factory.ControllerMediator;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -121,7 +120,7 @@ public class GerenciarAlunosBoundary {
 				if (b == btnSim) {
 					System.out.println("Deletar.....");
 					String cpf = tblAlunoPlano.getSelectionModel().getSelectedItem().getCpf();
-					boolean excluir = alunoControl.deletar(tblAlunoPlano.getSelectionModel().getSelectedItem());
+					boolean excluir = alunoControl.excluir(tblAlunoPlano.getSelectionModel().getSelectedItem());
 
 					if (excluir) {
 						Alert dialogoInfo = new Alert(Alert.AlertType.INFORMATION);
@@ -199,7 +198,9 @@ public class GerenciarAlunosBoundary {
 	}
 
 	private void iniciarChoiceBoxPlano() {
-		cbPlano.getItems().addAll(FXCollections.observableArrayList(planoControl.getPlanos()));
+
+		cbPlano.setItems(planoControl.getPlanos());
+
 	}
 
 	private void iniciarControl() {
