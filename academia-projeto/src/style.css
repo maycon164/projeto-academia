@@ -9,7 +9,7 @@
 	-fx-hgap: 10.0px;
 	-fx-vgap: 10.0px;
 	-fx-padding: 10.0px;
-	-fx-alignment: "top-center";
+	-fx-alignment: "center";
 }
 
 .gridGerenciarAlunos{
@@ -42,6 +42,8 @@
     -fx-border-insets: 20.0px;
     -fx-background-insets: 10.0px;
 }
+
+
 
 .messageError{
 	-fx-text-fill: red;
