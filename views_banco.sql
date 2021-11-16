@@ -1,6 +1,5 @@
 USE academiadb;
 
-
 ----------------------------------------CRIANDO VIEWS
 ---------VIEWS ALUNO
 CREATE VIEW vw_aluno AS
@@ -8,11 +7,6 @@ SELECT p.nome AS aluno, p.cpf, p.sexo, a.ativo, p.nascimento, p.email,
 p.telefone, p.cep, p.bairro, p.rua, p.num, p.data_matricula, a.observacoes 
 FROM pessoa p, aluno a
 WHERE p.cpf = a.cpf;
-
-SELECT * FROM vw_aluno;
-
-SELECT * FROM aluno_plano ap;
-
 
 
 --------VIEWS INSTRUTORES
@@ -22,9 +16,6 @@ p.telefone, p.cep, p.bairro, p.rua, p.num, i.especializacao
 FROM pessoa p, instrutor i
 WHERE p.cpf = i.cpf 
 
-SELECT * FROM vw_instrutor;
-
-DROP VIEW vw_instrutor
 
 -----VIEWS INSTRUTORES E PLANOS
 CREATE VIEW vw_instrutor_plano AS
@@ -33,7 +24,6 @@ FROM vw_instrutor vwi, plano pl, instrutor_plano ip
 WHERE ip.cpf_instrutor = vwi.cpf
 AND ip.id_plano = pl.id_plano
 
-SELECT * FROM vw_instrutor_plano vip;
 
 -----FUNCTION PARA RETORNAR INSTRUTORESDTO DE UM PLANO (id_plano)
 
@@ -46,10 +36,7 @@ RETURN (
 	WHERE vip.id_plano = @id_plano
 );
 
-SELECT * FROM plano;
-
 SELECT * FROM [dbo].[func_instrutoresDTO_por_plano](2);
-
 
 ---------VIEW ALUNO E PLANO
 
@@ -59,33 +46,42 @@ FROM vw_aluno vwa, plano pl, aluno_plano ap
 WHERE ap.cpf_aluno = vwa.cpf
 AND ap.id_plano = pl.id_plano
 
-SELECT * FROM vw_aluno_plano vap;
-
-exec sp_columns plano;
-
-SELECT * FROM aluno_plano ap 
-
 --------VIEW ALUNO DTO
 CREATE VIEW vw_aluno_dto AS
 SELECT va.cpf, va.aluno, DATEDIFF(YEAR, va.nascimento, GETDATE()) AS idade,
 va.data_matricula, va.ativo
 FROM vw_aluno va;
 
-SELECT * FROM vw_aluno_dto vad 
 
+---------- STORED PROCEDURE PARA DELETAR UM ALUNO (ALUNO_PLANO, ALUNO, PESSOA)
+
+CREATE PROCEDURE deletar_aluno
+@cpf VARCHAR(12)
+AS 
+BEGIN
+	
+	DELETE FROM aluno_plano WHERE cpf_aluno = @cpf
+	DELETE FROM aluno WHERE cpf = @cpf
+	DELETE FROM pessoa WHERE cpf = @cpf
+	
+END
+
+EXECUTE deletar_aluno @cpf = '11111111111'
 
 ------------------------------------- FIM POR ENQUANTO -------------------------------------
+------------------------------------------
 
-SELECT
-	*
-FROM
-	vw_instrutor vi 
-SELECT
-	*
-FROM
-	vw_instrutor_plano vip ;
+CREATE PROCEDURE concatenar
+@palavra VARCHAR(100)
+AS 
+BEGIN
+	SELECT (@palavra + ' TESTEANDO CONCATENAÇÃO') AS teste
+	RETURN 1
+END
 
---------FUNCTION PARA INSERIR UM ALUNO
+EXECUTE [dbo].[concatenar] @palavra = 'OLÁ MUNDO'
+
+--------FUNCTION PARA INSERIR UM ALUNO (NÃO FUNCIONA)
 
 CREATE FUNCTION inserirAluno(
 	@cpf VARCHAR(12),
@@ -134,8 +130,6 @@ SELECT dbo.inserirAluno('05460595037', 'MAYKHITARIAN', '2020-02-21', 'maycasso@g
 '8491312390', 'IGUATEMI', 'ANECY ROCHA', '178', 'M', GETDATE(), 1, 'MUITO ENTUSIASMADO'
 );
 
-
-
 exec sp_columns pessoa;
 exec sp_columns inserirAluno;
 
@@ -150,7 +144,11 @@ DROP FUNCTION TRIM;
 SELECT * FROM vw_aluno_plano vap 
 
 SELECT * FROM instrutor_plano ip;
-SELECT * FROM aluno_plano ap;
+
+SELECT * FROM vw_aluno_plano vap;
+
+SELECT * FROM aluno_plano
+WHERE cpf_aluno = '82259101097'
 
 SELECT * FROM plano;
 SELECT * FROM aluno;
@@ -159,7 +157,8 @@ SELECT * FROM pessoa;
 ALTER TABLE pessoa
 ADD cep VARCHAR(8)
 
-SELECT * FROM aluno;
+SELECT * FROM aluno_plano;
+SELECT * FROM aluno WHERE cpf = '11111111111'
 
 UPDATE aluno
 SET observacoes = 'Problemas Respiratorios....'
@@ -187,16 +186,21 @@ INSERT INTO instrutor_plano(cpf_instrutor, id_plano)VALUES
 ('97676760070', 4),
 ('01362539031', 2)
 
+
+SELECT * FROM vw_aluno
+
 SELECT * FROM instrutor_plano ip 
 SELECT * FROM vw_instrutor_plano vip 
 SELECT * FROM plano
+SELECT * FROM pessoa
 
 INSERT INTO plano(nome, descricao, preco, duracao) VALUES
 ('Zumba', 'movimentos de diversas danças latinas com o objetivo de emagrecer e modelar o corpo. Criado ainda no ano de 2001',
 100.99, 50),
 ('Crossfit', 'promover melhora da capacidade cardiorrespiratória, condicionamento físico e resistência muscular por meio da combinação de exercícios funcionais,',
 200.99, 60),
-('Muay Thai', 'Essa Luta dispõe de movimentos que ajudam na perda de massa gorda e ganho de massa magra')
+('Muay Thai', 'Essa Luta dispõe de movimentos que ajudam na perda de massa gorda e ganho de massa magra', 
+89.99, 35)
 
 exec sp_columns pessoa;
 exec sp_columns aluno;
