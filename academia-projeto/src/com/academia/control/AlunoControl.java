@@ -134,13 +134,13 @@ public class AlunoControl {
 		System.out.println("AGORA AQUI VEM A LÓGICA PARA ALTERAR.....");
 	}
 
-	public boolean excluir(AlunoPlanoDTO item) {
+	public boolean excluir(AlunoPlanoDTO aluno) {
 
-		if (alunoConn.deleteByCpf(item.getCpf())) {
-			alunosPlanos.remove(item);
-			System.out.println("REMOVEU O ALUNO COM CPF " + item.getCpf());
+		if (alunoConn.deleteByCpf(aluno.getCpf())) {
+			alunosPlanos.remove(aluno);
 			return true;
 		}
+
 		return false;
 	}
 

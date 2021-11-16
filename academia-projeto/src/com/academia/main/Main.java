@@ -1,5 +1,7 @@
 package com.academia.main;
 
+import com.academia.util.Utils;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -11,6 +13,16 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		Pane pane = new Pane();
 		Scene scene = new Scene(pane, 500, 500);
+
+		// Utils.showAlert("TESTE", "TESTANDO HEADER", "TESTANDO CONTEUDO",
+		// AlertType.CONFIRMATION);
+		
+		Utils.showConfirmation("DESEJA MESMO CONFIRMAR", "RONALDO").ifPresent(b -> {
+			
+			System.out.println(b.getText());
+			
+		});
+
 		primaryStage.setScene(scene);
 		primaryStage.show();
 

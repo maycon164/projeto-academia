@@ -8,16 +8,15 @@ import com.academia.control.PlanoControl;
 import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Plano;
 import com.academia.factory.ControllerMediator;
+import com.academia.util.Utils;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -107,32 +106,21 @@ public class GerenciarAlunosBoundary {
 		// EVENTO DE DELEÇÃO DE ALUNO E SEU PLANO;
 		btnExcluir.setOnAction(event -> {
 
-			Alert dialogoExe = new Alert(Alert.AlertType.CONFIRMATION);
-			ButtonType btnSim = new ButtonType("Sim");
-			ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-			String nome = tblAlunoPlano.getSelectionModel().getSelectedItem().getAluno();
-			dialogoExe.setTitle("Excluir Registro");
-			dialogoExe.setHeaderText("Deseja Excluir o Aluno " + nome + "?");
-			dialogoExe.getButtonTypes().setAll(btnSim, btnCancelar);
+			AlunoPlanoDTO aluno = tblAlunoPlano.getSelectionModel().getSelectedItem();
 
-			dialogoExe.showAndWait().ifPresent(b -> {
+			// CONFIRMAR EXCLUSÃO
+			Utils.showConfirmation("Excluir Aluno", "Deseja excluir o aluno " + aluno.getAluno()).ifPresent(b -> {
 
-				if (b == btnSim) {
-					System.out.println("Deletar.....");
-					String cpf = tblAlunoPlano.getSelectionModel().getSelectedItem().getCpf();
-					boolean excluir = alunoControl.excluir(tblAlunoPlano.getSelectionModel().getSelectedItem());
+				if (b.getText().equalsIgnoreCase("sim")) {
+
+					boolean excluir = alunoControl.excluir(aluno);
 
 					if (excluir) {
-						Alert dialogoInfo = new Alert(Alert.AlertType.INFORMATION);
-						dialogoInfo.setTitle("EXCLUSÃO DE ALUNO");
-						dialogoInfo.setHeaderText("AVISO");
-						dialogoInfo.setContentText("O ALUNO COM O CPF " + cpf + " FOI EXCLUÍDO");
-						dialogoInfo.showAndWait();
+						Utils.showAlert("EXCLUSÃO DE ALUNO", "AVISO",
+								"O ALUNO COM O CPF " + aluno.getCpf() + " FOI EXCLUÍDO", AlertType.INFORMATION);
 					}
-
-				} else if (b == btnCancelar) {
-					System.out.println("CANCELOU OPÇÃO DE CANCELAR");
 				}
+
 			});
 
 		});

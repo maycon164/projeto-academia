@@ -3,17 +3,14 @@ package com.academia.boundary;
 import com.academia.control.PlanoControl;
 import com.academia.entities.Plano;
 import com.academia.factory.ControllerMediator;
+import com.academia.util.Utils;
 
-import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -23,9 +20,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-public class GerenciarPlanoBoundary  {
+public class GerenciarPlanoBoundary {
 
 	// CONTROL
 	PlanoControl planoControl = ControllerMediator.getPlanoControl();
@@ -71,11 +67,10 @@ public class GerenciarPlanoBoundary  {
 	 * primaryStage.setScene(scene); primaryStage.show(); }
 	 */
 
-	
-	  public GerenciarPlanoBoundary() { iniciarTela();
-	  
-	  }
-	 
+	public GerenciarPlanoBoundary() {
+		iniciarTela();
+
+	}
 
 	public SplitPane render() {
 		return splitGerenciamentoPlano;
@@ -101,37 +96,24 @@ public class GerenciarPlanoBoundary  {
 		});
 
 		btnExcluir.setOnAction(event -> {
-			
+
 			Plano plano = tblPlanos.getSelectionModel().getSelectedItem();
-			
-			Alert dialogoExe = new Alert(Alert.AlertType.CONFIRMATION);
-			ButtonType btnSim = new ButtonType("Sim");
-			ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-			dialogoExe.setTitle("Excluir Registro");
-			dialogoExe.setHeaderText("Deseja Excluir o Plano " + plano.getNome() + "?");
-			dialogoExe.getButtonTypes().setAll(btnSim, btnCancelar);
-			
-			dialogoExe.showAndWait().ifPresent(b -> {
+			// CONFIRMAR EXCLUSÃO DE PLANO
+			Utils.showConfirmation("Excluir Registro", "Deseja Excluir o Plano " + plano.getNome()).ifPresent(b -> {
 
-				if (b == btnSim) {					
+				if (b.getText().equalsIgnoreCase("sim")) {
+
 					boolean excluir = planoControl.excluir(plano);
 
 					if (excluir) {
-						Alert dialogoInfo = new Alert(Alert.AlertType.INFORMATION);
-						dialogoInfo.setTitle("EXCLUSÃO DE ALUNO");
-						dialogoInfo.setHeaderText("AVISO");
-						dialogoInfo.setContentText("O PLANO COM O id " + plano.getIdPlano() + " FOI EXCLUÍDO");
-						dialogoInfo.showAndWait();
+						Utils.showAlert("EXCLUSÃO DE PLANO", "AVISO",
+								"O PLANO COM ID " + plano.getIdPlano() + " FOI EXCLUÍDO", AlertType.INFORMATION);
 					}
-
-				} else if (b == btnCancelar) {
-					System.out.println("CANCELOU OPÇÃO DE CANCELAR");
 				}
+
 			});
-			
-	
-			
+
 		});
 	}
 
