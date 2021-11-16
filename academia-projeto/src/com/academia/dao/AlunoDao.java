@@ -12,9 +12,9 @@ public interface AlunoDao {
 
 	void insert(Aluno aluno) throws CpfRegisteredException;
 
-	Aluno findById(String cpf);
+	Aluno findByCpf(String cpf);
 
-	void deleteById(String cpf);
+	void deleteByCpf(String cpf);
 
 	List<AlunoDTO> findAll();
 

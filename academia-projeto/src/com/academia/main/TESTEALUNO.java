@@ -1,27 +1,33 @@
 package com.academia.main;
 
-import java.util.List;
-
-import com.academia.dao.PlanoDao;
-import com.academia.entities.Plano;
+import com.academia.dao.AlunoDao;
+import com.academia.entities.Aluno;
 import com.academia.factory.DaoFactory;
 
 public class TESTEALUNO {
 
 	public static void main(String[] args) {
+		AlunoDao alunoConn = DaoFactory.getAlunoDao();
 
-		PlanoDao planoConn = DaoFactory.getPlanoDao();
-		List<Plano> planos = planoConn.findAll();
-		
-		Plano plano = planoConn.findById(1);
-		
-		System.out.println("Nome: " + plano.getNome());
-		System.out.println("Descrição: " + plano.getDescricao());
-		System.out.println("Duração: " + plano.getDuracao());
-		System.out.println("Preço: " + plano.getPreco());
+		Aluno a = alunoConn.findByCpf("9111111");
+
+		System.out.println(a);
+		// System.out.println(a.getAssinatura());
+		// System.out.println(a.getAssinatura().getPlano());
 
 		/*
-		 * /* AlunoDao alunoConn = DaoFactory.getAlunoDao();
+		 * PlanoDao planoConn = DaoFactory.getPlanoDao(); List<Plano> planos =
+		 * planoConn.findAll();
+		 * 
+		 * Plano plano = planoConn.findById(1);
+		 * 
+		 * System.out.println("Nome: " + plano.getNome());
+		 * System.out.println("Descrição: " + plano.getDescricao());
+		 * System.out.println("Duração: " + plano.getDuracao());
+		 * System.out.println("Preço: " + plano.getPreco());
+		 */
+		/*
+		 * AlunoDao alunoConn = DaoFactory.getAlunoDao();
 		 * 
 		 * List<AlunoPlanoDTO> alunosPlanos = alunoConn.findAllAlunoPlano();
 		 * System.out.println(alunosPlanos);

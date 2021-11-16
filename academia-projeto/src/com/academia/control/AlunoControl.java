@@ -134,6 +134,12 @@ public class AlunoControl {
 		System.out.println("AGORA AQUI VEM A LÓGICA PARA ALTERAR.....");
 	}
 
+	public void deletar(AlunoPlanoDTO item) {
+
+		alunosPlanos.remove(item);
+		System.out.println("REMOVEU O " + item);
+	}
+
 	private void validarCampos() throws EmptyFieldException {
 
 		if (cpfProps.get().isEmpty() || nomeProps.get().isEmpty() || nascimentoProps.get().isEmpty()
@@ -197,9 +203,13 @@ public class AlunoControl {
 					ruaProps.set(endereco.getLogradouro());
 
 				} catch (CepNotFound e) {
+
 					messageErrorProps.set(e.getMessage());
+
 				} catch (Exception e) {
+
 					messageErrorProps.set(e.getMessage());
+
 				}
 
 			}
@@ -282,7 +292,7 @@ public class AlunoControl {
 
 	public void setAluno(String cpf) {
 
-		this.aluno = alunoConn.findById(cpf);
+		this.aluno = alunoConn.findByCpf(cpf);
 		this.setarDados();
 
 	}
@@ -305,7 +315,7 @@ public class AlunoControl {
 			sexoProps.set("Feminino");
 		}
 		this.observacaoProps.set(aluno.getObservacao());
-		
+
 		// ALUNO PRECISA TRAZER A ASSINATURA JUNTO COM O PLANO
 		this.precoProps.set("R$" + String.valueOf(aluno.getAssinatura().getPlano().getPreco()));
 		this.duracaoProps.set(String.valueOf(aluno.getAssinatura().getPlano().getDuracao()));

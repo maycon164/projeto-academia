@@ -15,18 +15,20 @@ import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
 import com.academia.exception.CpfRegisteredException;
+import com.academia.factory.DaoFactory;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 public class AlunoDaoImpl implements AlunoDao {
 
 	private Connection conn;
+	private PlanoDao planoConn = DaoFactory.getPlanoDao();
 
 	public AlunoDaoImpl(Connection conn) {
 		this.conn = conn;
 	}
 
 	@Override
-	public Aluno findById(String cpf) {
+	public Aluno findByCpf(String cpf) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
@@ -35,17 +37,11 @@ public class AlunoDaoImpl implements AlunoDao {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, cpf);
 			rs = ps.executeQuery();
+
 			Aluno aluno = null;
 
 			if (rs.next()) {
 				aluno = instantiateAluno(rs);
-			}
-
-			// agora preciso vincular as "Assinaturas do cara";
-			Set<Assinatura> assinaturas;
-
-			if (true) {
-				assinaturas = this.findAllAssinaturasFromAluno(cpf);
 			}
 
 			return aluno;
@@ -76,6 +72,7 @@ public class AlunoDaoImpl implements AlunoDao {
 			while (rs.next()) {
 				assinaturas.add(instantiateAssinatura(rs));
 			}
+			return assinaturas;
 
 		} catch (Exception e) {
 
@@ -255,19 +252,51 @@ public class AlunoDaoImpl implements AlunoDao {
 				rs.getString("bairro"), rs.getString("rua"), rs.getString("num"), rs.getDate("data_matricula"),
 				rs.getBoolean("ativo"), rs.getString("observacoes"));
 
+		Assinatura assinatura = findAssinaturaByCpf(aluno.getCpf());
+		assinatura.setAluno(aluno);
+		aluno.setAssinatura(assinatura);
+
 		return aluno;
 	}
 
+	private Assinatura findAssinaturaByCpf(String cpf) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String sql = "SELECT * FROM aluno_plano WHERE cpf_aluno = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cpf);
+			rs = ps.executeQuery();
+
+			Assinatura assinatura = null;
+
+			if (rs.next()) {
+				assinatura = instantiateAssinatura(rs);
+			}
+			return assinatura;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 	@Override
-	public void deleteById(String cpf) {
+	public void deleteByCpf(String cpf) {
 		// TODO Auto-generated method stub
 
 	}
 
-	private Assinatura instantiateAssinatura(ResultSet rs) {
+	private Assinatura instantiateAssinatura(ResultSet rs) throws SQLException {
 
-		return new Assinatura();
+		Assinatura assinatura = new Assinatura();
+		assinatura.setId(rs.getInt("id_aluno_plano"));
+		assinatura.setPlano(planoConn.findById(rs.getInt("id_plano")));
+		assinatura.setDataInicio(rs.getDate("data_inicio"));
+		assinatura.setDataExpiracao(rs.getDate("data_expiracao"));
 
+		return assinatura;
 	}
 
 }

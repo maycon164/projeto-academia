@@ -67,4 +67,10 @@ public class Assinatura implements Comparable<Assinatura> {
 		return this.id.compareTo(other.getId());
 	}
 
+	@Override
+	public String toString() {
+		return "Assinatura [id=" + id + ", plano=" + plano + ", dataInicio=" + dataInicio + ", dataExpiracao="
+				+ dataExpiracao + "]";
+	}
+
 }

@@ -15,7 +15,10 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -88,18 +91,42 @@ public class GerenciarAlunosBoundary {
 
 			String cpf = tblAlunoPlano.getSelectionModel().getSelectedItem().getCpf();
 			alunoControl.setAluno(cpf);
-			
-			// PRECISA RENDERIZAR COM OS CAMPOS PREENCHIDOS, BTNALTER DISPONIVEL, TXTCPF DISABLE
+
+			// PRECISA RENDERIZAR COM OS CAMPOS PREENCHIDOS, BTNALTER DISPONIVEL, TXTCPF
+			// DISABLE
 			AlunoCadastroBoundary exemplo = new AlunoCadastroBoundary();
-			
+
 			exemplo.iniciarAlterar();
-			
+
 			Scene scene = vboxAlunoPlano.getScene();
 			BorderPane bpPrincipal = (BorderPane) scene.getRoot();
 
 			bpPrincipal.setCenter(exemplo.render());
 
 		});
+
+		// EVENTO DE DELEÇÃO DE ALUNO E SEU PLANO;
+		btnExcluir.setOnAction(event -> {
+
+			Alert dialogoExe = new Alert(Alert.AlertType.CONFIRMATION);
+			ButtonType btnSim = new ButtonType("Sim");
+			ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+			dialogoExe.setTitle("Excluir Registro");
+			dialogoExe.setHeaderText("Deseja Excluir o Aluno?");
+			dialogoExe.getButtonTypes().setAll(btnSim, btnCancelar);
+
+			dialogoExe.showAndWait().ifPresent(b -> {
+				if (b == btnSim) {
+					System.out.println("Deletar.....");
+					alunoControl.deletar(tblAlunoPlano.getSelectionModel().getSelectedItem());
+				} else if (b == btnCancelar) {
+					System.out.println("CANCELOU OPÇÃO DE CANCELAR");
+				}
+			});
+
+		});
+
 	}
 
 	private void configurarVboxAlunoPlano() {
