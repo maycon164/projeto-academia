@@ -134,10 +134,14 @@ public class AlunoControl {
 		System.out.println("AGORA AQUI VEM A LÓGICA PARA ALTERAR.....");
 	}
 
-	public void deletar(AlunoPlanoDTO item) {
+	public boolean deletar(AlunoPlanoDTO item) {
 
-		alunosPlanos.remove(item);
-		System.out.println("REMOVEU O " + item);
+		if (alunoConn.deleteByCpf(item.getCpf())) {
+			alunosPlanos.remove(item);
+			System.out.println("REMOVEU O ALUNO COM CPF " + item.getCpf());
+			return true;
+		}
+		return false;
 	}
 
 	private void validarCampos() throws EmptyFieldException {
@@ -245,6 +249,8 @@ public class AlunoControl {
 				dataFimProps.set(sdf.format(dataFim));
 			} catch (ParseException e) {
 				messageErrorProps.set("Informe a data no formato dd/MM/yyyy");
+			} catch (NumberFormatException e) {
+				System.out.println("HUMMMMM.....");
 			}
 		}
 	}

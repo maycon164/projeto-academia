@@ -14,7 +14,9 @@ public interface AlunoDao {
 
 	Aluno findByCpf(String cpf);
 
-	void deleteByCpf(String cpf);
+	Aluno update(Aluno aluno);
+
+	boolean deleteByCpf(String cpf);
 
 	List<AlunoDTO> findAll();
 

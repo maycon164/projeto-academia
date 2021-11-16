@@ -1,17 +1,15 @@
 package com.academia.main;
 
 import com.academia.dao.AlunoDao;
-import com.academia.entities.Aluno;
 import com.academia.factory.DaoFactory;
 
 public class TESTEALUNO {
 
 	public static void main(String[] args) {
 		AlunoDao alunoConn = DaoFactory.getAlunoDao();
+		boolean excluir = alunoConn.deleteByCpf("9111111");
+		System.out.println(excluir);
 
-		Aluno a = alunoConn.findByCpf("9111111");
-
-		System.out.println(a);
 		// System.out.println(a.getAssinatura());
 		// System.out.println(a.getAssinatura().getPlano());
 

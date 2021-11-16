@@ -283,9 +283,43 @@ public class AlunoDaoImpl implements AlunoDao {
 	}
 
 	@Override
-	public void deleteByCpf(String cpf) {
-		// TODO Auto-generated method stub
+	public boolean deleteByCpf(String cpf) {
+		// 1 - PRIMEIRA COISA É EXCLUIR O RELACIONAMENTO ALUNO_PLANO DA TABELA
+		// 2 - DEPOIS EXCLUIR O REGISTRO "ALUNO"
+		// 3 - POR ULTIMO EXCLUIR A PESSOA
 
+		PreparedStatement ps = null;
+		boolean excluir = false;
+		try {
+
+			String sql = "EXECUTE deletar_aluno @cpf = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cpf);
+
+			int rows = ps.executeUpdate();
+			System.out.println(rows);
+
+			if (rows > 0) {
+				System.out.println("EXLUI O ALUNO COM CPF " + cpf);
+				excluir = true;
+			}
+
+			return excluir;
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+		} finally {
+			DB.closeStatement(ps);
+		}
+		return excluir;
+	}
+
+	@Override
+	public Aluno update(Aluno aluno) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private Assinatura instantiateAssinatura(ResultSet rs) throws SQLException {

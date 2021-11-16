@@ -111,15 +111,26 @@ public class GerenciarAlunosBoundary {
 			Alert dialogoExe = new Alert(Alert.AlertType.CONFIRMATION);
 			ButtonType btnSim = new ButtonType("Sim");
 			ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
+			String nome = tblAlunoPlano.getSelectionModel().getSelectedItem().getAluno();
 			dialogoExe.setTitle("Excluir Registro");
-			dialogoExe.setHeaderText("Deseja Excluir o Aluno?");
+			dialogoExe.setHeaderText("Deseja Excluir o Aluno " + nome + "?");
 			dialogoExe.getButtonTypes().setAll(btnSim, btnCancelar);
 
 			dialogoExe.showAndWait().ifPresent(b -> {
+
 				if (b == btnSim) {
 					System.out.println("Deletar.....");
-					alunoControl.deletar(tblAlunoPlano.getSelectionModel().getSelectedItem());
+					String cpf = tblAlunoPlano.getSelectionModel().getSelectedItem().getCpf();
+					boolean excluir = alunoControl.deletar(tblAlunoPlano.getSelectionModel().getSelectedItem());
+
+					if (excluir) {
+						Alert dialogoInfo = new Alert(Alert.AlertType.INFORMATION);
+						dialogoInfo.setTitle("EXCLUSÃO DE ALUNO");
+						dialogoInfo.setHeaderText("AVISO");
+						dialogoInfo.setContentText("O ALUNO COM O CPF " + cpf + " FOI EXCLUÍDO");
+						dialogoInfo.showAndWait();
+					}
+
 				} else if (b == btnCancelar) {
 					System.out.println("CANCELOU OPÇÃO DE CANCELAR");
 				}
