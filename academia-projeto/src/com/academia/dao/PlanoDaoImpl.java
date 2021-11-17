@@ -100,10 +100,14 @@ public class PlanoDaoImpl implements PlanoDao {
 			}
 
 		} catch (SQLException e) {
+
 			e.printStackTrace();
+
 		} finally {
+
 			DB.closeStatement(ps);
 			DB.closeResultSet(rs);
+
 		}
 
 		return null;
@@ -130,6 +134,8 @@ public class PlanoDaoImpl implements PlanoDao {
 				while (rs.next()) {
 					plano.setIdPlano(rs.getInt(1));
 				}
+
+				planos.put(plano.getIdPlano(), plano);
 
 				DB.closeResultSet(rs);
 

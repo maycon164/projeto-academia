@@ -1,11 +1,16 @@
 package com.academia.boundary;
 
+import com.academia.control.InstrutorControl;
 import com.academia.entities.Plano;
+import com.academia.factory.ControllerMediator;
 import com.academia.util.Listener;
+import com.academia.util.UtilsGui;
 
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -17,6 +22,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class GerenciarInstrutorBoundary implements Listener {
+
+	// CONTROL
+	private InstrutorControl instrutorControl = ControllerMediator.getInstrutorControl();
 
 	// LABELS
 	private Label lblGerenciarInstrutores = new Label("Gerenciar Instrutores");
@@ -47,18 +55,6 @@ public class GerenciarInstrutorBoundary implements Listener {
 	private AdicionarPlanoBoundary adicionarPlanoBoundary = new AdicionarPlanoBoundary();
 	private Stage s1 = new Stage();
 
-	/*
-	 * public static void main(String[] args) {
-	 * Application.launch(GerenciarInstrutorBoundary.class, args); }
-	 * 
-	 * Scene scene = null; Stage stage = null;
-	 * 
-	 * @Override public void start(Stage primaryStage) throws Exception { stage =
-	 * primaryStage; scene = new Scene(gridGerenciarInstrutores, 500, 500);
-	 * scene.getStylesheets().add("style.css"); iniciarTela();
-	 * stage.setScene(scene); stage.show(); }
-	 */
-
 	public GerenciarInstrutorBoundary() {
 
 		iniciarTela();
@@ -76,6 +72,8 @@ public class GerenciarInstrutorBoundary implements Listener {
 		iniciarChoiceBox();
 		iniciarCss();
 		iniciarEventos();
+		iniciarControl();
+
 	}
 
 	private void iniciarModalAdicionarPlanos() {
@@ -128,6 +126,24 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 	private void iniciarEventos() {
 
+		// Cadastrar novo Instrutor
+		btnCadastrar.setOnAction(event -> {
+			System.out.println("CLICKOU");
+
+			boolean insercao = instrutorControl.cadastrar(lvPlanos.getItems());
+
+			if (insercao) {
+
+				UtilsGui.showAlert("Inserção de Instruto", "Instrutor",
+						"Instrutor " + txtNome.getText() + " Inserido Com sucesso", AlertType.INFORMATION);
+
+				instrutorControl.limparCampos();
+			} else {
+				System.out.println("DEU RUÍM");
+			}
+
+		});
+
 		// ADICIONAR PLANOS
 		btnAdicionar.setOnAction(event -> {
 			s1.show();
@@ -136,9 +152,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 		// REMOVER DA TABLE VIEW
 		btnRemover.setOnAction(event -> {
-
 			lvPlanos.getItems().remove(lvPlanos.getSelectionModel().getSelectedItem());
-
 		});
 
 	}
@@ -153,6 +167,15 @@ public class GerenciarInstrutorBoundary implements Listener {
 		lblVincularPlano.getStyleClass().add("textCentralizado");
 		lblGerenciarInstrutores.getStyleClass().add("textCentralizado");
 		gridGerenciarInstrutores.getStyleClass().add("grid");
+
+	}
+
+	private void iniciarControl() {
+
+		Bindings.bindBidirectional(txtCpf.textProperty(), instrutorControl.cpfProps);
+		Bindings.bindBidirectional(txtNome.textProperty(), instrutorControl.nomeProps);
+		Bindings.bindBidirectional(txtEmail.textProperty(), instrutorControl.emailProps);
+		Bindings.bindBidirectional(cbSexo.valueProperty(), instrutorControl.sexoProps);
 
 	}
 

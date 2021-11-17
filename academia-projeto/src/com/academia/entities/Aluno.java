@@ -1,7 +1,6 @@
 package com.academia.entities;
 
 import java.util.Date;
-import java.util.List;
 
 public class Aluno extends Pessoa {
 
@@ -9,9 +8,6 @@ public class Aluno extends Pessoa {
 	private String observacao = "";
 
 	private Assinatura assinatura;
-
-	private List<Pagamento> pagamento;
-	private List<Avaliacao> avaliacoes;
 
 	public Aluno(String cpf, String nome, Date nascimento, String email, String telefone, Character sexo, String cep,
 			String bairro, String rua, String num, Date data_matricula, boolean ativo, String observacao) {
@@ -49,26 +45,10 @@ public class Aluno extends Pessoa {
 		this.assinatura = assinatura;
 	}
 
-	public List<Pagamento> getPagamento() {
-		return pagamento;
-	}
-
-	public void setPagamento(List<Pagamento> pagamento) {
-		this.pagamento = pagamento;
-	}
-
-	public List<Avaliacao> getAvaliacoes() {
-		return avaliacoes;
-	}
-
-	public void setAvaliacoes(List<Avaliacao> avaliacoes) {
-		this.avaliacoes = avaliacoes;
-	}
-
 	@Override
 	public String toString() {
 		return super.toString() + "\nAluno [ativo=" + ativo + ", observacao=" + observacao + ", assinaturas="
-				+ assinatura + ", pagamento=" + pagamento + ", avaliacoes=" + avaliacoes + "]";
+				+ assinatura + "];";
 	}
 
 }
