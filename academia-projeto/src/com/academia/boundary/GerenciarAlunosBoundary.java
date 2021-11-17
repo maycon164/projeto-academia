@@ -5,10 +5,10 @@ import java.util.Date;
 
 import com.academia.control.AlunoControl;
 import com.academia.control.PlanoControl;
-import com.academia.dto.AlunoPlanoDTO;
+import com.academia.entities.Aluno;
 import com.academia.entities.Plano;
 import com.academia.factory.ControllerMediator;
-import com.academia.util.Utils;
+import com.academia.util.UtilsGui;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -39,7 +39,7 @@ public class GerenciarAlunosBoundary {
 	private FlowPane fpBotoes = new FlowPane();
 
 	// TABLE VIEW
-	private TableView<AlunoPlanoDTO> tblAlunoPlano = new TableView<>();
+	private TableView<Aluno> tblAlunoPlano = new TableView<>();
 
 	// LABELS
 	private Label lblGerenciamentoDeAluno = new Label("Gerenciamento de Aluno");
@@ -62,6 +62,7 @@ public class GerenciarAlunosBoundary {
 	}
 
 	public VBox render() {
+		alunoControl.atualizarListaAluno();
 		return vboxAlunoPlano;
 	}
 
@@ -106,22 +107,31 @@ public class GerenciarAlunosBoundary {
 		// EVENTO DE DELEÇÃO DE ALUNO E SEU PLANO;
 		btnExcluir.setOnAction(event -> {
 
-			AlunoPlanoDTO aluno = tblAlunoPlano.getSelectionModel().getSelectedItem();
+			Aluno aluno = tblAlunoPlano.getSelectionModel().getSelectedItem();
 
 			// CONFIRMAR EXCLUSÃO
-			Utils.showConfirmation("Excluir Aluno", "Deseja excluir o aluno " + aluno.getAluno()).ifPresent(b -> {
+			UtilsGui.showConfirmation("Excluir Aluno", "Deseja excluir o aluno " + aluno.getNome()).ifPresent(b -> {
 
 				if (b.getText().equalsIgnoreCase("sim")) {
 
 					boolean excluir = alunoControl.excluir(aluno);
 
 					if (excluir) {
-						Utils.showAlert("EXCLUSÃO DE ALUNO", "AVISO",
+						UtilsGui.showAlert("EXCLUSÃO DE ALUNO", "AVISO",
 								"O ALUNO COM O CPF " + aluno.getCpf() + " FOI EXCLUÍDO", AlertType.INFORMATION);
 					}
 				}
 
 			});
+
+		});
+
+		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+			
+			Plano plano = cbPlano.getValue();
+			Plano plano2 = tblAlunoPlano.getSelectionModel().getSelectedItem().getAssinatura().getPlano();
+
+			System.out.println(plano == plano2);
 
 		});
 
@@ -157,31 +167,39 @@ public class GerenciarAlunosBoundary {
 
 	@SuppressWarnings("unchecked")
 	private void iniciarTabelaAlunoPlano() {
-		TableColumn<AlunoPlanoDTO, String> alunoCol = new TableColumn<>("ALUNO");
-		alunoCol.setCellValueFactory(new PropertyValueFactory<>("aluno"));
 
-		TableColumn<AlunoPlanoDTO, String> planoCol = new TableColumn<>("PLANO");
-		planoCol.setCellValueFactory(new PropertyValueFactory<>("plano"));
+		TableColumn<Aluno, String> alunoCol = new TableColumn<>("ALUNO");
+		alunoCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
-		TableColumn<AlunoPlanoDTO, Integer> duracaoCol = new TableColumn<>("DURAÇÃO (DIAS)");
-		duracaoCol.setCellValueFactory(new PropertyValueFactory<>("duracao"));
+		// COMO PEGAR O PLANO
+		TableColumn<Aluno, String> planoCol = new TableColumn<>("PLANO");
+		planoCol.setCellValueFactory(item -> {
+			String plano = item.getValue().getAssinatura().getPlano().getNome();
+			return new ReadOnlyStringWrapper(plano);
+		});
 
-		TableColumn<AlunoPlanoDTO, String> dataInicioCol = new TableColumn<>("DATA INICIO");
+		TableColumn<Aluno, String> duracaoCol = new TableColumn<>("DURAÇÃO (DIAS)");
+		duracaoCol.setCellValueFactory(item -> {
+			Integer duracao = item.getValue().getAssinatura().getPlano().getDuracao();
+			return new ReadOnlyStringWrapper(String.valueOf(duracao));
+		});
+
+		TableColumn<Aluno, String> dataInicioCol = new TableColumn<>("DATA INICIO");
 
 		dataInicioCol.setCellValueFactory(item -> {
-			Date d = item.getValue().getDataInicio();
+			Date d = item.getValue().getAssinatura().getDataInicio();
 			return new ReadOnlyStringWrapper(sdf.format(d));
 		});
 
-		TableColumn<AlunoPlanoDTO, String> dataExpiracaoCol = new TableColumn<>("DATA EXPIRAÇÃO");
+		TableColumn<Aluno, String> dataExpiracaoCol = new TableColumn<>("DATA EXPIRAÇÃO");
 
 		dataExpiracaoCol.setCellValueFactory(item -> {
-			Date d = item.getValue().getDataExpiracao();
+			Date d = item.getValue().getAssinatura().getDataExpiracao();
 			return new ReadOnlyStringWrapper(sdf.format(d));
 		});
 
 		tblAlunoPlano.getColumns().setAll(alunoCol, planoCol, duracaoCol, dataInicioCol, dataExpiracaoCol);
-		tblAlunoPlano.setItems(alunoControl.getAlunosPlanosDTO());
+		tblAlunoPlano.setItems(alunoControl.getAlunos());
 
 	}
 

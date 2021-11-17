@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.academia.dao.AlunoDao;
-import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
 import com.academia.entities.Endereco;
@@ -56,13 +55,9 @@ public class AlunoControl {
 	public StringProperty observacaoProps = new SimpleStringProperty("");
 
 	// LISTAS
-
-	private ObservableList<AlunoPlanoDTO> alunosPlanos = FXCollections
-			.observableArrayList(alunoConn.findAllAlunoPlano());
-
-	private FilteredList<AlunoPlanoDTO> filteredAlunosPlanos = new FilteredList<>(alunosPlanos);
-
-	private SortedList<AlunoPlanoDTO> sortedAlunosPlanos = new SortedList<>(filteredAlunosPlanos);
+	private ObservableList<Aluno> alunos = FXCollections.observableArrayList(alunoConn.findAll());
+	private FilteredList<Aluno> filteredAlunos = new FilteredList<>(alunos);
+	private SortedList<Aluno> sortedAlunos = new SortedList<>(filteredAlunos);
 
 	// PROPERTY MESSAGE ERROR
 	public StringProperty messageErrorProps = new SimpleStringProperty();
@@ -73,14 +68,13 @@ public class AlunoControl {
 	// ALUNO PARA ALTERAÇÃO
 	private Aluno aluno = null;
 
-	public AlunoControl(Aluno aluno) {
-		this.iniciarEventos();
-		this.aluno = aluno;
-
-	}
-
 	public AlunoControl() {
 		this.iniciarEventos();
+	}
+
+	public void atualizarListaAluno() {
+		filteredAlunos.setPredicate(a -> false);
+		filteredAlunos.setPredicate(a -> true);
 	}
 
 	public void cadastrar() {
@@ -109,7 +103,7 @@ public class AlunoControl {
 
 				}
 
-				alunosPlanos.add(AlunoPlanoDTO.from(aluno));
+				alunos.add(aluno);
 
 				messageErrorProps.set("Cadastrado Com Sucesso");
 				this.limparCampos();
@@ -134,10 +128,10 @@ public class AlunoControl {
 		System.out.println("AGORA AQUI VEM A LÓGICA PARA ALTERAR.....");
 	}
 
-	public boolean excluir(AlunoPlanoDTO aluno) {
+	public boolean excluir(Aluno aluno) {
 
 		if (alunoConn.deleteByCpf(aluno.getCpf())) {
-			alunosPlanos.remove(aluno);
+			alunos.remove(aluno);
 			return true;
 		}
 
@@ -222,14 +216,14 @@ public class AlunoControl {
 		// ORDENAR LISTA CAMPO PESQUISAR
 		pesquisaProps.addListener((obs, oldValue, newValue) -> {
 
-			filteredAlunosPlanos.setPredicate(p -> {
+			filteredAlunos.setPredicate(p -> {
 				if (newValue.isEmpty() || newValue == null) {
 					return true;
 				}
 
 				String parametro = newValue.toLowerCase();
 
-				if (p.getAluno().toLowerCase().contains(parametro)) {
+				if (p.getNome().toLowerCase().contains(parametro)) {
 					return true;
 				}
 
@@ -292,8 +286,8 @@ public class AlunoControl {
 
 	}
 
-	public ObservableList<AlunoPlanoDTO> getAlunosPlanosDTO() {
-		return sortedAlunosPlanos;
+	public ObservableList<Aluno> getAlunos() {
+		return sortedAlunos;
 	}
 
 	public void setAluno(String cpf) {

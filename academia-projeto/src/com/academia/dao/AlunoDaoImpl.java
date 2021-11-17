@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.academia.db.DB;
@@ -22,6 +24,7 @@ public class AlunoDaoImpl implements AlunoDao {
 
 	private Connection conn;
 	private PlanoDao planoConn = DaoFactory.getPlanoDao();
+	private Map<String, Aluno> alunos = new LinkedHashMap<>();
 
 	public AlunoDaoImpl(Connection conn) {
 		this.conn = conn;
@@ -166,37 +169,6 @@ public class AlunoDaoImpl implements AlunoDao {
 	}
 
 	@Override
-	public List<AlunoDTO> findAll() {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			String sql = "SELECT * FROM vw_aluno_dto vad";
-			ps = conn.prepareStatement(sql);
-			rs = ps.executeQuery();
-
-			List<AlunoDTO> alunos = new ArrayList<>();
-
-			while (rs.next()) {
-				alunos.add(instantiateAlunoDTO(rs));
-			}
-
-			return alunos;
-
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
-
-		}
-
-		return null;
-	}
-
-	@Override
 	public List<AlunoDTO> findAllByParameter(String parameter) {
 		// TODO Auto-generated method stub
 		return null;
@@ -237,12 +209,6 @@ public class AlunoDaoImpl implements AlunoDao {
 		return new AlunoPlanoDTO(rs.getString("aluno"), rs.getString("cpf"), rs.getString("plano"),
 				rs.getInt("id_plano"), rs.getInt("duracao"), rs.getDate("data_inicio"), rs.getDate("data_expiracao"));
 
-	}
-
-	private AlunoDTO instantiateAlunoDTO(ResultSet rs) throws SQLException {
-
-		return new AlunoDTO(rs.getString("cpf"), rs.getString("aluno"), rs.getInt("idade"),
-				rs.getDate("data_matricula"), rs.getBoolean("ativo"));
 	}
 
 	private Aluno instantiateAluno(ResultSet rs) throws SQLException {
@@ -305,7 +271,7 @@ public class AlunoDaoImpl implements AlunoDao {
 			}
 
 			return excluir;
-			
+
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -331,6 +297,47 @@ public class AlunoDaoImpl implements AlunoDao {
 		assinatura.setDataExpiracao(rs.getDate("data_expiracao"));
 
 		return assinatura;
+	}
+
+	@Override
+	public List<Aluno> findAll() {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String sql = "SELECT * FROM vw_aluno";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+
+				if (!alunos.containsKey(rs.getString("cpf"))) {
+
+					Aluno aluno = instantiateAluno(rs);
+					alunos.put(aluno.getCpf(), aluno);
+				}
+
+			}
+
+			List<Aluno> aux = new ArrayList<>();
+
+			for (Aluno aluno : alunos.values()) {
+				aux.add(aluno);
+			}
+
+			return aux;
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			DB.closeStatement(ps);
+			DB.closeResultSet(rs);
+
+		}
+
+		return null;
 	}
 
 }

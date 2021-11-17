@@ -1,29 +1,38 @@
 package com.academia.main;
 
-import com.academia.dao.PlanoDao;
-import com.academia.entities.Plano;
+import java.util.List;
+
+import com.academia.dao.AlunoDao;
+import com.academia.entities.Aluno;
 import com.academia.factory.DaoFactory;
 
 public class TESTEALUNO {
 
 	public static void main(String[] args) {
 
-		PlanoDao planoConn = DaoFactory.getPlanoDao();
-		Plano plano = new Plano();
-		plano.setNome("RONALDO");
-		plano.setDescricao("RONALDINHO GAUCHO");
-		plano.setPreco(100d);
-		plano.setDuracao(10);
+		AlunoDao alunoConn = DaoFactory.getAlunoDao();
+		List<Aluno> a1 = alunoConn.findAll();
+		List<Aluno> a2 = alunoConn.findAll();
 
-		plano = planoConn.insert(plano);
-		System.out.println("Id Plano: " + plano.getIdPlano());
-		System.out.println("Nome: " + plano.getNome());
-		System.out.println("Descrição: " + plano.getDescricao());
-		System.out.println("Duração: " + plano.getDuracao());
-		System.out.println("Preço: " + plano.getPreco());
+		System.out.println(a1.get(0).getAssinatura().getPlano() == a2.get(0).getAssinatura().getPlano());
 
 		/*
-		 * List<Plano> planos1 = planoConn.findAll(); List<Plano> planos2 =
+		 * Aluno a1 = alunoConn.findByCpf("1"); Aluno a2 = alunoConn.findByCpf("2");
+		 * System.out.println("a1 " + a1.getAssinatura().getPlano());
+		 * System.out.println("a2 " + a2.getAssinatura().getPlano()); Plano p1 =
+		 * a1.getAssinatura().getPlano(); Plano p2 = a2.getAssinatura().getPlano();
+		 * 
+		 * PlanoDao planoConn = DaoFactory.getPlanoDao(); Plano plano = new Plano();
+		 * plano.setNome("RONALDO"); plano.setDescricao("RONALDINHO GAUCHO");
+		 * plano.setPreco(100d); plano.setDuracao(10);
+		 * 
+		 * plano = planoConn.insert(plano); System.out.println("Id Plano: " +
+		 * plano.getIdPlano()); System.out.println("Nome: " + plano.getNome());
+		 * System.out.println("Descrição: " + plano.getDescricao());
+		 * System.out.println("Duração: " + plano.getDuracao());
+		 * System.out.println("Preço: " + plano.getPreco());
+		 * 
+		 * /* List<Plano> planos1 = planoConn.findAll(); List<Plano> planos2 =
 		 * planoConn.findAll();
 		 * 
 		 * // TESTE 1 planos1.add(new Plano(101, "CICLISMO", "TESTE", 99.99, 100));

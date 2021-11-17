@@ -82,27 +82,4 @@ public class Utils {
 		return dataFim;
 	}
 
-
-	public static Optional<ButtonType> showConfirmation(String title, String text) {
-
-		Alert dialogoExe = new Alert(Alert.AlertType.CONFIRMATION);
-
-		ButtonType btnSim = new ButtonType("Sim");
-		ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-		dialogoExe.setTitle(title);
-		dialogoExe.setHeaderText(text);
-		dialogoExe.getButtonTypes().setAll(btnSim, btnCancelar);
-
-		return dialogoExe.showAndWait();
-
-	}
-
-	public static void showAlert(String title, String header, String content, AlertType type) {
-		Alert alert = new Alert(type);
-		alert.setTitle(title);
-		alert.setHeaderText(header);
-		alert.setContentText(content);
-		alert.show();
-	}
 }

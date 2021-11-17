@@ -15,10 +15,10 @@ public interface AlunoDao {
 	Aluno findByCpf(String cpf);
 
 	Aluno update(Aluno aluno);
+	
+	List<Aluno> findAll();
 
 	boolean deleteByCpf(String cpf);
-
-	List<AlunoDTO> findAll();
 
 	List<AlunoPlanoDTO> findAllAlunoPlano();
 

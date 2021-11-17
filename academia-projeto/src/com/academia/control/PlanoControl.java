@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 
 public class PlanoControl {
 
@@ -26,9 +27,10 @@ public class PlanoControl {
 
 	// LISTAS
 	private ObservableList<Plano> planos = FXCollections.observableArrayList(planoConn.findAll());
+	private FilteredList<Plano> filteredPlano = new FilteredList<>(planos, p -> true);
 
 	public ObservableList<Plano> getPlanos() {
-		return planos;
+		return filteredPlano;
 	}
 
 	public void cadastrar() {
@@ -49,6 +51,37 @@ public class PlanoControl {
 
 	}
 
+	public boolean atualizar(Plano plano) {
+
+		try {
+
+			validarCampos();
+
+			Plano aux = planoFromBoundary();
+			plano.setNome(aux.getNome());
+			plano.setDescricao(aux.getDescricao());
+			plano.setPreco(aux.getPreco());
+			plano.setDuracao(aux.getDuracao());
+
+			atualizarListaPlanos();
+
+			return planoConn.update(plano);
+
+		} catch (EmptyFieldException e) {
+			messageError.set(e.getMessage());
+		}
+
+		return false;
+
+	}
+
+	private void atualizarListaPlanos() {
+
+		filteredPlano.setPredicate(p -> false);
+		filteredPlano.setPredicate(p -> true);
+
+	}
+
 	private void validarCampos() throws EmptyFieldException {
 
 		if (nomeProps.get().isEmpty() || duracaoProps.get().isEmpty() || precoProps.get().isEmpty()
@@ -58,7 +91,7 @@ public class PlanoControl {
 
 	}
 
-	private void limparCampos() {
+	public void limparCampos() {
 
 		nomeProps.set("");
 		duracaoProps.set("");
@@ -85,6 +118,15 @@ public class PlanoControl {
 			return true;
 		}
 		return false;
+	}
+
+	public void linhaParaForm(Plano plano) {
+
+		nomeProps.set(plano.getNome());
+		precoProps.set(String.valueOf(plano.getPreco()));
+		duracaoProps.set(String.valueOf(plano.getDuracao()));
+		descricaoProps.set(plano.getDescricao());
+
 	}
 
 }

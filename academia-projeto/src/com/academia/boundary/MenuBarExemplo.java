@@ -41,6 +41,7 @@ public class MenuBarExemplo extends Application {
 		MenuItem itemCadastrarPlano = new MenuItem("Cadastrar Plano");
 
 		itemCadastrarPlano.setOnAction(event -> {
+			gerenciarPlanoBoundary.iniciarParaCadastro();
 			pane.setCenter(gerenciarPlanoBoundary.render());
 		});
 

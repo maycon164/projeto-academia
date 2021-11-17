@@ -1,6 +1,6 @@
 package com.academia.main;
 
-import com.academia.util.Utils;
+import com.academia.util.UtilsGui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -16,11 +16,11 @@ public class Main extends Application {
 
 		// Utils.showAlert("TESTE", "TESTANDO HEADER", "TESTANDO CONTEUDO",
 		// AlertType.CONFIRMATION);
-		
-		Utils.showConfirmation("DESEJA MESMO CONFIRMAR", "RONALDO").ifPresent(b -> {
-			
+
+		UtilsGui.showConfirmation("DESEJA MESMO CONFIRMAR", "RONALDO").ifPresent(b -> {
+
 			System.out.println(b.getText());
-			
+
 		});
 
 		primaryStage.setScene(scene);

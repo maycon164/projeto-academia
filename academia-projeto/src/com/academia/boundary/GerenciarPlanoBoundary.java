@@ -3,7 +3,7 @@ package com.academia.boundary;
 import com.academia.control.PlanoControl;
 import com.academia.entities.Plano;
 import com.academia.factory.ControllerMediator;
-import com.academia.util.Utils;
+import com.academia.util.UtilsGui;
 
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
@@ -18,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
@@ -55,17 +56,6 @@ public class GerenciarPlanoBoundary {
 	// TABLEVIEW
 	private TableView<Plano> tblPlanos = new TableView<>();
 
-	/*
-	 * public static void main(String[] args) {
-	 * Application.launch(GerenciarPlanoBoundary.class, args); }
-	 * 
-	 * @Override public void start(Stage primaryStage) throws Exception {
-	 * this.iniciarTela();
-	 * 
-	 * Scene scene = new Scene(splitGerenciamentoPlano, 500, 500);
-	 * scene.getStylesheets().add("style.css"); primaryStage.setMaximized(true);
-	 * primaryStage.setScene(scene); primaryStage.show(); }
-	 */
 
 	public GerenciarPlanoBoundary() {
 		iniciarTela();
@@ -74,6 +64,21 @@ public class GerenciarPlanoBoundary {
 
 	public SplitPane render() {
 		return splitGerenciamentoPlano;
+	}
+
+	public void iniciarParaCadastro() {
+
+		planoControl.limparCampos();
+		btnCadastrar.setDisable(false);
+		btnAlterar.setDisable(true);
+
+	}
+
+	public void iniciarParaAlterar() {
+
+		btnCadastrar.setDisable(true);
+		btnAlterar.setDisable(false);
+
 	}
 
 	private void iniciarTela() {
@@ -95,19 +100,34 @@ public class GerenciarPlanoBoundary {
 
 		});
 
+		// SELECIONANDO ITEM DA TABELA
+
+		tblPlanos.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+
+			if (event.getClickCount() > 1) {
+				Plano plano = tblPlanos.getSelectionModel().getSelectedItem();
+
+				planoControl.linhaParaForm(plano);
+				iniciarParaAlterar();
+
+			}
+
+		});
+
+		// EXCLUIR UM PLANO
 		btnExcluir.setOnAction(event -> {
 
 			Plano plano = tblPlanos.getSelectionModel().getSelectedItem();
 
 			// CONFIRMAR EXCLUSÃO DE PLANO
-			Utils.showConfirmation("Excluir Registro", "Deseja Excluir o Plano " + plano.getNome()).ifPresent(b -> {
+			UtilsGui.showConfirmation("Excluir Registro", "Deseja Excluir o Plano " + plano.getNome()).ifPresent(b -> {
 
 				if (b.getText().equalsIgnoreCase("sim")) {
 
 					boolean excluir = planoControl.excluir(plano);
 
 					if (excluir) {
-						Utils.showAlert("EXCLUSÃO DE PLANO", "AVISO",
+						UtilsGui.showAlert("EXCLUSÃO DE PLANO", "AVISO",
 								"O PLANO COM ID " + plano.getIdPlano() + " FOI EXCLUÍDO", AlertType.INFORMATION);
 					}
 				}
@@ -115,6 +135,27 @@ public class GerenciarPlanoBoundary {
 			});
 
 		});
+
+		// CONSTRAINTS PARA OS txts
+		UtilsGui.setTextFieldDouble(txtPreco);
+		UtilsGui.setTextFieldInteger(txtDuracao);
+
+		// BOTÃO PARA ALTERAR UM PLANO
+		btnAlterar.setOnAction(event -> {
+
+			if (planoControl.atualizar(tblPlanos.getSelectionModel().getSelectedItem())) {
+				iniciarParaCadastro();
+			}
+
+		});
+
+		// BOTÃO DE CANCELAR E VOLTAR A TELA INICIAL
+		btnCancelar.setOnAction(event -> {
+
+			iniciarParaCadastro();
+
+		});
+
 	}
 
 	private void iniciarControler() {

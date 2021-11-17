@@ -9,6 +9,7 @@ import com.academia.control.PlanoControl;
 import com.academia.dto.InstrutorDTO;
 import com.academia.entities.Plano;
 import com.academia.factory.ControllerMediator;
+import com.academia.util.UtilsGui;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -217,14 +218,14 @@ public class AlunoCadastroBoundary {
 
 		btnCancelar.setOnAction(event -> {
 			BorderPane bp = (BorderPane) gridCadastroAluno.getScene().getRoot();
-			bp.setCenter(new Label("VOLTANDO A TELA INICIAL ..... \nQual Tela Inicial?"));
+			bp.setCenter(new Label("VOLTANDO A TELA INICIAL ..... \nQual Tela Inicial?\n?????????"));
 		});
 
 		// ATUALIZAR O A LISTA DE INSTRUTORES DE ACORDO COM O PLANO
-		cbPlano.getSelectionModel().selectedItemProperty().addListener((event, oldValue, newValue) -> {
+		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 
 			Plano plano = cbPlano.getValue();
-
+			System.out.println(plano);
 			this.atualizarComboBoxInstrutores(plano.getIdPlano());
 			this.preencherCamposPlano(plano);
 			alunoControl.atualizarDataFim(txtDataInicio.getText());
@@ -236,6 +237,19 @@ public class AlunoCadastroBoundary {
 			alunoControl.alterar();
 			messageError.setText("Alterado Com Sucesso");
 		});
+
+		// FORMATANDO OS TXTS
+		UtilsGui.setTextFieldInteger(txtCpf);
+		UtilsGui.setTextFieldMaxLength(txtCpf, 11);
+
+		UtilsGui.setTextFieldInteger(txtNum);
+		UtilsGui.setTextFieldMaxLength(txtNum, 4);
+
+		UtilsGui.setTextFieldInteger(txtTelefone);
+		UtilsGui.setTextFieldMaxLength(txtTelefone, 11);
+
+		UtilsGui.setTextFieldInteger(txtCep);
+		UtilsGui.setTextFieldMaxLength(txtCep, 8);
 
 	}
 

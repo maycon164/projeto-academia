@@ -17,7 +17,7 @@ public class PlanoDaoImpl implements PlanoDao {
 	public Connection conn;
 
 	// GARANTINDO QUE NÃO HAJA MULTIPLAS INSTANCIAS DESNECESSARIAS
-	public Map<Integer, Plano> planos = new LinkedHashMap<>();
+	public static Map<Integer, Plano> planos = new LinkedHashMap<>();
 
 	public PlanoDaoImpl(Connection conn) {
 		this.conn = conn;
@@ -90,10 +90,15 @@ public class PlanoDaoImpl implements PlanoDao {
 			Plano plano = null;
 
 			if (rs.next()) {
-				plano = instantiatePlano(rs);
+
+				if (!planos.containsKey(id)) {
+					plano = instantiatePlano(rs);
+					planos.put(plano.getIdPlano(), plano);
+					return plano;
+				}
+
 			}
 
-			return plano;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -162,6 +167,40 @@ public class PlanoDaoImpl implements PlanoDao {
 		} finally {
 			DB.closeStatement(ps);
 		}
+		return false;
+	}
+
+	@Override
+	public boolean update(Plano plano) {
+		PreparedStatement ps = null;
+
+		try {
+
+			String sql = "UPDATE plano SET nome = ?, descricao = ?, preco = ?, duracao = ? WHERE id_plano = ? ";
+
+			ps = conn.prepareStatement(sql);
+
+			ps.setString(1, plano.getNome());
+			ps.setString(2, plano.getDescricao());
+			ps.setDouble(3, plano.getPreco());
+			ps.setInt(4, plano.getDuracao());
+			ps.setInt(5, plano.getIdPlano());
+
+			int rows = ps.executeUpdate();
+
+			if (rows > 0) {
+
+				System.out.println("LINHAS " + rows + " AFETADAS");
+				return true;
+
+			}
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+		}
+
 		return false;
 	}
 
