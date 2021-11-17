@@ -11,9 +11,10 @@ import javafx.stage.Stage;
 
 public class MenuBarExemplo extends Application {
 
-	public AlunoCadastroBoundary alunoCadastroBoundary = new AlunoCadastroBoundary();
-	public GerenciarAlunosBoundary gerenciarAlunosBoundary = new GerenciarAlunosBoundary();
+	private AlunoCadastroBoundary alunoCadastroBoundary = new AlunoCadastroBoundary();
+	private GerenciarAlunosBoundary gerenciarAlunosBoundary = new GerenciarAlunosBoundary();
 	private GerenciarPlanoBoundary gerenciarPlanoBoundary = new GerenciarPlanoBoundary();
+	private GerenciarInstrutorBoundary gerenciarInstrutorBoundary = new GerenciarInstrutorBoundary();
 
 	public static void main(String[] args) {
 		Application.launch(MenuBarExemplo.class, args);
@@ -45,7 +46,12 @@ public class MenuBarExemplo extends Application {
 			pane.setCenter(gerenciarPlanoBoundary.render());
 		});
 
-		menuCadastros.getItems().addAll(itemCadastrarAluno, itemCadastrarPlano);
+		MenuItem itemCadastrarInstrutor = new MenuItem("Cadastrar Instrutor");
+		itemCadastrarInstrutor.setOnAction(event -> {
+			pane.setCenter(gerenciarInstrutorBoundary.render());
+		});
+
+		menuCadastros.getItems().addAll(itemCadastrarAluno, itemCadastrarPlano, itemCadastrarInstrutor);
 
 		MenuItem itemGerenciarAlunos = new MenuItem("Gerenciar Alunos");
 
