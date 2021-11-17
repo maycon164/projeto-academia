@@ -16,12 +16,15 @@ public class MenuBarExemplo extends Application {
 	private GerenciarPlanoBoundary gerenciarPlanoBoundary = new GerenciarPlanoBoundary();
 	private GerenciarInstrutorBoundary gerenciarInstrutorBoundary = new GerenciarInstrutorBoundary();
 
+	private static Stage root;
+
 	public static void main(String[] args) {
 		Application.launch(MenuBarExemplo.class, args);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		root = primaryStage;
 		BorderPane pane = new BorderPane();
 
 		MenuBar menuBar = new MenuBar();
@@ -75,9 +78,12 @@ public class MenuBarExemplo extends Application {
 		Scene scene = new Scene(pane, 500, 500);
 		scene.getStylesheets().add("style.css");
 
-		primaryStage.setMaximized(true);
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		root.setMaximized(true);
+		root.setScene(scene);
+		root.show();
 	}
 
+	public static Stage getRoot() {
+		return root;
+	}
 }

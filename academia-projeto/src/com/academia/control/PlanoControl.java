@@ -75,7 +75,7 @@ public class PlanoControl {
 
 	}
 
-	private void atualizarListaPlanos() {
+	public void atualizarListaPlanos() {
 
 		filteredPlano.setPredicate(p -> false);
 		filteredPlano.setPredicate(p -> true);
