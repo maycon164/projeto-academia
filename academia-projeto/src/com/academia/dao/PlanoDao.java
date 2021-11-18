@@ -16,4 +16,6 @@ public interface PlanoDao {
 
 	boolean update(Plano plano);
 
+	List<Plano> findAllPlanosByInstrutor(String cpf);
+
 }

@@ -6,16 +6,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.academia.db.DB;
 import com.academia.dto.InstrutorDTO;
 import com.academia.entities.Instrutor;
 import com.academia.entities.Plano;
+import com.academia.factory.DaoFactory;
 
 public class InstrutorDaoImpl implements InstrutorDao {
 
 	private Connection conn;
+	private PlanoDao planoConn = DaoFactory.getPlanoDao();
+
+	private static Map<String, Instrutor> instrutores = new LinkedHashMap<>();
 
 	public InstrutorDaoImpl(Connection conn) {
 		this.conn = conn;
@@ -35,7 +41,7 @@ public class InstrutorDaoImpl implements InstrutorDao {
 
 			while (rs.next()) {
 
-				instrutoresDTO.add(instantiateInstrutor(rs));
+				instrutoresDTO.add(instantiateInstrutorDTO(rs));
 
 			}
 
@@ -50,12 +56,13 @@ public class InstrutorDaoImpl implements InstrutorDao {
 		return null;
 	}
 
-	private InstrutorDTO instantiateInstrutor(ResultSet rs) throws SQLException {
+	private InstrutorDTO instantiateInstrutorDTO(ResultSet rs) throws SQLException {
 
 		return new InstrutorDTO(rs.getString("cpf"), rs.getString("instrutor"));
 
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public boolean insert(Instrutor instrutor) {
 		PreparedStatement ps = null;
@@ -122,6 +129,57 @@ public class InstrutorDaoImpl implements InstrutorDao {
 		}
 
 		return true;
+	}
+
+	@Override
+	public List<Instrutor> findAll() {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String sql = "SELECT * FROM vw_instrutor";
+			ps = conn.prepareStatement(sql);
+
+			rs = ps.executeQuery();
+
+			List<Instrutor> auxiliar = new ArrayList<>();
+
+			while (rs.next()) {
+				if (!instrutores.containsKey(rs.getString("cpf"))) {
+					Instrutor instrutor = instantiateInstrutor(rs);
+					instrutores.put(instrutor.getCpf(), instrutor);
+				}
+			}
+			
+			for (Instrutor a : instrutores.values()) {
+				auxiliar.add(a);
+			}
+			return auxiliar;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.closeStatement(ps);
+			DB.closeResultSet(rs);
+		}
+
+		return null;
+	}
+
+	private Instrutor instantiateInstrutor(ResultSet rs) throws SQLException {
+		Instrutor instrutor = new Instrutor();
+		instrutor.setCpf(rs.getString("cpf"));
+		instrutor.setNome(rs.getString("instrutor"));
+		instrutor.setSexo(rs.getString("sexo").charAt(0));
+		instrutor.setEmail(rs.getString("email"));
+
+		List<Plano> planos = planoConn.findAllPlanosByInstrutor(instrutor.getCpf());
+
+		for (Plano plano : planos) {
+			instrutor.getPlanos().add(plano);
+		}
+
+		return instrutor;
 	}
 
 }

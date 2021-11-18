@@ -33,7 +33,7 @@ public class PlanoControl {
 		return filteredPlano;
 	}
 
-	public void cadastrar() {
+	public boolean cadastrar() {
 
 		try {
 
@@ -44,11 +44,13 @@ public class PlanoControl {
 			plano = planoConn.insert(plano);
 			planos.add(plano);
 			limparCampos();
+			return true;
 
 		} catch (EmptyFieldException e) {
 			messageError.set(e.getMessage());
 		}
 
+		return false;
 	}
 
 	public boolean atualizar(Plano plano) {

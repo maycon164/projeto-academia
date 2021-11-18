@@ -77,7 +77,7 @@ public class AlunoControl {
 		filteredAlunos.setPredicate(a -> true);
 	}
 
-	public void cadastrar() {
+	public boolean cadastrar() {
 
 		try {
 
@@ -104,10 +104,8 @@ public class AlunoControl {
 				}
 
 				alunos.add(aluno);
-
-				messageErrorProps.set("Cadastrado Com Sucesso");
 				this.limparCampos();
-
+				return true;
 			} catch (ParseException e) {
 
 				messageErrorProps.set("INFORME A DATA(dd/MM/yyyy)");
@@ -121,7 +119,7 @@ public class AlunoControl {
 			messageErrorProps.set(e.getMessage());
 
 		}
-
+		return false;
 	}
 
 	public void alterar() {
@@ -140,22 +138,16 @@ public class AlunoControl {
 
 	private void validarCampos() throws EmptyFieldException {
 
-		if (cpfProps.get().isEmpty() || nomeProps.get().isEmpty() || nascimentoProps.get().isEmpty()
-				|| emailProps.get().isEmpty() || telefoneProps.get().isEmpty() || sexoProps.get().isEmpty()) {
-			System.out.println("");
-			throw new EmptyFieldException("DADOS DO ALUNO: ALGUNS CAMPOS VAZIOS");
-		}
+		Utils.verificarCampos(cpfProps.get(), nomeProps.get(), nascimentoProps.get(), emailProps.get(),
+				telefoneProps.get(), sexoProps.get());
 
-		if (cepProps.get().isEmpty() || bairroProps.get().isEmpty() || ruaProps.get().isEmpty()
-				|| numProps.get().isEmpty()) {
-			throw new EmptyFieldException("DADOS DE ENDEREÇO: ALGUNS CAMPOS VAZIOS");
-		}
+		Utils.verificarCampos(cepProps.get(), bairroProps.get(), ruaProps.get(), numProps.get());
 
-		if ((idPlano == null) || duracaoProps.get().isEmpty() || dataInicioProps.get().isEmpty()
-				|| dataFimProps.get().isEmpty() || precoProps.get().isEmpty()) {
-			throw new EmptyFieldException("DADOS DE PLANO: ALGUNS CAMPOS VAZIOS");
+		Utils.verificarCampos(duracaoProps.get(), dataInicioProps.get(), dataFimProps.get(), precoProps.get());
+		
+		if(idPlano == null) {
+			throw new EmptyFieldException("SELECIONE UM PLANO");
 		}
-
 	}
 
 	public void limparCampos() {

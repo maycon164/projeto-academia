@@ -210,4 +210,32 @@ public class PlanoDaoImpl implements PlanoDao {
 		return false;
 	}
 
+	@Override
+	public List<Plano> findAllPlanosByInstrutor(String cpf) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String sql = "SELECT * FROM instrutor_plano WHERE cpf_instrutor = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cpf);
+			rs = ps.executeQuery();
+			
+			List<Plano> planos = new ArrayList<>();
+			
+			while(rs.next()) {
+				planos.add(findById(rs.getInt("id_plano")));
+			}
+			
+			return planos;
+		} catch (Exception e) {
+
+		} finally {
+			DB.closeStatement(ps);
+			DB.closeResultSet(rs);
+		}
+
+		return null;
+	}
+
 }

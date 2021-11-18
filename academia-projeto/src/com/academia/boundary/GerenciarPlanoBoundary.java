@@ -56,7 +56,6 @@ public class GerenciarPlanoBoundary {
 	// TABLEVIEW
 	private TableView<Plano> tblPlanos = new TableView<>();
 
-
 	public GerenciarPlanoBoundary() {
 		iniciarTela();
 
@@ -96,7 +95,9 @@ public class GerenciarPlanoBoundary {
 		// CADASTRAR UM NOVO PLANO
 		btnCadastrar.setOnAction(event -> {
 
-			planoControl.cadastrar();
+			if (planoControl.cadastrar()) {
+				UtilsGui.showAlert("AVISO", "INSERÇÃO DE PLANO", "Plano inserido com sucesso", AlertType.INFORMATION);
+			}
 
 		});
 
@@ -144,6 +145,9 @@ public class GerenciarPlanoBoundary {
 		btnAlterar.setOnAction(event -> {
 
 			if (planoControl.atualizar(tblPlanos.getSelectionModel().getSelectedItem())) {
+
+				UtilsGui.showAlert("AVISO", "ALTERAR PLANO", "PLANO ALTERADO COM SUCESSO", AlertType.INFORMATION);
+
 				iniciarParaCadastro();
 			}
 

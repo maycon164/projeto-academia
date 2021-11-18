@@ -1,6 +1,7 @@
 package com.academia.boundary;
 
 import com.academia.control.InstrutorControl;
+import com.academia.entities.Instrutor;
 import com.academia.entities.Plano;
 import com.academia.factory.ControllerMediator;
 import com.academia.util.Listener;
@@ -15,7 +16,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -40,9 +44,13 @@ public class GerenciarInstrutorBoundary implements Listener {
 	private ChoiceBox<String> cbSexo = new ChoiceBox<>();
 
 	private Label lblVincularPlano = new Label("Vincular Plano ao Instrutor: ");
+	private Label lblTodosInstrutores = new Label("Todos os Instrutores");
 
 	// List view
 	private ListView<Plano> lvPlanos = new ListView<>();
+
+	// TABLE VIEW
+	private TableView<Instrutor> tblInstrutores = new TableView<>();
 
 	// BUTTONS
 	private Button btnAdicionar = new Button("Adicionar Plano");
@@ -73,7 +81,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 		iniciarCss();
 		iniciarEventos();
 		iniciarControl();
-
+		iniciarTableViewInstrutores();
 	}
 
 	private void iniciarModalAdicionarPlanos() {
@@ -91,6 +99,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 	}
 
 	private void iniciarGridGerenciarInstrutores() {
+		tblInstrutores.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		gridGerenciarInstrutores.addRow(0, lblGerenciarInstrutores);
 		gridGerenciarInstrutores.addRow(1, lblCpf, txtCpf, lblEmail, txtEmail);
@@ -122,22 +131,32 @@ public class GerenciarInstrutorBoundary implements Listener {
 		GridPane.setColumnSpan(fpListaPlanos, 4);
 		GridPane.setColumnSpan(fpBotoesPlano, 4);
 
+		// GAMBIARRA
+		gridGerenciarInstrutores.addColumn(5, new Label("    "));
+
+		
+		// PARTE DE INSTRUTORES
+		gridGerenciarInstrutores.add(lblTodosInstrutores, 7, 0);
+		gridGerenciarInstrutores.add(tblInstrutores, 7, 1);
+
+		GridPane.setColumnSpan(lblTodosInstrutores, 2);
+		GridPane.setColumnSpan(tblInstrutores, 2);
+		GridPane.setRowSpan(tblInstrutores, 6);
 	}
 
 	private void iniciarEventos() {
 
 		// Cadastrar novo Instrutor
 		btnCadastrar.setOnAction(event -> {
-			System.out.println("CLICKOU");
 
-			boolean insercao = instrutorControl.cadastrar(lvPlanos.getItems());
-
-			if (insercao) {
+			if (instrutorControl.cadastrar(lvPlanos.getItems())) {
 
 				UtilsGui.showAlert("Inserção de Instruto", "Instrutor",
 						"Instrutor " + txtNome.getText() + " Inserido Com sucesso", AlertType.INFORMATION);
 
 				instrutorControl.limparCampos();
+				lvPlanos.getItems().clear();
+
 			} else {
 				System.out.println("DEU RUÍM");
 			}
@@ -166,8 +185,21 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 		lblVincularPlano.getStyleClass().add("textCentralizado");
 		lblGerenciarInstrutores.getStyleClass().add("textCentralizado");
+		lblTodosInstrutores.getStyleClass().add("textCentralizado");
 		gridGerenciarInstrutores.getStyleClass().add("grid");
 
+	}
+
+	@SuppressWarnings("unchecked")
+	private void iniciarTableViewInstrutores() {
+		TableColumn<Instrutor, String> instrutorCol = new TableColumn<>("INSTRUTOR");
+		instrutorCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
+
+		TableColumn<Instrutor, String> cpfCol = new TableColumn<>("CPF");
+		cpfCol.setCellValueFactory(new PropertyValueFactory<>("cpf"));
+
+		tblInstrutores.getColumns().addAll(instrutorCol, cpfCol);
+		tblInstrutores.setItems(instrutorControl.getInstrutores());
 	}
 
 	private void iniciarControl() {

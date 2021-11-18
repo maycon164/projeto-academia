@@ -13,6 +13,7 @@ import com.academia.util.UtilsGui;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -133,7 +134,6 @@ public class AlunoCadastroBoundary {
 		gridCadastroAluno.addRow(2, lblCpf, txtCpf, lblEmail, txtEmail);
 		gridCadastroAluno.addRow(3, lblNome, txtNome, lblTelefone, txtTelefone);
 		cbSexo.getItems().addAll("Masculino", "Feminino");
-		cbSexo.setValue("Masculino");
 		gridCadastroAluno.addRow(4, lblNascimento, txtNascimento, lblSexo, cbSexo);
 
 		// DADOS ENDEREÇO DO ALUNO
@@ -205,30 +205,40 @@ public class AlunoCadastroBoundary {
 
 			// ENVIAR O ID DO PLANO
 			if (cbPlano.getValue() != null) {
+
 				alunoControl.idPlano = cbPlano.getValue().getIdPlano();
 				alunoControl.nomePlano = cbPlano.getValue().getNome();
-				// alunoControl.instrutorNome = cbInstrutores.getValue().getNome();
 
-				alunoControl.cadastrar();
+				if (alunoControl.cadastrar()) {
+
+					UtilsGui.showAlert("AVISO", "CADASTRO DE ALUNO", "ALUNO CADASTRADO COM SUCESSO",
+							AlertType.INFORMATION);
+
+					messageError.setText("");
+
+				}
+
 			} else {
+				System.out.println("ERROR RONALOD");
 				messageError.setText("SELECIONE UM PLANO");
 			}
 
 		});
 
 		btnCancelar.setOnAction(event -> {
+			
 			BorderPane bp = (BorderPane) gridCadastroAluno.getScene().getRoot();
 			bp.setCenter(new Label("VOLTANDO A TELA INICIAL ..... \nQual Tela Inicial?\n?????????"));
+			
 		});
 
 		// ATUALIZAR O A LISTA DE INSTRUTORES DE ACORDO COM O PLANO
 		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 
-			Plano plano = cbPlano.getValue();
-			System.out.println(plano);
-			this.atualizarComboBoxInstrutores(plano.getIdPlano());
-			this.preencherCamposPlano(plano);
+			this.atualizarComboBoxInstrutores(cbPlano.getValue().getIdPlano());
+			this.preencherCamposPlano(cbPlano.getValue());
 			alunoControl.atualizarDataFim(txtDataInicio.getText());
+
 		});
 
 		// BOTAO DE ALTERAR

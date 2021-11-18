@@ -7,18 +7,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 
 import com.academia.entities.Endereco;
 import com.academia.exception.CepNotFound;
+import com.academia.exception.EmptyFieldException;
 import com.google.gson.Gson;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-
 public class Utils {
+
+	public static void verificarCampos(String... campos) throws EmptyFieldException {
+		
+		for(String campo: campos) {
+			
+			if(campo.length() == 0) {
+				
+				throw new EmptyFieldException("Preencha todos os campos");
+			
+			}
+		}
+	}
 
 	public static Endereco pegarCep(String cep) throws CepNotFound, IOException {
 

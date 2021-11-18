@@ -2,22 +2,34 @@ package com.academia.main;
 
 import java.util.List;
 
-import com.academia.dao.AlunoDao;
-import com.academia.entities.Aluno;
+import com.academia.dao.InstrutorDao;
+import com.academia.entities.Instrutor;
 import com.academia.factory.DaoFactory;
 
 public class TESTEALUNO {
 
 	public static void main(String[] args) {
 
-		AlunoDao alunoConn = DaoFactory.getAlunoDao();
-		List<Aluno> a1 = alunoConn.findAll();
-		List<Aluno> a2 = alunoConn.findAll();
+		InstrutorDao instrutorConn = DaoFactory.getInstrutorDao();
+		List<Instrutor> instrutores = instrutorConn.findAll();
 
-		System.out.println(a1.get(0).getAssinatura().getPlano() == a2.get(0).getAssinatura().getPlano());
+		for (Instrutor i : instrutores) {
+			System.out.print(i.getNome() + " - ");
+			System.out.println(i.getPlanos());
+		}
 
 		/*
-		 * Aluno a1 = alunoConn.findByCpf("1"); Aluno a2 = alunoConn.findByCpf("2");
+		 * AlunoDao alunoConn = DaoFactory.getAlunoDao();
+		 * 
+		 * List<Aluno> alunos = alunoConn.findAll(); Aluno a1 =
+		 * alunoConn.findByCpf("4"); System.out.println(a1); System.out.println("\n");
+		 * System.out.println(alunos); List<Aluno> a1 = alunoConn.findAll(); List<Aluno>
+		 * a2 = alunoConn.findAll();
+		 * 
+		 * System.out.println(a1.get(0).getAssinatura().getPlano() ==
+		 * a2.get(0).getAssinatura().getPlano());
+		 * 
+		 * /* Aluno a1 = alunoConn.findByCpf("1"); Aluno a2 = alunoConn.findByCpf("2");
 		 * System.out.println("a1 " + a1.getAssinatura().getPlano());
 		 * System.out.println("a2 " + a2.getAssinatura().getPlano()); Plano p1 =
 		 * a1.getAssinatura().getPlano(); Plano p2 = a2.getAssinatura().getPlano();

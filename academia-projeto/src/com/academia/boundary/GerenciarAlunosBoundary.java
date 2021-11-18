@@ -93,14 +93,14 @@ public class GerenciarAlunosBoundary {
 
 			// PRECISA RENDERIZAR COM OS CAMPOS PREENCHIDOS, BTNALTER DISPONIVEL, TXTCPF
 			// DISABLE
-			AlunoCadastroBoundary exemplo = new AlunoCadastroBoundary();
+			AlunoCadastroBoundary alterarAluno = new AlunoCadastroBoundary();
 
-			exemplo.iniciarAlterar();
+			alterarAluno.iniciarAlterar();
 
 			Scene scene = vboxAlunoPlano.getScene();
 			BorderPane bpPrincipal = (BorderPane) scene.getRoot();
 
-			bpPrincipal.setCenter(exemplo.render());
+			bpPrincipal.setCenter(alterarAluno.render());
 
 		});
 
@@ -127,7 +127,7 @@ public class GerenciarAlunosBoundary {
 		});
 
 		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-			
+
 			Plano plano = cbPlano.getValue();
 			Plano plano2 = tblAlunoPlano.getSelectionModel().getSelectedItem().getAssinatura().getPlano();
 

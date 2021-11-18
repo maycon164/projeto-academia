@@ -24,7 +24,7 @@ public class AlunoDaoImpl implements AlunoDao {
 
 	private Connection conn;
 	private PlanoDao planoConn = DaoFactory.getPlanoDao();
-	private Map<String, Aluno> alunos = new LinkedHashMap<>();
+	private static Map<String, Aluno> alunos = new LinkedHashMap<>();
 
 	public AlunoDaoImpl(Connection conn) {
 		this.conn = conn;
@@ -32,6 +32,11 @@ public class AlunoDaoImpl implements AlunoDao {
 
 	@Override
 	public Aluno findByCpf(String cpf) {
+
+		if (alunos.containsKey(cpf)) {
+			return alunos.get(cpf);
+		}
+
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
@@ -44,7 +49,13 @@ public class AlunoDaoImpl implements AlunoDao {
 			Aluno aluno = null;
 
 			if (rs.next()) {
-				aluno = instantiateAluno(rs);
+
+				if (!alunos.containsKey(cpf)) {
+
+					aluno = instantiateAluno(rs);
+					alunos.put(cpf, aluno);
+				}
+
 			}
 
 			return aluno;

@@ -11,6 +11,9 @@ import com.academia.factory.DaoFactory;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 
 public class InstrutorControl {
 
@@ -21,6 +24,10 @@ public class InstrutorControl {
 	public StringProperty emailProps = new SimpleStringProperty("");
 
 	private InstrutorDao instrutorConn = DaoFactory.getInstrutorDao();
+
+	// LISTAS
+	private ObservableList<Instrutor> instrutores = FXCollections.observableArrayList(instrutorConn.findAll());
+	private FilteredList<Instrutor> filteredInstrutores = new FilteredList<>(instrutores, i -> true);
 
 	public List<InstrutorDTO> getInstrutoresByPlano(int idPlano) {
 
@@ -49,6 +56,10 @@ public class InstrutorControl {
 		} catch (EmptyFieldException e) {
 			return false;
 		}
+	}
+
+	public ObservableList<Instrutor> getInstrutores() {
+		return filteredInstrutores;
 	}
 
 	public void limparCampos() {
