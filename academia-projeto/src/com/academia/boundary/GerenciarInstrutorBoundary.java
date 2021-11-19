@@ -9,6 +9,7 @@ import com.academia.util.UtilsGui;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -200,6 +201,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 			if (event.getClickCount() > 1) {
 				Instrutor i = tblInstrutores.getSelectionModel().getSelectedItem();
+				lvPlanos.setItems(FXCollections.observableArrayList(i.getPlanos()));
 				instrutorControl.setInstrutor(i);
 				iniciarParaAlterar();
 			}

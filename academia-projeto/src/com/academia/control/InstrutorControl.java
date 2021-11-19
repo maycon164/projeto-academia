@@ -45,10 +45,10 @@ public class InstrutorControl {
 				instrutor.getPlanos().add(plano);
 			}
 
-			boolean insercao = instrutorConn.insert(instrutor);
-
-			if (insercao) {
+			if (instrutorConn.insert(instrutor)) {
 				System.out.println("CADASTRO DE INSTRUTOR COM SUCESSO " + instrutor);
+				instrutores.add(instrutor);
+				atualizarLista();
 				return true;
 			}
 
