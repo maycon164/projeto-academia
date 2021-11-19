@@ -90,7 +90,6 @@ public class AlunoControl {
 
 				if (aluno != null) {
 					alunoConn.insert(aluno);
-					System.out.println(aluno);
 				}
 
 				assinatura = this.assinaturaFromBoundary();
@@ -106,9 +105,11 @@ public class AlunoControl {
 				alunos.add(aluno);
 				this.limparCampos();
 				return true;
+
 			} catch (ParseException e) {
 
 				messageErrorProps.set("INFORME A DATA(dd/MM/yyyy)");
+
 			} catch (CpfRegisteredException e) {
 
 				messageErrorProps.set(e.getMessage());
@@ -123,7 +124,9 @@ public class AlunoControl {
 	}
 
 	public void alterar() {
+
 		System.out.println("AGORA AQUI VEM A LÓGICA PARA ALTERAR.....");
+
 	}
 
 	public boolean excluir(Aluno aluno) {
@@ -144,9 +147,11 @@ public class AlunoControl {
 		Utils.verificarCampos(cepProps.get(), bairroProps.get(), ruaProps.get(), numProps.get());
 
 		Utils.verificarCampos(duracaoProps.get(), dataInicioProps.get(), dataFimProps.get(), precoProps.get());
-		
-		if(idPlano == null) {
+
+		if (idPlano == null) {
+
 			throw new EmptyFieldException("SELECIONE UM PLANO");
+
 		}
 	}
 

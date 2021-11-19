@@ -8,6 +8,7 @@ import com.academia.entities.Instrutor;
 import com.academia.entities.Plano;
 import com.academia.exception.EmptyFieldException;
 import com.academia.factory.DaoFactory;
+import com.academia.util.Utils;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -29,26 +30,29 @@ public class InstrutorControl {
 	private ObservableList<Instrutor> instrutores = FXCollections.observableArrayList(instrutorConn.findAll());
 	private FilteredList<Instrutor> filteredInstrutores = new FilteredList<>(instrutores, i -> true);
 
+	// teste
+	public List<Plano> planosBoundary = null;
+
 	public List<InstrutorDTO> getInstrutoresByPlano(int idPlano) {
 
 		return instrutorConn.findAllByPlano(idPlano);
 
 	}
 
-	public boolean cadastrar(List<Plano> planos) {
+	public boolean cadastrar() {
 
 		try {
 			validarCampos();
 
 			Instrutor instrutor = instrutorFromBoundary();
-			for (Plano plano : planos) {
-				instrutor.getPlanos().add(plano);
-			}
 
 			if (instrutorConn.insert(instrutor)) {
+
 				System.out.println("CADASTRO DE INSTRUTOR COM SUCESSO " + instrutor);
 				instrutores.add(instrutor);
 				atualizarLista();
+				limparCampos();
+
 				return true;
 			}
 
@@ -56,6 +60,28 @@ public class InstrutorControl {
 		} catch (EmptyFieldException e) {
 			return false;
 		}
+	}
+
+	public boolean alterar(Instrutor i) {
+		try {
+			validarCampos();
+			Instrutor aux = instrutorFromBoundary();
+
+			i.setNome(aux.getNome());
+			i.setSexo(aux.getSexo());
+			i.setEmail(aux.getEmail());
+			i.getPlanos().clear();
+			
+			for(Plano plano: aux.getPlanos()) {
+				i.getPlanos().add(plano);
+			}
+			
+			return(instrutorConn.update(i));
+
+		} catch (EmptyFieldException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	public ObservableList<Instrutor> getInstrutores() {
@@ -74,16 +100,14 @@ public class InstrutorControl {
 		sexoProps.set("");
 		emailProps.set("");
 
+		if (planosBoundary != null)
+			planosBoundary.clear();
+
 	}
 
 	private void validarCampos() throws EmptyFieldException {
 
-		if (cpfProps.get().isEmpty() || nomeProps.get().isEmpty() || sexoProps.get().isEmpty()
-				|| emailProps.get().isEmpty()) {
-
-			throw new EmptyFieldException("Alguns Campos Vazios!!!!");
-
-		}
+		Utils.verificarCampos(cpfProps.get(), nomeProps.get(), sexoProps.get(), emailProps.get());
 
 	}
 
@@ -94,6 +118,12 @@ public class InstrutorControl {
 		instrutor.setNome(nomeProps.get());
 		instrutor.setEmail(emailProps.get());
 		instrutor.setSexo(sexoProps.get().charAt(0));
+
+		if (planosBoundary != null) {
+			for (Plano plano : planosBoundary) {
+				instrutor.getPlanos().add(plano);
+			}
+		}
 
 		return instrutor;
 	}

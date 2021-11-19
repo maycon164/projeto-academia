@@ -147,7 +147,7 @@ public class GerenciarPlanoBoundary {
 
 		{
 
-			if (planoControl.atualizar(tblPlanos.getSelectionModel().getSelectedItem())) {
+			if (planoControl.alterar(tblPlanos.getSelectionModel().getSelectedItem())) {
 
 				UtilsGui.showAlert("AVISO", "ALTERAR PLANO", "PLANO ALTERADO COM SUCESSO", AlertType.INFORMATION);
 

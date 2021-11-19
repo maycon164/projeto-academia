@@ -203,4 +203,35 @@ public class InstrutorDaoImpl implements InstrutorDao {
 		}
 	}
 
+	@Override
+	public boolean update(Instrutor i) {
+
+		PreparedStatement ps = null;
+
+		try {
+			String sql = "UPDATE pessoa SET nome = ?, sexo = ?, email = ? WHERE  cpf = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, i.getNome());
+			ps.setString(2, i.getSexo().toString());
+			ps.setString(3, i.getEmail());
+			ps.setString(4, i.getCpf());
+			ps.execute();
+
+			sql = "DELETE instrutor_plano WHERE cpf_instrutor = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, i.getCpf());
+			ps.execute();
+
+			vincularPlano(i.getCpf(), i.getPlanos());
+			return true;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.closeStatement(ps);
+		}
+
+		return false;
+	}
+
 }

@@ -51,6 +51,7 @@ public class MenuBarExemplo extends Application {
 
 		MenuItem itemCadastrarInstrutor = new MenuItem("Cadastrar Instrutor");
 		itemCadastrarInstrutor.setOnAction(event -> {
+			gerenciarInstrutorBoundary.iniciarParaCadastro();
 			pane.setCenter(gerenciarInstrutorBoundary.render());
 		});
 

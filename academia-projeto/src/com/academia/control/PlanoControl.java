@@ -53,7 +53,7 @@ public class PlanoControl {
 		return false;
 	}
 
-	public boolean atualizar(Plano plano) {
+	public boolean alterar(Plano plano) {
 
 		try {
 

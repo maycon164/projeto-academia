@@ -80,7 +80,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 	}
 
 	private void iniciarTela() {
-		iniciarParaCadastrar();
+		iniciarParaCadastro();
 		iniciarModalAdicionarPlanos();
 		iniciarGridGerenciarInstrutores();
 		iniciarChoiceBox();
@@ -172,21 +172,39 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 		// Cadastrar novo Instrutor
 		btnCadastrar.setOnAction(event -> {
+			instrutorControl.planosBoundary = lvPlanos.getItems();
 
-			if (instrutorControl.cadastrar(lvPlanos.getItems())) {
+			if (instrutorControl.cadastrar()) {
 
 				UtilsGui.showAlert("Inserção de Instruto", "Instrutor",
 						"Instrutor " + txtNome.getText() + " Inserido Com sucesso", AlertType.INFORMATION);
 
 				limparCampos();
+
 			} else {
-				System.out.println("DEU RUÍM");
+				System.out.println("DEU RUÍM kkkkkkk");
+			}
+
+		});
+
+		// BTN ALTERAR
+		btnAlterar.setOnAction(event -> {
+
+			instrutorControl.planosBoundary = lvPlanos.getItems();
+
+			if (instrutorControl.alterar(tblInstrutores.getSelectionModel().getSelectedItem())) {
+
+				UtilsGui.showAlert("AVISO", "ALTERAR INSTRUTOR", "INSTRUTOR ALTERADO COM SUCESSO",
+						AlertType.INFORMATION);
+				iniciarParaCadastro();
+
 			}
 
 		});
 
 		// ADICIONAR PLANOS
 		btnAdicionar.setOnAction(event -> {
+
 			s1.show();
 
 		});
@@ -214,8 +232,10 @@ public class GerenciarInstrutorBoundary implements Listener {
 			Instrutor instrutor = tblInstrutores.getSelectionModel().getSelectedItem();
 			if (UtilsGui.showConfirmation("Excluir Instrutor", "Deseja Excluir o Insturtor " + instrutor.getNome())) {
 				if (instrutorControl.excluir(instrutor)) {
+
 					UtilsGui.showAlert("EXCLUSÃO DE INSTRUTOR", "AVISO",
 							"O INSTRUTOR COM O CPF " + instrutor.getCpf() + " FOI EXCLUÍDO", AlertType.INFORMATION);
+					limparCampos();
 				} else {
 					System.out.println("ALGO DEU MUITO ERRADO KKKKKKK");
 				}
@@ -225,12 +245,12 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 		// BTN CANCELAR
 		btnCancelar.setOnAction(event -> {
-			iniciarParaCadastrar();
+			iniciarParaCadastro();
 		});
 
 	}
 
-	private void iniciarParaCadastrar() {
+	public void iniciarParaCadastro() {
 
 		btnCadastrar.setDisable(false);
 		btnAlterar.setDisable(true);
@@ -294,10 +314,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 	@Override
 	public void update(Plano plano) {
-
-		System.out.println(plano);
 		lvPlanos.getItems().add(plano);
-
 	}
 
 }

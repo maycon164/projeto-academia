@@ -121,9 +121,7 @@ public class GerenciarAlunosBoundary {
 		});
 
 		// FILTRAR POR PLANO
-		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
-
-		{
+		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 
 			Plano plano = cbPlano.getValue();
 			Plano plano2 = tblAlunoPlano.getSelectionModel().getSelectedItem().getAssinatura().getPlano();
