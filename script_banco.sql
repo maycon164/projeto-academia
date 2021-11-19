@@ -5,14 +5,19 @@ USE academiadb;
 CREATE TABLE pessoa(
 	cpf VARCHAR(12) NOT NULL,
 	nome VARCHAR(100) NOT NULL,
+	sexo CHAR(1) NOT NULL DEFAULT '?',
 	nascimento DATE NOT NULL,
 	email VARCHAR(100),
-	telefone VARCHAR(12)
+	telefone VARCHAR(12),
+	cep VARCHAR(12),
+	rua VARCHAR(100), 
+	bairro VARCHAR(100), 
+	num VARCHAR(5)
 	
 	PRIMARY KEY(cpf)
 )
 ALTER TABLE pessoa
-ADD rua VARCHAR(100), bairro VARCHAR(100), num VARCHAR(5)
+ADD 
 
 CREATE TABLE aluno(
 	cpf VARCHAR(12) NOT NULL,
@@ -67,13 +72,24 @@ CREATE TABLE aluno_plano(
 	CONSTRAINT ck_data_expiracao
 	CHECK ((data_expiracao) > (data_inicio))
 )
+
+
+CREATE TABLE pagamento(
+	id_pagamento INT IDENTITY(1,1),
+	cpf_aluno VARCHAR(12) NOT NULL,
+	nome_aluno VARCHAR(100),
+	id_plano INT NOT NULL,
+	plano VARCHAR(100),
+	valor_total DECIMAL(9,2) NOT NULL,
+	data_pagamento DATE,
+	tipo_pagamento VARCHAR(100),
+	status VARCHAR(100) NOT NULL
+	
+	PRIMARY KEY(id_pagamento)
+)
+
+
 ---- erro com pk rss
-ALTER TABLE aluno_plano 
-DROP CONSTRAINT PK__aluno_pl__16C90C0474FBA02D
-
-DROP TABLE aluno_plano 
-
-DROP TABLE aluno_plano;
 ----- o campo imc deve ser gerado na propria aplicaca
 ----- os campos de altura e medidas (cm), peso(g) serão convertidos na applicação
 
@@ -97,29 +113,11 @@ CREATE TABLE avaliacao(
 	FOREIGN KEY (cpf_instrutor) REFERENCES instrutor(cpf)
 )
 
-CREATE TABLE pagamento(
-	id_pagamento INT IDENTITY,
-	id_aluno_plano INT NOT NULL,
-	data_pagamento DATE,
-	valor_total DECIMAL(10, 2),
-	forma_pagamento VARCHAR(50),
-	situacao VARCHAR(50) DEFAULT 'A PAGAR'
-	
-	PRIMARY KEY(id_pagamento),
-	FOREIGN KEY(id_aluno_plano) REFERENCES aluno_plano(id_aluno_plano)
-)
----agora erro com fk rsrsr
-ALTER TABLE pagamento
-DROP CONSTRAINT FK__pagamento__id_al__619B8048
 
-DROP TABLE pagamento;
+
 
 -----INSERINDO COLUNA SEXO
-ALTER TABLE pessoa
-ADD sexo CHAR(1) NOT NULL DEFAULT '?'
-
-
-
+ALTER TABLE 
 /*ELABORAR MAIS SOBRE A FICHA DE TREINO AS TABELAS 
  * COMOS OS EQUIPAMENTOS
  * GRUPOS MUSCULARES
@@ -141,14 +139,6 @@ SELECT * FROM instrutor;
 SELECT * FROM plano;
 SELECT * FROM instrutor_plano;
 SELECT * FROM pagamento
-
-
-SELECT p.*, a.observacoes 
-FROM pessoa p, aluno a
-WHERE a.cpf = p.cpf
-
-
-
 
 
 exec sp_columns pessoa;

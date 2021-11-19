@@ -205,39 +205,9 @@ INSERT INTO instrutor_plano(cpf_instrutor, id_plano)VALUES
 ('01362539031', 2)
 
 
-SELECT * FROM vw_aluno
 
-SELECT * FROM instrutor_plano ip 
-SELECT * FROM vw_instrutor_plano vip 
-SELECT * FROM plano
-SELECT * FROM pessoa
 
-INSERT INTO plano(nome, descricao, preco, duracao) VALUES
-('Zumba', 'movimentos de diversas danças latinas com o objetivo de emagrecer e modelar o corpo. Criado ainda no ano de 2001',
-100.99, 50),
-('Crossfit', 'promover melhora da capacidade cardiorrespiratória, condicionamento físico e resistência muscular por meio da combinação de exercícios funcionais,',
-200.99, 60),
-('Muay Thai', 'Essa Luta dispõe de movimentos que ajudam na perda de massa gorda e ganho de massa magra', 
-89.99, 35)
-
-DELETE FROM pagamento;
 SELECT * FROM pagamento;
-
-SELECT * FROM plano;
-ORDER BY nome
-
-DELETE plano WHERE id_plano = 1
-
-SELECT TOP 3 * FROM plano
-
-SELECT * FROM instrutor_plano ip ;
-
-UPDATE plano
-SET nome = 'MUSCULAÇÃO', 
-descricao = ' diferentes músculos do seu corpo para se tornar mais forte 2'
-WHERE id_plano = 1
-
-SELECT * FROM avaliacao a 
 
 ORDER BY nome DESC 
 
