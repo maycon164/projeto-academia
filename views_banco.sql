@@ -8,6 +8,7 @@ p.telefone, p.cep, p.bairro, p.rua, p.num, p.data_matricula, a.observacoes
 FROM pessoa p, aluno a
 WHERE p.cpf = a.cpf;
 
+SELECT * FROM vw_aluno;
 
 --------VIEWS INSTRUTORES
 CREATE VIEW vw_instrutor AS
@@ -24,6 +25,7 @@ FROM vw_instrutor vwi, plano pl, instrutor_plano ip
 WHERE ip.cpf_instrutor = vwi.cpf
 AND ip.id_plano = pl.id_plano
 
+SELECT * FROM vw_instrutor_plano vip 
 
 -----FUNCTION PARA RETORNAR INSTRUTORESDTO DE UM PLANO (id_plano)
 
@@ -67,6 +69,22 @@ BEGIN
 END
 
 EXECUTE deletar_aluno @cpf = '11111111111'
+
+---------- STORED PROCEDURE PARA DELETAR UM INSTRUTOR (INSTRUTOR_PLANO, INSTRUTOR, PESSOA)
+
+CREATE PROCEDURE deletar_instrutor
+@cpf VARCHAR(12)
+AS 
+BEGIN
+	
+	DELETE FROM instrutor_plano WHERE cpf_instrutor = @cpf
+	DELETE FROM instrutor WHERE cpf = @cpf
+	DELETE FROM pessoa WHERE cpf = @cpf
+	
+END
+
+EXECUTE deletar_instrutor @cpf = '93243'
+
 
 ------------------------------------- FIM POR ENQUANTO -------------------------------------
 ------------------------------------------
@@ -201,6 +219,30 @@ INSERT INTO plano(nome, descricao, preco, duracao) VALUES
 200.99, 60),
 ('Muay Thai', 'Essa Luta dispõe de movimentos que ajudam na perda de massa gorda e ganho de massa magra', 
 89.99, 35)
+
+DELETE FROM pagamento;
+SELECT * FROM pagamento;
+
+SELECT * FROM plano;
+ORDER BY nome
+
+DELETE plano WHERE id_plano = 1
+
+SELECT TOP 3 * FROM plano
+
+SELECT * FROM instrutor_plano ip ;
+
+UPDATE plano
+SET nome = 'MUSCULAÇÃO', 
+descricao = ' diferentes músculos do seu corpo para se tornar mais forte 2'
+WHERE id_plano = 1
+
+SELECT * FROM avaliacao a 
+
+ORDER BY nome DESC 
+
+SELECT * FROM vw_instrutor vi 
+SELECT * FROM instrutor_plano ip 
 
 exec sp_columns pessoa;
 exec sp_columns aluno;
