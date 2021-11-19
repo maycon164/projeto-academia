@@ -1,24 +1,42 @@
 package com.academia.main;
 
+import java.util.Date;
 import java.util.List;
 
-import com.academia.dao.InstrutorDao;
-import com.academia.entities.Instrutor;
+import com.academia.dao.PagamentoDao;
+import com.academia.entities.Pagamento;
+import com.academia.entities.StatusPagamento;
+import com.academia.entities.TipoPagamento;
 import com.academia.factory.DaoFactory;
 
 public class TESTEALUNO {
 
 	public static void main(String[] args) {
 
-		InstrutorDao instrutorConn = DaoFactory.getInstrutorDao();
-		List<Instrutor> instrutores = instrutorConn.findAll();
+		PagamentoDao pagamentoConn = DaoFactory.getPagamentoDao();
+		Pagamento p1 = new Pagamento();
+		p1.setCpfAluno("1");
+		p1.setNomeAluno("TESTE 2");
+		p1.setIdPlano(1);
+		p1.setNomePlano("PLANO PAGAMENTO 2");
+		p1.setValorTotal(199d);
+		p1.setDataPagamento(new Date());
+		p1.setTipoPagamento(TipoPagamento.CARTAO_CREDITO);
+		p1.setStatus(StatusPagamento.CANCELADO);
 
-		for (Instrutor i : instrutores) {
-			System.out.print(i.getNome() + " - ");
-			System.out.println(i.getPlanos());
-		}
+		pagamentoConn.insert(p1);
+
+		List<Pagamento> p2 = pagamentoConn.findAll();
+
+		p2.forEach(System.out::println);
 
 		/*
+		 * ] InstrutorDao instrutorConn = DaoFactory.getInstrutorDao(); List<Instrutor>
+		 * instrutores = instrutorConn.findAll();
+		 * 
+		 * for (Instrutor i : instrutores) { System.out.print(i.getNome() + " - ");
+		 * System.out.println(i.getPlanos()); }
+		 * 
 		 * AlunoDao alunoConn = DaoFactory.getAlunoDao();
 		 * 
 		 * List<Aluno> alunos = alunoConn.findAll(); Aluno a1 =

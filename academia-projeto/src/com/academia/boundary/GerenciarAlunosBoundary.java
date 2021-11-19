@@ -14,7 +14,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -57,6 +56,9 @@ public class GerenciarAlunosBoundary {
 	// SIMPLE DATE FORMAT
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
+	// ALUNO CADASTRO
+	private AlunoCadastroBoundary alterarAluno = new AlunoCadastroBoundary();
+
 	public GerenciarAlunosBoundary() {
 		this.iniciarTela();
 	}
@@ -90,15 +92,9 @@ public class GerenciarAlunosBoundary {
 
 			String cpf = tblAlunoPlano.getSelectionModel().getSelectedItem().getCpf();
 			alunoControl.setAluno(cpf);
-
-			// PRECISA RENDERIZAR COM OS CAMPOS PREENCHIDOS, BTNALTER DISPONIVEL, TXTCPF
-			// DISABLE
-			AlunoCadastroBoundary alterarAluno = new AlunoCadastroBoundary();
-
 			alterarAluno.iniciarAlterar();
 
-			Scene scene = vboxAlunoPlano.getScene();
-			BorderPane bpPrincipal = (BorderPane) scene.getRoot();
+			BorderPane bpPrincipal = (BorderPane) vboxAlunoPlano.getScene().getRoot();
 
 			bpPrincipal.setCenter(alterarAluno.render());
 
@@ -121,7 +117,9 @@ public class GerenciarAlunosBoundary {
 		});
 
 		// FILTRAR POR PLANO
-		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
+
+		{
 
 			Plano plano = cbPlano.getValue();
 			Plano plano2 = tblAlunoPlano.getSelectionModel().getSelectedItem().getAssinatura().getPlano();

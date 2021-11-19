@@ -15,6 +15,8 @@ import com.academia.exception.EmptyFieldException;
 import com.academia.factory.DaoFactory;
 import com.academia.util.Utils;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -53,6 +55,9 @@ public class AlunoControl {
 	public StringProperty dataInicioProps = new SimpleStringProperty(sdf.format(new Date()));
 	public StringProperty dataFimProps = new SimpleStringProperty("");
 	public StringProperty observacaoProps = new SimpleStringProperty("");
+
+	// CBPLANO
+	public ObjectProperty<Plano> planoProps = new SimpleObjectProperty<>();
 
 	// LISTAS
 	private ObservableList<Aluno> alunos = FXCollections.observableArrayList(alunoConn.findAll());
@@ -314,10 +319,12 @@ public class AlunoControl {
 		this.observacaoProps.set(aluno.getObservacao());
 
 		// ALUNO PRECISA TRAZER A ASSINATURA JUNTO COM O PLANO
-		this.precoProps.set("R$" + String.valueOf(aluno.getAssinatura().getPlano().getPreco()));
+		this.planoProps.set(aluno.getAssinatura().getPlano());
+		
+		this.precoProps.set("R$ " + String.valueOf(aluno.getAssinatura().getPlano().getPreco()));
 		this.duracaoProps.set(String.valueOf(aluno.getAssinatura().getPlano().getDuracao()));
 		this.dataInicioProps.set(sdf.format(aluno.getAssinatura().getDataInicio()));
 		this.dataFimProps.set(sdf.format(aluno.getAssinatura().getDataExpiracao()));
-
+		
 	}
 }

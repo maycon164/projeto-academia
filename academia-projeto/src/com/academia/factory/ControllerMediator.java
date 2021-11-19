@@ -2,6 +2,7 @@ package com.academia.factory;
 
 import com.academia.control.AlunoControl;
 import com.academia.control.InstrutorControl;
+import com.academia.control.PagamentoControl;
 import com.academia.control.PlanoControl;
 
 public class ControllerMediator {
@@ -9,6 +10,7 @@ public class ControllerMediator {
 	private static AlunoControl alunoControl = null;
 	private static PlanoControl planoControl = null;
 	private static InstrutorControl instrutorControl = null;
+	private static PagamentoControl pagamentoControl = null;
 
 	public static AlunoControl getAlunoControl() {
 
@@ -36,4 +38,12 @@ public class ControllerMediator {
 
 		return instrutorControl;
 	}
+
+	public static PagamentoControl getPagamentoControl() {
+		if (pagamentoControl == null) {
+			pagamentoControl = new PagamentoControl();
+		}
+		return pagamentoControl;
+	}
+
 }

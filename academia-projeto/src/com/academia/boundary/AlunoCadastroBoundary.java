@@ -158,7 +158,7 @@ public class AlunoCadastroBoundary {
 		gridCadastroAluno.addRow(15, messageError);
 
 		// BUTTONS
-		gridCadastroAluno.addRow(16, btnCadastrar, btnAlterar, btnCancelar);
+		gridCadastroAluno.addRow(16, btnCadastrar, btnCancelar);
 
 		// SETANDO COLUMN SPANS
 		GridPane.setColumnSpan(lblDadosCadastrais, 4);
@@ -219,17 +219,17 @@ public class AlunoCadastroBoundary {
 				}
 
 			} else {
-				System.out.println("ERROR RONALOD");
+				System.out.println("ERROR RONALDO");
 				messageError.setText("SELECIONE UM PLANO");
 			}
 
 		});
 
 		btnCancelar.setOnAction(event -> {
-			
+
 			BorderPane bp = (BorderPane) gridCadastroAluno.getScene().getRoot();
 			bp.setCenter(new Label("VOLTANDO A TELA INICIAL ..... \nQual Tela Inicial?\n?????????"));
-			
+
 		});
 
 		// ATUALIZAR O A LISTA DE INSTRUTORES DE ACORDO COM O PLANO
@@ -264,8 +264,10 @@ public class AlunoCadastroBoundary {
 	}
 
 	private void preencherCamposPlano(Plano plano) {
+
 		txtPreco.setText(String.valueOf("R$" + plano.getPreco()));
 		txtDuracao.setText(String.valueOf(plano.getDuracao()));
+
 	}
 
 	private void atualizarComboBoxInstrutores(int idPlano) {
@@ -296,12 +298,8 @@ public class AlunoCadastroBoundary {
 		Bindings.bindBidirectional(txtDataFim.textProperty(), alunoControl.dataFimProps);
 		Bindings.bindBidirectional(txtaObservacao.textProperty(), alunoControl.observacaoProps);
 
-		// Bindings.bindBidirectional(cbPlano.valueProperty(),
-		// alunoControl.bairroProps);
-
-		Plano p = new Plano();
-		p.setIdPlano(1);
-		cbPlano.setValue(p);
+		// BINDING UM PLANO ?????
+		Bindings.bindBidirectional(cbPlano.valueProperty(), alunoControl.planoProps);
 
 		// MESSAGE ERROR
 		Bindings.bindBidirectional(messageError.textProperty(), alunoControl.messageErrorProps);
