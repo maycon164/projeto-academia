@@ -25,11 +25,12 @@
 }
 
 .textArea{
-	-fx-pref-height: 50.0pt;	
+	-fx-pref-height: 50.0pt;
+	-fx-pref-width: 150.0pt;	
 }
 
 .txtField{
-	-fx-min-width: 200.0pt;
+	-fx-min-width: 100.0pt;
 	-fx-min-height: 23.0pt;
 }
 

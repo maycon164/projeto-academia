@@ -8,6 +8,7 @@ import com.academia.util.Listener;
 import com.academia.util.UtilsGui;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -56,6 +58,9 @@ public class GerenciarInstrutorBoundary implements Listener {
 	private Button btnAdicionar = new Button("Adicionar Plano");
 	private Button btnRemover = new Button("Remover Plano");
 	private Button btnCadastrar = new Button("Cadastrar");
+	private Button btnExcluir = new Button("Excluir");
+	private Button btnAlterar = new Button("Alterar");
+	private Button btnCancelar = new Button("Cancelar");
 
 	private GridPane gridGerenciarInstrutores = new GridPane();
 
@@ -74,7 +79,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 	}
 
 	private void iniciarTela() {
-
+		iniciarParaCadastrar();
 		iniciarModalAdicionarPlanos();
 		iniciarGridGerenciarInstrutores();
 		iniciarChoiceBox();
@@ -100,6 +105,12 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 	private void iniciarGridGerenciarInstrutores() {
 		tblInstrutores.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		tblInstrutores.setPrefWidth(500d);
+		tblInstrutores.setPrefHeight(300d);
+		tblInstrutores.setMaxHeight(300d);
+		tblInstrutores.setMinHeight(300d);
+
+		// gridGerenciarInstrutores.setGridLinesVisible(true);
 
 		gridGerenciarInstrutores.addRow(0, lblGerenciarInstrutores);
 		gridGerenciarInstrutores.addRow(1, lblCpf, txtCpf, lblEmail, txtEmail);
@@ -120,28 +131,40 @@ public class GerenciarInstrutorBoundary implements Listener {
 		lvPlanos.setMaxWidth(350d);
 		lvPlanos.setMinWidth(350d);
 		fpListaPlanos.setAlignment(Pos.CENTER);
-
 		gridGerenciarInstrutores.addRow(5, fpListaPlanos);
 
-		gridGerenciarInstrutores.addRow(7, btnCadastrar);
+		FlowPane fpBotoes = new FlowPane();
+		fpBotoes.getChildren().addAll(btnCadastrar, btnAlterar, btnCancelar);
+		FlowPane.setMargin(btnAlterar, new Insets(0d, 20d, 0d, 20d));
+		gridGerenciarInstrutores.addRow(7, fpBotoes);
+		fpBotoes.setAlignment(Pos.CENTER);
 
 		// COLUMN SPAN
 		GridPane.setColumnSpan(lblGerenciarInstrutores, 4);
 		GridPane.setColumnSpan(lblVincularPlano, 4);
 		GridPane.setColumnSpan(fpListaPlanos, 4);
 		GridPane.setColumnSpan(fpBotoesPlano, 4);
+		GridPane.setColumnSpan(fpBotoes, 4);
 
 		// GAMBIARRA
 		gridGerenciarInstrutores.addColumn(5, new Label("    "));
+		gridGerenciarInstrutores.addColumn(6, new Label("    "));
 
-		
 		// PARTE DE INSTRUTORES
 		gridGerenciarInstrutores.add(lblTodosInstrutores, 7, 0);
 		gridGerenciarInstrutores.add(tblInstrutores, 7, 1);
 
+		FlowPane fpBtnExcluir = new FlowPane();
+		fpBtnExcluir.getChildren().add(btnExcluir);
+
+		gridGerenciarInstrutores.add(fpBtnExcluir, 7, 7);
+		fpBtnExcluir.setAlignment(Pos.CENTER);
+
 		GridPane.setColumnSpan(lblTodosInstrutores, 2);
 		GridPane.setColumnSpan(tblInstrutores, 2);
+		GridPane.setColumnSpan(fpBtnExcluir, 2);
 		GridPane.setRowSpan(tblInstrutores, 6);
+
 	}
 
 	private void iniciarEventos() {
@@ -154,9 +177,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 				UtilsGui.showAlert("Inserção de Instruto", "Instrutor",
 						"Instrutor " + txtNome.getText() + " Inserido Com sucesso", AlertType.INFORMATION);
 
-				instrutorControl.limparCampos();
-				lvPlanos.getItems().clear();
-
+				limparCampos();
 			} else {
 				System.out.println("DEU RUÍM");
 			}
@@ -174,6 +195,56 @@ public class GerenciarInstrutorBoundary implements Listener {
 			lvPlanos.getItems().remove(lvPlanos.getSelectionModel().getSelectedItem());
 		});
 
+		// SELECIONAR UM INSTRUTOR DA TABELA
+		tblInstrutores.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+
+			if (event.getClickCount() > 1) {
+				Instrutor i = tblInstrutores.getSelectionModel().getSelectedItem();
+				instrutorControl.setInstrutor(i);
+				iniciarParaAlterar();
+			}
+
+		});
+
+		// BTN EXCLUIR
+		btnExcluir.setOnAction(event -> {
+
+			Instrutor instrutor = tblInstrutores.getSelectionModel().getSelectedItem();
+			if (UtilsGui.showConfirmation("Excluir Instrutor", "Deseja Excluir o Insturtor " + instrutor.getNome())) {
+				if (instrutorControl.excluir(instrutor)) {
+					UtilsGui.showAlert("EXCLUSÃO DE INSTRUTOR", "AVISO",
+							"O INSTRUTOR COM O CPF " + instrutor.getCpf() + " FOI EXCLUÍDO", AlertType.INFORMATION);
+				} else {
+					System.out.println("ALGO DEU MUITO ERRADO KKKKKKK");
+				}
+			}
+
+		});
+
+		// BTN CANCELAR
+		btnCancelar.setOnAction(event -> {
+			iniciarParaCadastrar();
+		});
+
+	}
+
+	private void iniciarParaCadastrar() {
+
+		btnCadastrar.setDisable(false);
+		btnAlterar.setDisable(true);
+		limparCampos();
+
+	}
+
+	public void limparCampos() {
+		instrutorControl.limparCampos();
+		lvPlanos.getItems().clear();
+	}
+
+	private void iniciarParaAlterar() {
+
+		btnCadastrar.setDisable(true);
+		btnAlterar.setDisable(false);
 	}
 
 	private void iniciarChoiceBox() {
@@ -198,7 +269,15 @@ public class GerenciarInstrutorBoundary implements Listener {
 		TableColumn<Instrutor, String> cpfCol = new TableColumn<>("CPF");
 		cpfCol.setCellValueFactory(new PropertyValueFactory<>("cpf"));
 
-		tblInstrutores.getColumns().addAll(instrutorCol, cpfCol);
+		TableColumn<Instrutor, String> emailCol = new TableColumn<>("EMAIL");
+		emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+		TableColumn<Instrutor, String> sexoCol = new TableColumn<>("SEXO");
+		sexoCol.setCellValueFactory(item -> {
+			return new ReadOnlyStringWrapper((item.getValue().getSexo() == 'M') ? "Masculino" : "Feminino");
+		});
+
+		tblInstrutores.getColumns().addAll(instrutorCol, cpfCol, emailCol, sexoCol);
 		tblInstrutores.setItems(instrutorControl.getInstrutores());
 	}
 

@@ -150,7 +150,7 @@ public class InstrutorDaoImpl implements InstrutorDao {
 					instrutores.put(instrutor.getCpf(), instrutor);
 				}
 			}
-			
+
 			for (Instrutor a : instrutores.values()) {
 				auxiliar.add(a);
 			}
@@ -180,6 +180,27 @@ public class InstrutorDaoImpl implements InstrutorDao {
 		}
 
 		return instrutor;
+	}
+
+	@Override
+	public boolean deleteByCpf(String cpf) {
+		PreparedStatement ps = null;
+
+		try {
+			String sql = "EXECUTE deletar_instrutor @cpf = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cpf);
+
+			ps.execute();
+
+			return true;
+		} catch (SQLException e) {
+
+			return false;
+
+		} finally {
+			DB.closeStatement(ps);
+		}
 	}
 
 }

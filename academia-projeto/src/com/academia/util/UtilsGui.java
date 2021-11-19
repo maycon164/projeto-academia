@@ -1,7 +1,5 @@
 package com.academia.util;
 
-import java.util.Optional;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar;
@@ -10,7 +8,9 @@ import javafx.scene.control.TextField;
 
 public class UtilsGui {
 
-	public static Optional<ButtonType> showConfirmation(String title, String text) {
+	private static Boolean resp = null;
+	
+	public static boolean showConfirmation(String title, String text) {
 
 		Alert dialogoExe = new Alert(Alert.AlertType.CONFIRMATION);
 
@@ -21,8 +21,15 @@ public class UtilsGui {
 		dialogoExe.setHeaderText(text);
 		dialogoExe.getButtonTypes().setAll(btnSim, btnCancelar);
 
-		return dialogoExe.showAndWait();
+		dialogoExe.showAndWait().ifPresent(b -> {
+			if (b == btnSim) {
+				resp = true;
+			}else {
+				resp = false;
+			}
+		});
 
+		return resp;
 	}
 
 	public static void showAlert(String title, String header, String content, AlertType type) {

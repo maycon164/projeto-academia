@@ -17,12 +17,7 @@ public class Main extends Application {
 		// Utils.showAlert("TESTE", "TESTANDO HEADER", "TESTANDO CONTEUDO",
 		// AlertType.CONFIRMATION);
 
-		UtilsGui.showConfirmation("DESEJA MESMO CONFIRMAR", "RONALDO").ifPresent(b -> {
-
-			System.out.println(b.getText());
-
-		});
-
+		UtilsGui.showConfirmation("DESEJA MESMO CONFIRMAR", "RONALDO");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 

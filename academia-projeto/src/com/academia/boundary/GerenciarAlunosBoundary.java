@@ -110,23 +110,20 @@ public class GerenciarAlunosBoundary {
 			Aluno aluno = tblAlunoPlano.getSelectionModel().getSelectedItem();
 
 			// CONFIRMAR EXCLUSÃO
-			UtilsGui.showConfirmation("Excluir Aluno", "Deseja excluir o aluno " + aluno.getNome()).ifPresent(b -> {
+			if (UtilsGui.showConfirmation("Excluir Aluno", "Deseja excluir o aluno " + aluno.getNome())) {
 
-				if (b.getText().equalsIgnoreCase("sim")) {
-
-					boolean excluir = alunoControl.excluir(aluno);
-
-					if (excluir) {
-						UtilsGui.showAlert("EXCLUSÃO DE ALUNO", "AVISO",
-								"O ALUNO COM O CPF " + aluno.getCpf() + " FOI EXCLUÍDO", AlertType.INFORMATION);
-					}
+				if (alunoControl.excluir(aluno)) {
+					UtilsGui.showAlert("EXCLUSÃO DE ALUNO", "AVISO",
+							"O ALUNO COM O CPF " + aluno.getCpf() + " FOI EXCLUÍDO", AlertType.INFORMATION);
 				}
-
-			});
+			}
 
 		});
 
-		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+		// FILTRAR POR PLANO
+		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
+
+		{
 
 			Plano plano = cbPlano.getValue();
 			Plano plano2 = tblAlunoPlano.getSelectionModel().getSelectedItem().getAssinatura().getPlano();

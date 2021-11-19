@@ -1,5 +1,8 @@
 package com.academia.boundary;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.academia.control.PlanoControl;
 import com.academia.entities.Plano;
 import com.academia.factory.ControllerMediator;
@@ -7,20 +10,18 @@ import com.academia.util.UtilsGui;
 
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 
 public class GerenciarPlanoBoundary {
 
@@ -28,17 +29,15 @@ public class GerenciarPlanoBoundary {
 	PlanoControl planoControl = ControllerMediator.getPlanoControl();
 
 	// GRIDPANE
-	private SplitPane splitGerenciamentoPlano = new SplitPane();
 	private GridPane gridCadastroPlano = new GridPane();
-	private VBox vboxTableViewPlanos = new VBox();
 
 	// LABELS
-	private Label lblGerenciamentoPlanos = new Label("GERENCIAMENTO DE PLANOS DE ACADEMIA");
+	private Label lblGerenciamentoPlanos = new Label("GERENCIAMENTO DE PLANOS");
 	private Label lblTodosPlanos = new Label("TODOS OS PLANOS CADASTRADOS");
-	private Label lblNome = new Label("Nome: ");
-	private Label lblDescricao = new Label("Descrição: ");
-	private Label lblPreco = new Label("Preço: ");
-	private Label lblDuracao = new Label("Duração(DIAS): ");
+	private Label lblNome = new Label("Nome:");
+	private Label lblDescricao = new Label("Descrição:");
+	private Label lblPreco = new Label("Preço:");
+	private Label lblDuracao = new Label("Duração:");
 	private Label messageError = new Label("");
 
 	// TEXTFIELDS
@@ -61,8 +60,8 @@ public class GerenciarPlanoBoundary {
 
 	}
 
-	public SplitPane render() {
-		return splitGerenciamentoPlano;
+	public GridPane render() {
+		return gridCadastroPlano;
 	}
 
 	public void iniciarParaCadastro() {
@@ -84,10 +83,18 @@ public class GerenciarPlanoBoundary {
 		iniciarCss();
 		iniciarEventos();
 		iniciarTabelaPlano();
-		iniciarSplitPane();
 		iniciarGridGerenciamentoPlano();
-		iniciarVboxTableViewPlanos();
 		iniciarControler();
+		ajustarTamanhoTextFields();
+	}
+
+	private void ajustarTamanhoTextFields() {
+		List<TextField> textFields = gridCadastroPlano.getChildren().stream().filter(node -> node instanceof TextField)
+				.map(textField -> (TextField) textField).collect(Collectors.toList());
+
+		textFields.forEach(txt -> {
+			txt.getStyleClass().add("txtField");
+		});
 	}
 
 	private void iniciarEventos() {
@@ -121,19 +128,13 @@ public class GerenciarPlanoBoundary {
 			Plano plano = tblPlanos.getSelectionModel().getSelectedItem();
 
 			// CONFIRMAR EXCLUSÃO DE PLANO
-			UtilsGui.showConfirmation("Excluir Registro", "Deseja Excluir o Plano " + plano.getNome()).ifPresent(b -> {
-
-				if (b.getText().equalsIgnoreCase("sim")) {
-
-					boolean excluir = planoControl.excluir(plano);
-
-					if (excluir) {
-						UtilsGui.showAlert("EXCLUSÃO DE PLANO", "AVISO",
-								"O PLANO COM ID " + plano.getIdPlano() + " FOI EXCLUÍDO", AlertType.INFORMATION);
-					}
+			if (UtilsGui.showConfirmation("Excluir Registro", "Deseja Excluir o Plano " + plano.getNome())) {
+				if (planoControl.excluir(plano)) {
+					UtilsGui.showAlert("EXCLUSÃO DE PLANO", "AVISO",
+							"O PLANO COM ID " + plano.getIdPlano() + " FOI EXCLUÍDO", AlertType.INFORMATION);
 				}
 
-			});
+			}
 
 		});
 
@@ -142,7 +143,9 @@ public class GerenciarPlanoBoundary {
 		UtilsGui.setTextFieldInteger(txtDuracao);
 
 		// BOTÃO PARA ALTERAR UM PLANO
-		btnAlterar.setOnAction(event -> {
+		btnAlterar.setOnAction(event ->
+
+		{
 
 			if (planoControl.atualizar(tblPlanos.getSelectionModel().getSelectedItem())) {
 
@@ -172,30 +175,9 @@ public class GerenciarPlanoBoundary {
 
 	}
 
-	private void iniciarSplitPane() {
-
-		tblPlanos.setMaxWidth(500d);
-		tblPlanos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-		vboxTableViewPlanos.setAlignment(Pos.CENTER);
-
-		splitGerenciamentoPlano.setOrientation(Orientation.HORIZONTAL);
-		splitGerenciamentoPlano.getItems().addAll(gridCadastroPlano, vboxTableViewPlanos);
-	}
-
-	private void iniciarVboxTableViewPlanos() {
-
-		vboxTableViewPlanos.getChildren().addAll(lblTodosPlanos, tblPlanos, btnExcluir);
-		VBox.setMargin(tblPlanos, new Insets(40d, 0d, 40d, 0d));
-
-	}
-
 	private void iniciarGridGerenciamentoPlano() {
 
 		gridCadastroPlano.addRow(0, lblGerenciamentoPlanos);
-
-		gridCadastroPlano.addRow(1, new Label(""));
-		gridCadastroPlano.addRow(2, new Label(""));
 
 		gridCadastroPlano.addRow(3, lblNome, txtNome, lblDuracao, txtDuracao);
 		gridCadastroPlano.addRow(4, lblPreco, txtPreco);
@@ -205,12 +187,38 @@ public class GerenciarPlanoBoundary {
 		gridCadastroPlano.addRow(7, new Label(""));
 
 		gridCadastroPlano.addRow(8, messageError);
+		FlowPane fpBotoes = new FlowPane();
+		fpBotoes.setAlignment(Pos.CENTER);
+		fpBotoes.getChildren().addAll(btnCadastrar, btnAlterar, btnCancelar);
+		FlowPane.setMargin(btnAlterar, new Insets(0d, 20d, 0d, 20d));
+		gridCadastroPlano.addRow(9, fpBotoes);
 
-		gridCadastroPlano.addRow(9, btnCadastrar, btnAlterar, btnCancelar);
+		tblPlanos.setPrefWidth(500d);
+		tblPlanos.setMaxWidth(500d);
+		tblPlanos.setMinWidth(500d);
+		tblPlanos.setPrefHeight(200);
+		tblPlanos.setMaxHeight(200);
+		tblPlanos.setMinHeight(200);
+
+		tblPlanos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+		gridCadastroPlano.add(lblTodosPlanos, 7, 0);
+		FlowPane fpTabela = new FlowPane();
+		fpTabela.getChildren().add(tblPlanos);
+		fpTabela.setAlignment(Pos.CENTER);
+		gridCadastroPlano.add(fpTabela, 7, 3);
+
+		FlowPane fpBtnExcluir = new FlowPane();
+		fpBtnExcluir.getChildren().add(btnExcluir);
+		fpBtnExcluir.setAlignment(Pos.CENTER);
+		gridCadastroPlano.add(fpBtnExcluir, 7, 9);
 
 		GridPane.setColumnSpan(messageError, 4);
 		GridPane.setColumnSpan(lblGerenciamentoPlanos, 4);
 		GridPane.setColumnSpan(txtDescricao, 4);
+		GridPane.setColumnSpan(lblDescricao, 4);
+		GridPane.setColumnSpan(fpBotoes, 4);
+		GridPane.setRowSpan(fpTabela, 5);
 	}
 
 	@SuppressWarnings("unchecked")

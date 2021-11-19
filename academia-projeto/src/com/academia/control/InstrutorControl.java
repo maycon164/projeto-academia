@@ -62,6 +62,11 @@ public class InstrutorControl {
 		return filteredInstrutores;
 	}
 
+	private void atualizarLista() {
+		filteredInstrutores.setPredicate(i -> false);
+		filteredInstrutores.setPredicate(i -> true);
+	}
+
 	public void limparCampos() {
 
 		cpfProps.set("");
@@ -91,5 +96,26 @@ public class InstrutorControl {
 		instrutor.setSexo(sexoProps.get().charAt(0));
 
 		return instrutor;
+	}
+
+	public void setInstrutor(Instrutor i) {
+
+		cpfProps.set(i.getCpf());
+		nomeProps.set(i.getNome());
+		emailProps.set(i.getEmail());
+		sexoProps.set((i.getSexo() == 'M') ? "Masculino" : "Feminino");
+
+	}
+
+	public boolean excluir(Instrutor i) {
+
+		if (instrutorConn.deleteByCpf(i.getCpf())) {
+			instrutores.remove(i);
+			atualizarLista();
+			return true;
+		}
+
+		return false;
+
 	}
 }

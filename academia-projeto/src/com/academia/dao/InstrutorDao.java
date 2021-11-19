@@ -12,4 +12,6 @@ public interface InstrutorDao {
 	boolean insert(Instrutor instrutor);
 
 	List<Instrutor> findAll();
+	
+	boolean deleteByCpf(String cpf);
 }
