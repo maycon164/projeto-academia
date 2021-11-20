@@ -68,7 +68,14 @@ BEGIN
 	
 END
 
-EXECUTE deletar_aluno @cpf = '11111111111'
+EXECUTE deletar_aluno @cpf = '2'
+
+SELECT * FROM vw_aluno
+SELECT * FROM  pagamento
+
+UPDATE pagamento 
+SET tipo_pagamento = 'DINHEIRO'
+WHERE id_pagamento = 8
 
 ---------- STORED PROCEDURE PARA DELETAR UM INSTRUTOR (INSTRUTOR_PLANO, INSTRUTOR, PESSOA)
 
@@ -87,133 +94,6 @@ EXECUTE deletar_instrutor @cpf = '93243'
 
 
 ------------------------------------- FIM POR ENQUANTO -------------------------------------
-------------------------------------------
-
-CREATE PROCEDURE concatenar
-@palavra VARCHAR(100)
-AS 
-BEGIN
-	SELECT (@palavra + ' TESTEANDO CONCATENAÇÃO') AS teste
-	RETURN 1
-END
-
-EXECUTE [dbo].[concatenar] @palavra = 'OLÁ MUNDO'
-
---------FUNCTION PARA INSERIR UM ALUNO (NÃO FUNCIONA)
-
-CREATE FUNCTION inserirAluno(
-	@cpf VARCHAR(12),
-	@nome VARCHAR(100),
-	@nascimento DATE,
-	@email VARCHAR(100),
-	@telefone VARCHAR(12),
-	@bairro VARCHAR(100),
-	@rua VARCHAR(100),
-	@num VARCHAR(5),
-	@sexo CHARACTER(1),
-	@data_matricula DATE,	
-	@ativo BIT,
-	@observacoes VARCHAR(200)
-)
-RETURNS VARCHAR(12)
-BEGIN
-	INSERT
-	INTO
-	pessoa(cpf,
-	nome,
-	nascimento,
-	email,
-	telefone,
-	bairro,
-	rua,
-	num,
-	sexo,
-	data_matricula)
-VALUES 
-	(@cpf,
-@nome,
-@nascimento,
-@email,
-@telefone,
-@bairro,
-@rua,
-@num,
-@sexo,
-@data_matricula)
-	RETURN @cpf
-END
-DROP FUNCTION dbo.inserirAluno;
-
-SELECT dbo.inserirAluno('05460595037', 'MAYKHITARIAN', '2020-02-21', 'maycasso@gmail.com',
-'8491312390', 'IGUATEMI', 'ANECY ROCHA', '178', 'M', GETDATE(), 1, 'MUITO ENTUSIASMADO'
-);
-
-exec sp_columns pessoa;
-exec sp_columns inserirAluno;
-
-CREATE FUNCTION TRIM(@ST VARCHAR(100))
-RETURNS VARCHAR(100)
-BEGIN 
-	RETURN (LTRIM(RTRIM(@ST)))
-END
-	
-DROP FUNCTION TRIM;
-
-SELECT * FROM vw_aluno_plano vap 
-
-SELECT * FROM instrutor_plano ip;
-
-SELECT * FROM vw_aluno_plano vap;
-
-SELECT * FROM aluno_plano
-WHERE cpf_aluno = '82259101097'
-
-SELECT * FROM plano;
-SELECT * FROM aluno;
-SELECT * FROM pessoa;
-
-ALTER TABLE pessoa
-ADD cep VARCHAR(8)
-
-SELECT * FROM aluno_plano;
-SELECT * FROM aluno WHERE cpf = '11111111111'
-
-UPDATE aluno
-SET observacoes = 'Problemas Respiratorios....'
-WHERE cpf = '10866672044'
-
-DELETE pessoa
-WHERE cpf = '50409978846'
-
-ALTER TABLE pessoa
-ADD data_matricula DATE DEFAULT GETDATE();
-
-INSERT INTO pessoa(cpf, nome, sexo, nascimento, email, telefone, bairro, rua, num) VALUES
-('44570562000', 'Isabelle', 'F', '2002-12-21', 'isabel@gmail.com','188991123', 'Praia Paulistinha', 'Rua Maria Cleofas', '89'),
-('97676760070', 'Leticia', 'F', '1992-03-15', 'leticia@gmail.com','11978413657', 'Jardim Iguatemi', 'Rua Professor Thomaz Aquino', '111'),
-('01362539031', 'Luisa', 'F', '1994-09-21', 'luisa@gmail.com','11989447314', 'Vila Prudente', 'Rua Angelina Cidro', '89')
-
-INSERT INTO instrutor (cpf, ativo, especializacao) VALUES
-('44570562000', 1, 'Educação, Diversidade e Inclusão Social'),
-('97676760070', 1, 'Dança e Consciência Corporal.'),
-('01362539031', 1, 'Fundamentos da Dança')
-
-1 MUSCULAÇÃO, 2 BOXE, 3 NATAÇÃO, 4 GINASTICA
-INSERT INTO instrutor_plano(cpf_instrutor, id_plano)VALUES
-('44570562000', 4),
-('97676760070', 4),
-('01362539031', 2)
-
-
-
-
-SELECT * FROM pagamento;
-
-ORDER BY nome DESC 
-
-SELECT * FROM vw_instrutor vi 
-SELECT * FROM instrutor_plano ip 
-
 exec sp_columns pessoa;
 exec sp_columns aluno;
 exec sp_columns plano;

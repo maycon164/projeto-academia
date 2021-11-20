@@ -22,8 +22,7 @@ ADD
 CREATE TABLE aluno(
 	cpf VARCHAR(12) NOT NULL,
 	ativo BIT NOT NULL,
-	observacoes VARCHAR(200)
-	
+	observacoes VARCHAR(200),
 	PRIMARY KEY(cpf),
 	FOREIGN KEY (cpf) REFERENCES pessoa(cpf)
 )
@@ -78,7 +77,7 @@ CREATE TABLE pagamento(
 	id_pagamento INT IDENTITY(1,1),
 	cpf_aluno VARCHAR(12) NOT NULL,
 	nome_aluno VARCHAR(100),
-	id_plano INT NOT NULL,
+	id_plano INT,
 	plano VARCHAR(100),
 	valor_total DECIMAL(9,2) NOT NULL,
 	data_pagamento DATE,
@@ -116,29 +115,6 @@ CREATE TABLE avaliacao(
 
 
 
------INSERINDO COLUNA SEXO
-ALTER TABLE 
-/*ELABORAR MAIS SOBRE A FICHA DE TREINO AS TABELAS 
- * COMOS OS EQUIPAMENTOS
- * GRUPOS MUSCULARES
- * FAZER COM QUE A FICHA DE TREINO SEJA ENVIADA POR EMAIL
- * */
-DROP TABLE pagamento 
-
-
-SELECT CASE WHEN ('1999-10-14') > ('2001-09-21')
-THEN 'VERDADE'
-ELSE 'FALSO'
-END AS teste
-
-
-SELECT * FROM aluno_plano;
-SELECT * FROM pessoa;
-SELECT * FROM aluno;
-SELECT * FROM instrutor;
-SELECT * FROM plano;
-SELECT * FROM instrutor_plano;
-SELECT * FROM pagamento
 
 
 exec sp_columns pessoa;
