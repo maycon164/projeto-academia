@@ -97,4 +97,18 @@ public class Pagamento {
 				+ ", dataPagamento=" + dataPagamento + ", tipoPagamento=" + tipoPagamento + ", status=" + status + "]";
 	}
 
+	public static Pagamento fromAluno(Aluno aluno) {
+
+		Pagamento p = new Pagamento();
+		p.setCpfAluno(aluno.getCpf());
+		p.setNomeAluno(aluno.getNome());
+		p.setNomePlano(aluno.getAssinatura().getPlano().getNome());
+		p.setValorTotal(aluno.getAssinatura().getPlano().getPreco());
+		p.setDataPagamento(new Date());
+		p.setTipoPagamento(null);
+		p.setStatus(StatusPagamento.ABERTO);
+		return p;
+
+	}
+
 }

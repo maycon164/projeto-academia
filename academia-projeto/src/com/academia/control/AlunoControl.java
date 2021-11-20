@@ -108,6 +108,8 @@ public class AlunoControl {
 				}
 
 				alunos.add(aluno);
+				alunoConn.gerarPagamento(aluno);
+
 				this.limparCampos();
 				return true;
 
@@ -275,12 +277,7 @@ public class AlunoControl {
 
 		// NÃO SEI SE ESSA É A MELHOR FORMA
 		Assinatura assinatura = new Assinatura();
-
-		Plano plano = new Plano();
-		plano.setIdPlano(idPlano);
-		plano.setNome(nomePlano);
-		plano.setDuracao(Integer.parseInt(duracaoProps.get()));
-		assinatura.setPlano(plano);
+		assinatura.setPlano(planoProps.get());
 		assinatura.setDataInicio(sdf.parse(dataInicioProps.get()));
 		assinatura.setDataExpiracao(sdf.parse(dataFimProps.get()));
 
@@ -320,11 +317,11 @@ public class AlunoControl {
 
 		// ALUNO PRECISA TRAZER A ASSINATURA JUNTO COM O PLANO
 		this.planoProps.set(aluno.getAssinatura().getPlano());
-		
+
 		this.precoProps.set("R$ " + String.valueOf(aluno.getAssinatura().getPlano().getPreco()));
 		this.duracaoProps.set(String.valueOf(aluno.getAssinatura().getPlano().getDuracao()));
 		this.dataInicioProps.set(sdf.format(aluno.getAssinatura().getDataInicio()));
 		this.dataFimProps.set(sdf.format(aluno.getAssinatura().getDataExpiracao()));
-		
+
 	}
 }

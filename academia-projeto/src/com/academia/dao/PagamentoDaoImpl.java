@@ -60,7 +60,10 @@ public class PagamentoDaoImpl implements PagamentoDao {
 		pagamento.setNomePlano(rs.getString("plano"));
 		pagamento.setValorTotal(rs.getDouble("valor_total"));
 		pagamento.setDataPagamento(rs.getDate("data_pagamento"));
-		pagamento.setTipoPagamento(TipoPagamento.valueOf(rs.getString("tipo_pagamento")));
+
+		String tipoPagamento = rs.getString("tipo_pagamento");
+		pagamento.setTipoPagamento((tipoPagamento.equals("")) ? null : TipoPagamento.valueOf(tipoPagamento));
+
 		pagamento.setStatus(StatusPagamento.valueOf(rs.getString("status")));
 
 		return pagamento;
@@ -81,7 +84,7 @@ public class PagamentoDaoImpl implements PagamentoDao {
 			ps.setString(4, pagamento.getNomePlano());
 			ps.setDouble(5, pagamento.getValorTotal());
 			ps.setDate(6, new java.sql.Date(pagamento.getDataPagamento().getTime()));
-			ps.setString(7, pagamento.getTipoPagamento().toString());
+			ps.setString(7, (pagamento.getTipoPagamento() != null) ? pagamento.getTipoPagamento().toString() : "");
 			ps.setString(8, pagamento.getStatus().toString());
 
 			int rows = ps.executeUpdate();

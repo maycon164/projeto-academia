@@ -45,7 +45,10 @@ public class PagamentoControl {
 		planoProps.set(p.getNomePlano());
 		valorProps.set("R$" + p.getValorTotal());
 		dataPagamentoProps.set(sdf.format(p.getDataPagamento()));
-		tipoPagamentoProps.set(p.getTipoPagamento().toString());
+
+		if (p.getTipoPagamento() != null) {
+			tipoPagamentoProps.set(p.getTipoPagamento().toString());
+		}
 
 	}
 

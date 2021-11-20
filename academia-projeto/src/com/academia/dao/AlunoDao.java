@@ -26,4 +26,6 @@ public interface AlunoDao {
 
 	Assinatura assinarPlano(Assinatura assinatura);
 
+	void gerarPagamento(Aluno aluno);
+
 }

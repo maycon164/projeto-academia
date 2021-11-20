@@ -16,6 +16,7 @@ import com.academia.dto.AlunoDTO;
 import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
+import com.academia.entities.Pagamento;
 import com.academia.exception.CpfRegisteredException;
 import com.academia.factory.DaoFactory;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
@@ -24,6 +25,7 @@ public class AlunoDaoImpl implements AlunoDao {
 
 	private Connection conn;
 	private PlanoDao planoConn = DaoFactory.getPlanoDao();
+	private PagamentoDao pagamentoConn = DaoFactory.getPagamentoDao();
 	private static Map<String, Aluno> alunos = new LinkedHashMap<>();
 
 	public AlunoDaoImpl(Connection conn) {
@@ -177,6 +179,10 @@ public class AlunoDaoImpl implements AlunoDao {
 		}
 
 		return null;
+	}
+
+	public void gerarPagamento(Aluno aluno) {
+		pagamentoConn.insert(Pagamento.fromAluno(aluno));
 	}
 
 	@Override
