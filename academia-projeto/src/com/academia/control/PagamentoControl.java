@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 
 public class PagamentoControl {
 
@@ -24,13 +25,55 @@ public class PagamentoControl {
 	public StringProperty dataPagamentoProps = new SimpleStringProperty("");
 	public StringProperty tipoPagamentoProps = new SimpleStringProperty("");
 
+	// PESQUISAR
+	public StringProperty pesquisarPagamentosProps = new SimpleStringProperty("");
+	public StringProperty statusProps = new SimpleStringProperty("");
+
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	// LISTAS
 	private ObservableList<Pagamento> pagamentos = FXCollections.observableArrayList();
+	private FilteredList<Pagamento> filteredPagamentos = new FilteredList<>(pagamentos, p -> true);
+
+	// GAMBIARRA PARA PEGAR O ID SETADO
+	private int idPagamento;
 
 	public ObservableList<Pagamento> getPagamentos() {
-		return pagamentos;
+		return filteredPagamentos;
+	}
+
+	public PagamentoControl() {
+		iniciarEventos();
+	}
+
+	private void iniciarEventos() {
+
+		// PESQUISAR
+		pesquisarPagamentosProps.addListener((obs, oldValue, newValue) -> {
+
+			filteredPagamentos.setPredicate(p -> {
+
+				if (newValue.equals("") || newValue == null) {
+					return true;
+				}
+
+				if (p.getNomeAluno().toLowerCase().contains(newValue.toLowerCase())) {
+					return true;
+				}
+
+				if (p.getNomePlano().toLowerCase().contains(newValue.toLowerCase())) {
+					return true;
+				}
+
+				return false;
+			});
+
+		});
+
+		// PESQUISAR POR CHOICE BOX
+		statusProps.addListener((obs, oldValue, newValue) -> {
+			filteredPagamentos.setPredicate(p -> (p.getStatus().toString().equals(newValue)) ? true : false);
+		});
 	}
 
 	public void atualizarPagamentos() {
@@ -39,6 +82,7 @@ public class PagamentoControl {
 	}
 
 	public void setPagamento(Pagamento p) {
+		idPagamento = p.getIdPagamento();
 
 		cpfProps.set(p.getCpfAluno());
 		nomeProps.set(p.getNomeAluno());
@@ -50,6 +94,15 @@ public class PagamentoControl {
 			tipoPagamentoProps.set(p.getTipoPagamento().toString());
 		}
 
+	}
+
+	public boolean realizarPagamento(String formaPagamento) {
+
+		if (idPagamento != 0 && formaPagamento != null) {
+			return pagamentoConn.makePayment(idPagamento, formaPagamento);
+		}
+
+		return false;
 	}
 
 }

@@ -69,6 +69,7 @@ public class AlunoControl {
 
 	// CAMPO DE PESQUISA
 	public StringProperty pesquisaProps = new SimpleStringProperty("");
+	public ObjectProperty<Plano> planoPesquisaProps = new SimpleObjectProperty<>();
 
 	// ALUNO PARA ALTERAÇÃO
 	private Aluno aluno = null;
@@ -235,6 +236,18 @@ public class AlunoControl {
 
 			});
 
+		});
+
+		// PESQUISA POR PLANOS
+		planoPesquisaProps.addListener((obs, oldValue, newValue) -> {
+
+			filteredAlunos.setPredicate(a -> {
+				if (a.getAssinatura().getPlano() == newValue) {
+					return true;
+				}
+				return false;
+			});
+			
 		});
 
 	}

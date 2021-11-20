@@ -2,10 +2,12 @@ package com.academia.boundary;
 
 import com.academia.control.PagamentoControl;
 import com.academia.factory.ControllerMediator;
+import com.academia.util.UtilsGui;
 
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -61,18 +63,35 @@ public class DetalhesPagamentoBoundary {
 	}
 
 	private void iniciarControl() {
-		
+
 		Bindings.bindBidirectional(txtCpf.textProperty(), pagamentoControl.cpfProps);
 		Bindings.bindBidirectional(txtNome.textProperty(), pagamentoControl.nomeProps);
 		Bindings.bindBidirectional(txtPlano.textProperty(), pagamentoControl.planoProps);
 		Bindings.bindBidirectional(txtValor.textProperty(), pagamentoControl.valorProps);
 		Bindings.bindBidirectional(txtDataPagamento.textProperty(), pagamentoControl.dataPagamentoProps);
 		Bindings.bindBidirectional(cbFormaPagamento.valueProperty(), pagamentoControl.tipoPagamentoProps);
-	
+
 	}
 
 	private void iniciarEventos() {
 
+		// PAGAR
+		btnPagar.setOnAction(event -> {
+
+			if (cbFormaPagamento != null) {
+
+				if (pagamentoControl.realizarPagamento(cbFormaPagamento.getValue())) {
+
+					UtilsGui.showAlert("PAGAMENTO", " REALIZAR PAGAMENTO", "PAGAMENTO REALIZADO COM SUCESSO",
+							AlertType.INFORMATION);
+
+					pagamentoControl.atualizarPagamentos();
+				}
+				;
+
+			}
+
+		});
 	}
 
 	private void iniciarCbFormaPagamento() {

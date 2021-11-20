@@ -204,5 +204,6 @@ public class GerenciarAlunosBoundary {
 
 	private void iniciarControl() {
 		Bindings.bindBidirectional(txtPesquisa.textProperty(), alunoControl.pesquisaProps);
+		Bindings.bindBidirectional(cbPlano.valueProperty(), alunoControl.planoPesquisaProps);
 	}
 }

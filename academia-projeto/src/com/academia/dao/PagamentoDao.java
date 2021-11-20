@@ -10,4 +10,6 @@ public interface PagamentoDao {
 
 	boolean insert(Pagamento pagamento);
 
+	boolean makePayment(int idPagamento, String formaPagamento);
+
 }

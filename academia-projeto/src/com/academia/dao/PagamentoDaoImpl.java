@@ -106,4 +106,25 @@ public class PagamentoDaoImpl implements PagamentoDao {
 		return false;
 	}
 
+	@Override
+	public boolean makePayment(int idPagamento, String formaPagamento) {
+		PreparedStatement ps = null;
+
+		try {
+			String sql = "UPDATE pagamento SET tipo_pagamento = ?, STATUS = ? WHERE id_pagamento = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, formaPagamento);
+			ps.setString(2, "PAGO");
+			ps.setInt(3, idPagamento);
+
+			ps.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.closeStatement(ps);
+		}
+		return false;
+	}
+
 }

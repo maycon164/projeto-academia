@@ -4,6 +4,7 @@ import com.academia.control.PagamentoControl;
 import com.academia.entities.Pagamento;
 import com.academia.factory.ControllerMediator;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,9 +29,10 @@ public class GerenciarPagamentosBoundary {
 
 	// LABEL
 	private Label lblTodosPagamentos = new Label("TODOS OS PAGAMENTOS");
+	private Label lblPesquisar = new Label("Pesquisar: ");
 
 	// BOTOES
-	private TextField txtPagamento = new TextField();
+	private TextField txtPesquisarPagamento = new TextField();
 	private ChoiceBox<String> cbStatus = new ChoiceBox<>();
 
 	// TABLE VIEW
@@ -57,12 +59,18 @@ public class GerenciarPagamentosBoundary {
 	}
 
 	private void iniciarTela() {
+		iniciarControl();
 		iniciarGrid();
 		iniciarModalDetalhesPagamento();
 		iniciarChoiceBox();
 		iniciarTabela();
 		iniciarCss();
 		iniciarEventos();
+	}
+
+	private void iniciarControl() {
+		Bindings.bindBidirectional(cbStatus.valueProperty(), pagamentoControl.statusProps);
+		Bindings.bindBidirectional(txtPesquisarPagamento.textProperty(), pagamentoControl.pesquisarPagamentosProps);
 	}
 
 	private void iniciarModalDetalhesPagamento() {
@@ -90,8 +98,8 @@ public class GerenciarPagamentosBoundary {
 	private void iniciarGrid() {
 		gridGerenciarPagamentos.addRow(0, lblTodosPagamentos);
 
-		fpPesquisa.getChildren().addAll(txtPagamento, cbStatus);
-		txtPagamento.setPrefWidth(500d);
+		fpPesquisa.getChildren().addAll(lblPesquisar, txtPesquisarPagamento, cbStatus);
+		txtPesquisarPagamento.setPrefWidth(500d);
 		fpPesquisa.setAlignment(Pos.CENTER);
 		FlowPane.setMargin(cbStatus, new Insets(0d, 0d, 0d, 40d));
 
