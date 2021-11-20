@@ -41,7 +41,7 @@ public class GerenciarAlunosBoundary {
 	private TableView<Aluno> tblAlunoPlano = new TableView<>();
 
 	// LABELS
-	private Label lblGerenciamentoDeAluno = new Label("Gerenciamento de Aluno");
+	private Label lblGerenciamentoDeAluno = new Label("GERENCIAMENTO DE ALUNO");
 
 	// TEXTFIELD
 	private TextField txtPesquisa = new TextField();
@@ -153,8 +153,8 @@ public class GerenciarAlunosBoundary {
 
 	private void configurarCss() {
 		lblGerenciamentoDeAluno.getStyleClass().addAll("textCentralizado", "margin");
-		fpPesquisa.getStyleClass().addAll("textCentralizado", "margin");
-		fpBotoes.getStyleClass().addAll("textCentralizado", "margin");
+		fpPesquisa.getStyleClass().addAll("centralizar", "margin");
+		fpBotoes.getStyleClass().addAll("centralizar", "margin");
 		txtPesquisa.getStyleClass().addAll("txtPesquisa");
 	}
 

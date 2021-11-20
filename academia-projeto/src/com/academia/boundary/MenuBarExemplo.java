@@ -15,6 +15,7 @@ public class MenuBarExemplo extends Application {
 	private GerenciarAlunosBoundary gerenciarAlunosBoundary = new GerenciarAlunosBoundary();
 	private GerenciarPlanoBoundary gerenciarPlanoBoundary = new GerenciarPlanoBoundary();
 	private GerenciarInstrutorBoundary gerenciarInstrutorBoundary = new GerenciarInstrutorBoundary();
+	private GerenciarPagamentosBoundary gerenciarPagamentosBoundary = new GerenciarPagamentosBoundary();
 
 	private static Stage root;
 
@@ -64,7 +65,13 @@ public class MenuBarExemplo extends Application {
 			pane.setCenter(gerenciarAlunosBoundary.render());
 		});
 
-		menuGerenciar.getItems().add(itemGerenciarAlunos);
+		MenuItem itemGerenciarPagamentos = new MenuItem("Gerenciar Pagamentos");
+		itemGerenciarPagamentos.setOnAction(event -> {
+			gerenciarPagamentosBoundary.atualizarPagamentos();
+			pane.setCenter(gerenciarPagamentosBoundary.render());
+		});
+
+		menuGerenciar.getItems().addAll(itemGerenciarAlunos, itemGerenciarPagamentos);
 
 		MenuItem itemMenuSair = new MenuItem("Sair");
 		itemMenuSair.setOnAction(event -> {

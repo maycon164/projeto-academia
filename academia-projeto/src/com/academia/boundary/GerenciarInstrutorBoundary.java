@@ -34,7 +34,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 	private InstrutorControl instrutorControl = ControllerMediator.getInstrutorControl();
 
 	// LABELS
-	private Label lblGerenciarInstrutores = new Label("Gerenciar Instrutores");
+	private Label lblGerenciarInstrutores = new Label("GERENCIAR INSTRUTORES");
 	private Label lblCpf = new Label("CPF: ");
 	private Label lblEmail = new Label("Email: ");
 	private Label lblNome = new Label("Nome: ");
@@ -46,8 +46,8 @@ public class GerenciarInstrutorBoundary implements Listener {
 	private TextField txtEmail = new TextField();
 	private ChoiceBox<String> cbSexo = new ChoiceBox<>();
 
-	private Label lblVincularPlano = new Label("Vincular Plano ao Instrutor: ");
-	private Label lblTodosInstrutores = new Label("Todos os Instrutores");
+	private Label lblVincularPlano = new Label("VINCULAR PLANO AO INSTRUTOR: ");
+	private Label lblTodosInstrutores = new Label("TODOS OS INSTRUTORES");
 
 	// List view
 	private ListView<Plano> lvPlanos = new ListView<>();
