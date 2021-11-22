@@ -1,8 +1,8 @@
 .root{
-    
+ 
     -fx-font-size: 12.0pt;
     -fx-font-family: "courier,arial,helvetica";
-    -fx-background: "white";
+    -fx-background: white;
 }
 
 .grid{
@@ -11,17 +11,43 @@
 	-fx-padding: 10.0px;
 	-fx-alignment: "center";
 }
+.gridMargin{
+	
+	-fx-hgap: 30.0px;
+	-fx-vgap: 30.0px;	
+}
 
 .gridGerenciarAlunos{
 	}
 
 .textCentralizado{
-	-fx-font-size: 22px;
+	-fx-font-size: 22.0px;
    -fx-font-family: "Arial Black";
 	-fx-underline: "true";
 	-fx-max-width: "Infinity";
 	-fx-alignment: "top-center";
 	
+}
+.textInfoGeral{
+	-fx-font-size: 25.0px;	
+}
+
+.info { 
+	/*-fx-text-fill: violet;*/
+	-fx-max-width: "Infinity";
+	-fx-alignment: "top-center";
+	-fx-font-size: 30.0px;	
+	-fx-text-fill: linear-gradient(from 0.0% 0.0% to 100.0% 200.0%, repeat, #191970 0.0%, #363636 50.0%);
+    -fx-stroke: black;
+    -fx-stroke-width: 1.0;
+}
+.info-pendencias{
+	-fx-max-width: "Infinity";
+	-fx-alignment: "center-left";
+	-fx-font-size: 20.0px;	
+	-fx-text-fill: linear-gradient(from 0.0% 0.0% to 100.0% 200.0%, repeat, #8B0000 0.0%, #FF0000 50.0%);
+    -fx-stroke: black;
+    -fx-stroke-width: 1.0;
 }
 
 .centralizar{
@@ -36,8 +62,8 @@
 .txtField{
 	-fx-min-width: 100.0pt;
 	-fx-min-height: 23.0pt;
-    -fx-background-color: transparent, #009EF, transparent, limegreen;
-    -fx-background-radius: 0, 0, 0, 0;
+    -fx-background-color: transparent, #009EF, transparent, #32CD32;
+    -fx-background-radius: 0.0, 0.0, 0.0, 0.0;
     -fx-padding: 0.166667em;
 }
 
@@ -97,8 +123,8 @@
 }
 
 .table-row-cell:selected {
-   -fx-background-color: blue; 
-   -fx-text-background-color:  blue;
+   -fx-background-color: black; 
+   -fx-text-background-color:  black;
        
 }
 

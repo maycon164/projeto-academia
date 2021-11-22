@@ -88,6 +88,9 @@ public class AlunoCadastroBoundary {
 	private Button btnAlterar = new Button("ALTERAR");
 	private Button btnCancelar = new Button("CANCELAR");
 
+	// TELA INICIAL
+	private TelaInicialBoundary inicio = new TelaInicialBoundary();
+
 	// GRID PRINCIPAL
 	private GridPane gridCadastroAluno = new GridPane();
 
@@ -158,7 +161,7 @@ public class AlunoCadastroBoundary {
 		gridCadastroAluno.addRow(15, messageError);
 
 		// BUTTONS
-		gridCadastroAluno.addRow(16, btnCadastrar, btnCancelar);
+		gridCadastroAluno.addRow(16, btnCadastrar, btnAlterar, btnCancelar);
 
 		// SETANDO COLUMN SPANS
 		GridPane.setColumnSpan(lblDadosCadastrais, 4);
@@ -225,10 +228,22 @@ public class AlunoCadastroBoundary {
 
 		});
 
+		// ALTERAR
+		btnAlterar.setOnAction(event -> {
+			System.out.println("AOFDJHASOIDA OIJAOIDJASDOIJASIO");
+			if (alunoControl.alterar()) {
+				System.out.println("RONALDO");
+				UtilsGui.showAlert("ALUNO", "ALTERAR ALUNO", "ALUNO ALTERADO COM SUCESSO", AlertType.INFORMATION);
+			}
+
+			alunoControl.limparCampos();
+		});
+
 		btnCancelar.setOnAction(event -> {
 
 			BorderPane bp = (BorderPane) gridCadastroAluno.getScene().getRoot();
-			bp.setCenter(new Label("VOLTANDO A TELA INICIAL ..... \nQual Tela Inicial?\n?????????"));
+			inicio.atualizarTela();
+			bp.setCenter(inicio.render());
 
 		});
 
@@ -241,13 +256,7 @@ public class AlunoCadastroBoundary {
 
 		});
 
-		// BOTAO DE ALTERAR
-		btnAlterar.setOnAction(event -> {
-			// CHAMADA PARA O CONTROL
-			alunoControl.alterar();
-			messageError.setText("Alterado Com Sucesso");
-		});
-
+		
 		// FORMATANDO OS TXTS
 		UtilsGui.setTextFieldInteger(txtCpf);
 		UtilsGui.setTextFieldMaxLength(txtCpf, 11);

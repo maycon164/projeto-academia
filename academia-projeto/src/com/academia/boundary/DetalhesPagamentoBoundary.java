@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 public class DetalhesPagamentoBoundary {
 
@@ -91,6 +92,14 @@ public class DetalhesPagamentoBoundary {
 
 			}
 
+		});
+
+		// CANCELAR
+		btnCancelar.setOnAction(event -> {
+
+			Stage s = (Stage) btnCancelar.getScene().getWindow();
+			s.close();
+			
 		});
 	}
 

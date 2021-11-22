@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,15 +16,16 @@ import com.academia.exception.EmptyFieldException;
 import com.google.gson.Gson;
 
 public class Utils {
+	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	public static void verificarCampos(String... campos) throws EmptyFieldException {
-		
-		for(String campo: campos) {
-			
-			if(campo.length() == 0) {
-				
+
+		for (String campo : campos) {
+
+			if (campo.length() == 0) {
+
 				throw new EmptyFieldException("Preencha todos os campos");
-			
+
 			}
 		}
 	}
@@ -89,4 +92,11 @@ public class Utils {
 		return dataFim;
 	}
 
+	public static String formatarData(Date data) {
+		return sdf.format(data);
+	}
+
+	public static Date converterParaData(String data) throws ParseException {
+		return sdf.parse(data);
+	}
 }

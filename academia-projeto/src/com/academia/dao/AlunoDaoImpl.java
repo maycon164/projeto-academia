@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.academia.db.DB;
-import com.academia.dto.AlunoDTO;
 import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
@@ -73,6 +72,7 @@ public class AlunoDaoImpl implements AlunoDao {
 		return null;
 	}
 
+	// AINDA ME SERÁ UTIL
 	private Set<Assinatura> findAllAssinaturasFromAluno(String cpf) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -186,12 +186,6 @@ public class AlunoDaoImpl implements AlunoDao {
 	}
 
 	@Override
-	public List<AlunoDTO> findAllByParameter(String parameter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<AlunoPlanoDTO> findAllAlunoPlano() {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -267,10 +261,6 @@ public class AlunoDaoImpl implements AlunoDao {
 
 	@Override
 	public boolean deleteByCpf(String cpf) {
-		// 1 - PRIMEIRA COISA É EXCLUIR O RELACIONAMENTO ALUNO_PLANO DA TABELA
-		// 2 - DEPOIS EXCLUIR O REGISTRO "ALUNO"
-		// 3 - POR ULTIMO EXCLUIR A PESSOA
-
 		PreparedStatement ps = null;
 		boolean excluir = false;
 		try {
@@ -300,9 +290,36 @@ public class AlunoDaoImpl implements AlunoDao {
 	}
 
 	@Override
-	public Aluno update(Aluno aluno) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean update(Aluno aluno) {
+
+		PreparedStatement ps = null;
+
+		try {
+			String sql = "UPDATE pessoa SET cpf = ?, nome = ?, nascimento = ?, email = ?, telefone = ?, cep =?, "
+					+ "bairro = ?, rua = ?, num = ?, sexo = ? WHERE cpf = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, aluno.getCpf());
+			ps.setString(2, aluno.getNome());
+			ps.setDate(3, new java.sql.Date(aluno.getNascimento().getTime()));
+			ps.setString(4, aluno.getEmail());
+			ps.setString(5, aluno.getTelefone());
+			ps.setString(6, aluno.getCep());
+			ps.setString(7, aluno.getBairro());
+			ps.setString(8, aluno.getRua());
+			ps.setString(9, aluno.getNum());
+			ps.setString(10, aluno.getSexo().toString());
+			ps.setString(11, aluno.getCpf());
+
+			ps.execute();
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.closeStatement(ps);
+		}
+
+		return false;
 	}
 
 	private Assinatura instantiateAssinatura(ResultSet rs) throws SQLException {

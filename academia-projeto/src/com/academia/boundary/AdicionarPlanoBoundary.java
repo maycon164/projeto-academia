@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class AdicionarPlanoBoundary implements EventListener {
 
@@ -55,6 +56,11 @@ public class AdicionarPlanoBoundary implements EventListener {
 
 			notifyListener();
 
+		});
+
+		btnCancelar.setOnAction(event -> {
+			Stage s = (Stage) btnCancelar.getScene().getWindow();
+			s.close();
 		});
 
 	}

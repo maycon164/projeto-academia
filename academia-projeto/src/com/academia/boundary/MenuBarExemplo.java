@@ -16,6 +16,7 @@ public class MenuBarExemplo extends Application {
 	private GerenciarPlanoBoundary gerenciarPlanoBoundary = new GerenciarPlanoBoundary();
 	private GerenciarInstrutorBoundary gerenciarInstrutorBoundary = new GerenciarInstrutorBoundary();
 	private GerenciarPagamentosBoundary gerenciarPagamentosBoundary = new GerenciarPagamentosBoundary();
+	private TelaInicialBoundary telaInicialBoundary = new TelaInicialBoundary();
 
 	private static Stage root;
 
@@ -79,12 +80,20 @@ public class MenuBarExemplo extends Application {
 			System.exit(0);
 		});
 
-		menuOutros.getItems().add(itemMenuSair);
+		MenuItem itemTelaInicial = new MenuItem("Tela Inicial");
+		itemTelaInicial.setOnAction(event -> {
+			telaInicialBoundary.atualizarTela();
+			pane.setCenter(telaInicialBoundary.render());
+		});
+
+		menuOutros.getItems().addAll(itemTelaInicial, itemMenuSair);
 
 		menuBar.getMenus().addAll(menuCadastros, menuGerenciar, menuOutros);
 
 		Scene scene = new Scene(pane, 500, 500);
 		scene.getStylesheets().add("style.css");
+
+		pane.setCenter(telaInicialBoundary.render());
 
 		root.setMaximized(true);
 		root.setScene(scene);

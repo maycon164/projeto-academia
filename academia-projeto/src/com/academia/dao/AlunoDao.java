@@ -14,15 +14,13 @@ public interface AlunoDao {
 
 	Aluno findByCpf(String cpf);
 
-	Aluno update(Aluno aluno);
+	boolean update(Aluno aluno);
 	
 	List<Aluno> findAll();
 
 	boolean deleteByCpf(String cpf);
 
 	List<AlunoPlanoDTO> findAllAlunoPlano();
-
-	List<AlunoDTO> findAllByParameter(String parameter);
 
 	Assinatura assinarPlano(Assinatura assinatura);
 

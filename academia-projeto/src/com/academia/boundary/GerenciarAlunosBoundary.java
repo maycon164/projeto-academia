@@ -1,6 +1,5 @@
 package com.academia.boundary;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.academia.control.AlunoControl;
@@ -8,6 +7,7 @@ import com.academia.control.PlanoControl;
 import com.academia.entities.Aluno;
 import com.academia.entities.Plano;
 import com.academia.factory.ControllerMediator;
+import com.academia.util.Utils;
 import com.academia.util.UtilsGui;
 
 import javafx.beans.binding.Bindings;
@@ -53,11 +53,7 @@ public class GerenciarAlunosBoundary {
 	private Button btnDetalhes = new Button("DETALHES");
 	private Button btnExcluir = new Button("EXCLUIR");
 
-	// SIMPLE DATE FORMAT
-	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-	// ALUNO CADASTRO
-	private AlunoCadastroBoundary alterarAluno = new AlunoCadastroBoundary();
+	private AlunoCadastroBoundary alunoAlterarBoundary = new AlunoCadastroBoundary();
 
 	public GerenciarAlunosBoundary() {
 		this.iniciarTela();
@@ -90,13 +86,12 @@ public class GerenciarAlunosBoundary {
 		// EVENTO DE TROCA DE TELA
 		btnDetalhes.setOnAction((event) -> {
 
-			String cpf = tblAlunoPlano.getSelectionModel().getSelectedItem().getCpf();
-			alunoControl.setAluno(cpf);
-			alterarAluno.iniciarAlterar();
+			alunoControl.setAluno(tblAlunoPlano.getSelectionModel().getSelectedItem());
 
-			BorderPane bpPrincipal = (BorderPane) vboxAlunoPlano.getScene().getRoot();
+			alunoAlterarBoundary.iniciarAlterar();
 
-			bpPrincipal.setCenter(alterarAluno.render());
+			BorderPane bpPrincipal = (BorderPane) MenuBarExemplo.getRoot().getScene().getRoot();
+			bpPrincipal.setCenter(alunoAlterarBoundary.render());
 
 		});
 
@@ -113,18 +108,6 @@ public class GerenciarAlunosBoundary {
 							"O ALUNO COM O CPF " + aluno.getCpf() + " FOI EXCLUÍDO", AlertType.INFORMATION);
 				}
 			}
-
-		});
-
-		// FILTRAR POR PLANO
-		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
-
-		{
-
-			Plano plano = cbPlano.getValue();
-			Plano plano2 = tblAlunoPlano.getSelectionModel().getSelectedItem().getAssinatura().getPlano();
-
-			System.out.println(plano == plano2);
 
 		});
 
@@ -181,14 +164,14 @@ public class GerenciarAlunosBoundary {
 
 		dataInicioCol.setCellValueFactory(item -> {
 			Date d = item.getValue().getAssinatura().getDataInicio();
-			return new ReadOnlyStringWrapper(sdf.format(d));
+			return new ReadOnlyStringWrapper(Utils.formatarData(d));
 		});
 
 		TableColumn<Aluno, String> dataExpiracaoCol = new TableColumn<>("DATA EXPIRAÇÃO");
 
 		dataExpiracaoCol.setCellValueFactory(item -> {
 			Date d = item.getValue().getAssinatura().getDataExpiracao();
-			return new ReadOnlyStringWrapper(sdf.format(d));
+			return new ReadOnlyStringWrapper(Utils.formatarData(d));
 		});
 
 		tblAlunoPlano.getColumns().setAll(alunoCol, planoCol, duracaoCol, dataInicioCol, dataExpiracaoCol);

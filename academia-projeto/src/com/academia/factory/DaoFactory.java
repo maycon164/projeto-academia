@@ -2,6 +2,7 @@ package com.academia.factory;
 
 import com.academia.dao.AlunoDao;
 import com.academia.dao.AlunoDaoImpl;
+import com.academia.dao.GeralConexao;
 import com.academia.dao.InstrutorDao;
 import com.academia.dao.InstrutorDaoImpl;
 import com.academia.dao.PagamentoDao;
@@ -26,6 +27,10 @@ public class DaoFactory {
 
 	public static PagamentoDao getPagamentoDao() {
 		return new PagamentoDaoImpl(DB.getConnection());
+	}
+
+	public static GeralConexao getGeralConexao() {
+		return new GeralConexao(DB.getConnection());
 	}
 
 }

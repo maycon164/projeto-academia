@@ -1,7 +1,6 @@
 package com.academia.control;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.academia.dao.AlunoDao;
@@ -29,9 +28,6 @@ public class AlunoControl {
 	// ALUNO CONNEXÃO
 	private AlunoDao alunoConn = DaoFactory.getAlunoDao();
 
-	// FORMATAR DATAS
-	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
 	// PROPERTYS ALUNO
 	public StringProperty cpfProps = new SimpleStringProperty("");
 	public StringProperty nomeProps = new SimpleStringProperty("");
@@ -52,7 +48,7 @@ public class AlunoControl {
 
 	public StringProperty precoProps = new SimpleStringProperty("");
 	public StringProperty duracaoProps = new SimpleStringProperty("");
-	public StringProperty dataInicioProps = new SimpleStringProperty(sdf.format(new Date()));
+	public StringProperty dataInicioProps = new SimpleStringProperty(Utils.formatarData(new Date()));
 	public StringProperty dataFimProps = new SimpleStringProperty("");
 	public StringProperty observacaoProps = new SimpleStringProperty("");
 
@@ -131,10 +127,34 @@ public class AlunoControl {
 		return false;
 	}
 
-	public void alterar() {
+	public boolean alterar() {
 
-		System.out.println("AGORA AQUI VEM A LÓGICA PARA ALTERAR.....");
+		if (aluno.getCpf().equals(cpfProps.get())) {
 
+			try {
+
+				Aluno aux = alunoFromBoundary();
+
+				aluno.setNome(aux.getNome());
+				aluno.setEmail(aux.getEmail());
+				aluno.setSexo(aux.getSexo());
+				aluno.setTelefone(aux.getTelefone());
+				aluno.setNascimento(aux.getNascimento());
+				aluno.setCep(aux.getCep());
+				aluno.setBairro(aux.getBairro());
+				aluno.setRua(aux.getRua());
+				aluno.setNum(aux.getNum());
+				aluno.setObservacao(aux.getObservacao());
+				boolean exec = alunoConn.update(aluno);
+				System.out.println(exec);
+				return exec;
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		return false;
 	}
 
 	public boolean excluir(Aluno aluno) {
@@ -179,7 +199,7 @@ public class AlunoControl {
 
 		idPlano = null;
 		duracaoProps.set("");
-		dataInicioProps.set(sdf.format(new Date()));
+		dataInicioProps.set(Utils.formatarData(new Date()));
 		dataFimProps.set("");
 		precoProps.set("");
 
@@ -247,7 +267,7 @@ public class AlunoControl {
 				}
 				return false;
 			});
-			
+
 		});
 
 	}
@@ -256,8 +276,11 @@ public class AlunoControl {
 		if (data.length() == 10) {
 
 			try {
-				Date dataFim = Utils.somarData(sdf.parse(dataInicioProps.get()), Integer.parseInt(duracaoProps.get()));
-				dataFimProps.set(sdf.format(dataFim));
+				Date dataFim = Utils.somarData(Utils.converterParaData(dataInicioProps.get()),
+						Integer.parseInt(duracaoProps.get()));
+
+				dataFimProps.set(Utils.formatarData(dataFim));
+
 			} catch (ParseException e) {
 				messageErrorProps.set("Informe a data no formato dd/MM/yyyy");
 			} catch (NumberFormatException e) {
@@ -272,7 +295,7 @@ public class AlunoControl {
 
 		aluno.setCpf(cpfProps.get());
 		aluno.setNome(nomeProps.get());
-		aluno.setNascimento(sdf.parse(nascimentoProps.get()));
+		aluno.setNascimento(Utils.converterParaData(nascimentoProps.get()));
 		aluno.setEmail(emailProps.get());
 		aluno.setTelefone(telefoneProps.get());
 		aluno.setSexo(sexoProps.get().charAt(0));
@@ -291,8 +314,8 @@ public class AlunoControl {
 		// NÃO SEI SE ESSA É A MELHOR FORMA
 		Assinatura assinatura = new Assinatura();
 		assinatura.setPlano(planoProps.get());
-		assinatura.setDataInicio(sdf.parse(dataInicioProps.get()));
-		assinatura.setDataExpiracao(sdf.parse(dataFimProps.get()));
+		assinatura.setDataInicio(Utils.converterParaData(dataInicioProps.get()));
+		assinatura.setDataExpiracao(Utils.converterParaData(dataFimProps.get()));
 
 		return assinatura;
 
@@ -302,9 +325,9 @@ public class AlunoControl {
 		return sortedAlunos;
 	}
 
-	public void setAluno(String cpf) {
+	public void setAluno(Aluno aluno) {
 
-		this.aluno = alunoConn.findByCpf(cpf);
+		this.aluno = aluno;
 		this.setarDados();
 
 	}
@@ -315,7 +338,7 @@ public class AlunoControl {
 		this.nomeProps.set(aluno.getNome());
 		this.emailProps.set(aluno.getEmail());
 		this.telefoneProps.set(aluno.getTelefone());
-		this.nascimentoProps.set(sdf.format(aluno.getNascimento()));
+		this.nascimentoProps.set(Utils.formatarData(aluno.getNascimento()));
 		this.cepProps.set(aluno.getCep());
 		this.bairroProps.set(aluno.getBairro());
 		this.ruaProps.set(aluno.getRua());
@@ -333,8 +356,8 @@ public class AlunoControl {
 
 		this.precoProps.set("R$ " + String.valueOf(aluno.getAssinatura().getPlano().getPreco()));
 		this.duracaoProps.set(String.valueOf(aluno.getAssinatura().getPlano().getDuracao()));
-		this.dataInicioProps.set(sdf.format(aluno.getAssinatura().getDataInicio()));
-		this.dataFimProps.set(sdf.format(aluno.getAssinatura().getDataExpiracao()));
+		this.dataInicioProps.set(Utils.formatarData(aluno.getAssinatura().getDataInicio()));
+		this.dataFimProps.set(Utils.formatarData(aluno.getAssinatura().getDataExpiracao()));
 
 	}
 }

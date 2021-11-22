@@ -1,10 +1,9 @@
 package com.academia.control;
 
-import java.text.SimpleDateFormat;
-
 import com.academia.dao.PagamentoDao;
 import com.academia.entities.Pagamento;
 import com.academia.factory.DaoFactory;
+import com.academia.util.Utils;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -28,8 +27,6 @@ public class PagamentoControl {
 	// PESQUISAR
 	public StringProperty pesquisarPagamentosProps = new SimpleStringProperty("");
 	public StringProperty statusProps = new SimpleStringProperty("");
-
-	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	// LISTAS
 	private ObservableList<Pagamento> pagamentos = FXCollections.observableArrayList();
@@ -88,7 +85,7 @@ public class PagamentoControl {
 		nomeProps.set(p.getNomeAluno());
 		planoProps.set(p.getNomePlano());
 		valorProps.set("R$" + p.getValorTotal());
-		dataPagamentoProps.set(sdf.format(p.getDataPagamento()));
+		dataPagamentoProps.set(Utils.formatarData(p.getDataPagamento()));
 
 		if (p.getTipoPagamento() != null) {
 			tipoPagamentoProps.set(p.getTipoPagamento().toString());
