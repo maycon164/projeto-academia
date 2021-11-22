@@ -50,25 +50,6 @@ public class PagamentoDaoImpl implements PagamentoDao {
 		return null;
 	}
 
-	public Pagamento instantiatePagamento(ResultSet rs) throws SQLException {
-		Pagamento pagamento = new Pagamento();
-
-		pagamento.setIdPagamento(rs.getInt("id_pagamento"));
-		pagamento.setCpfAluno(rs.getString("cpf_aluno"));
-		pagamento.setNomeAluno(rs.getString("nome_aluno"));
-		pagamento.setIdPlano(rs.getInt("id_plano"));
-		pagamento.setNomePlano(rs.getString("plano"));
-		pagamento.setValorTotal(rs.getDouble("valor_total"));
-		pagamento.setDataPagamento(rs.getDate("data_pagamento"));
-
-		String tipoPagamento = rs.getString("tipo_pagamento");
-		pagamento.setTipoPagamento((tipoPagamento.equals("")) ? null : TipoPagamento.valueOf(tipoPagamento));
-
-		pagamento.setStatus(StatusPagamento.valueOf(rs.getString("status")));
-
-		return pagamento;
-	}
-
 	@Override
 	public boolean insert(Pagamento pagamento) {
 		PreparedStatement ps = null;
@@ -125,6 +106,25 @@ public class PagamentoDaoImpl implements PagamentoDao {
 			DB.closeStatement(ps);
 		}
 		return false;
+	}
+
+	private static Pagamento instantiatePagamento(ResultSet rs) throws SQLException {
+		Pagamento pagamento = new Pagamento();
+
+		pagamento.setIdPagamento(rs.getInt("id_pagamento"));
+		pagamento.setCpfAluno(rs.getString("cpf_aluno"));
+		pagamento.setNomeAluno(rs.getString("nome_aluno"));
+		pagamento.setIdPlano(rs.getInt("id_plano"));
+		pagamento.setNomePlano(rs.getString("plano"));
+		pagamento.setValorTotal(rs.getDouble("valor_total"));
+		pagamento.setDataPagamento(rs.getDate("data_pagamento"));
+
+		String tipoPagamento = rs.getString("tipo_pagamento");
+		pagamento.setTipoPagamento((tipoPagamento.equals("")) ? null : TipoPagamento.valueOf(tipoPagamento));
+
+		pagamento.setStatus(StatusPagamento.valueOf(rs.getString("status")));
+
+		return pagamento;
 	}
 
 }

@@ -1,5 +1,8 @@
 package com.academia.dto;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class InstrutorDTO {
 
 	private String cpf;
@@ -31,7 +34,5 @@ public class InstrutorDTO {
 	public String toString() {
 		return nome;
 	}
-
-	
 	
 }

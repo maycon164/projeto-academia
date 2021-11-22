@@ -127,10 +127,12 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 		FlowPane fpListaPlanos = new FlowPane();
 		fpListaPlanos.getChildren().add(lvPlanos);
+		
 		lvPlanos.setPrefHeight(200d);
 		lvPlanos.setPrefWidth(350d);
 		lvPlanos.setMaxWidth(350d);
 		lvPlanos.setMinWidth(350d);
+		
 		fpListaPlanos.setAlignment(Pos.CENTER);
 		gridGerenciarInstrutores.addRow(5, fpListaPlanos);
 

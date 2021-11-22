@@ -224,7 +224,7 @@ public class InstrutorDaoImpl implements InstrutorDao {
 
 			vincularPlano(i.getCpf(), i.getPlanos());
 			return true;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

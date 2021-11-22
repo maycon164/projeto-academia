@@ -64,13 +64,6 @@ public class PlanoDaoImpl implements PlanoDao {
 		return null;
 	}
 
-	private Plano instantiatePlano(ResultSet rs) throws SQLException {
-
-		return new Plano(rs.getInt("id_plano"), rs.getString("nome"), rs.getString("Descricao"), rs.getDouble("preco"),
-				rs.getInt("duracao"));
-
-	}
-
 	@Override
 	public Plano findById(int id) {
 
@@ -111,6 +104,13 @@ public class PlanoDaoImpl implements PlanoDao {
 		}
 
 		return null;
+	}
+
+	private Plano instantiatePlano(ResultSet rs) throws SQLException {
+
+		return new Plano(rs.getInt("id_plano"), rs.getString("nome"), rs.getString("Descricao"), rs.getDouble("preco"),
+				rs.getInt("duracao"));
+
 	}
 
 	@Override
@@ -220,13 +220,13 @@ public class PlanoDaoImpl implements PlanoDao {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, cpf);
 			rs = ps.executeQuery();
-			
+
 			List<Plano> planos = new ArrayList<>();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				planos.add(findById(rs.getInt("id_plano")));
 			}
-			
+
 			return planos;
 		} catch (Exception e) {
 
