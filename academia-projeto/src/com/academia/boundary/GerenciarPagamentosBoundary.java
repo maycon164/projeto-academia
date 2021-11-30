@@ -77,7 +77,7 @@ public class GerenciarPagamentosBoundary {
 		Scene sceneTeste = new Scene(detalhesPagamentoBoundary.render(), 750, 400);
 		sceneTeste.getStylesheets().add("style.css");
 
-		s1.initOwner(MenuBarExemplo.getRoot());
+		s1.initOwner(MenuBarBoundary.getRoot());
 		s1.initModality(Modality.APPLICATION_MODAL);
 		s1.setTitle("DETALHES DO PAGAMENTO");
 		s1.setScene(sceneTeste);

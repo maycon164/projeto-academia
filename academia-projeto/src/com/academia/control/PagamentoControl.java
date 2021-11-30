@@ -32,7 +32,6 @@ public class PagamentoControl {
 	private ObservableList<Pagamento> pagamentos = FXCollections.observableArrayList();
 	private FilteredList<Pagamento> filteredPagamentos = new FilteredList<>(pagamentos, p -> true);
 
-	// GAMBIARRA PARA PEGAR O ID SETADO
 	private int idPagamento;
 
 	public ObservableList<Pagamento> getPagamentos() {

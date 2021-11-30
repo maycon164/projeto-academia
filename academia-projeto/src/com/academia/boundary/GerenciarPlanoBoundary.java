@@ -109,7 +109,6 @@ public class GerenciarPlanoBoundary {
 		});
 
 		// SELECIONANDO ITEM DA TABELA
-
 		tblPlanos.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
 
 			if (event.getClickCount() > 1) {
@@ -209,7 +208,8 @@ public class GerenciarPlanoBoundary {
 		gridCadastroPlano.add(fpTabela, 7, 3);
 
 		FlowPane fpBtnExcluir = new FlowPane();
-		fpBtnExcluir.getChildren().add(btnExcluir);
+		fpBtnExcluir.getChildren().addAll(btnExcluir);
+		FlowPane.setMargin(btnExcluir, new Insets(0d, 30d, 0d, 0d));
 		fpBtnExcluir.setAlignment(Pos.CENTER);
 		gridCadastroPlano.add(fpBtnExcluir, 7, 9);
 

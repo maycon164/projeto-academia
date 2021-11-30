@@ -9,7 +9,7 @@ import com.academia.entities.Assinatura;
 import com.academia.entities.Endereco;
 import com.academia.entities.Plano;
 import com.academia.exception.CepNotFound;
-import com.academia.exception.CpfRegisteredException;
+import com.academia.exception.CpfException;
 import com.academia.exception.EmptyFieldException;
 import com.academia.factory.DaoFactory;
 import com.academia.util.Utils;
@@ -21,7 +21,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 
 public class AlunoControl {
 
@@ -42,9 +41,7 @@ public class AlunoControl {
 	public StringProperty ruaProps = new SimpleStringProperty("");
 	public StringProperty numProps = new SimpleStringProperty("");
 
-	// PROPERTYS PLANO ESCOLHIDO
-	public Integer idPlano;
-	public String nomePlano;
+	// ASSINATURA
 
 	public StringProperty precoProps = new SimpleStringProperty("");
 	public StringProperty duracaoProps = new SimpleStringProperty("");
@@ -58,7 +55,6 @@ public class AlunoControl {
 	// LISTAS
 	private ObservableList<Aluno> alunos = FXCollections.observableArrayList(alunoConn.findAll());
 	private FilteredList<Aluno> filteredAlunos = new FilteredList<>(alunos);
-	private SortedList<Aluno> sortedAlunos = new SortedList<>(filteredAlunos);
 
 	// PROPERTY MESSAGE ERROR
 	public StringProperty messageErrorProps = new SimpleStringProperty();
@@ -100,6 +96,7 @@ public class AlunoControl {
 
 					assinatura.setAluno(aluno);
 					aluno.setAssinatura(assinatura);
+
 					alunoConn.assinarPlano(assinatura);
 
 				}
@@ -114,9 +111,10 @@ public class AlunoControl {
 
 				messageErrorProps.set("INFORME A DATA(dd/MM/yyyy)");
 
-			} catch (CpfRegisteredException e) {
+			} catch (CpfException e) {
 
 				messageErrorProps.set(e.getMessage());
+
 			}
 
 		} catch (EmptyFieldException e) {
@@ -146,7 +144,6 @@ public class AlunoControl {
 				aluno.setNum(aux.getNum());
 				aluno.setObservacao(aux.getObservacao());
 				boolean exec = alunoConn.update(aluno);
-				System.out.println(exec);
 				return exec;
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -176,7 +173,7 @@ public class AlunoControl {
 
 		Utils.verificarCampos(duracaoProps.get(), dataInicioProps.get(), dataFimProps.get(), precoProps.get());
 
-		if (idPlano == null) {
+		if (planoProps == null) {
 
 			throw new EmptyFieldException("SELECIONE UM PLANO");
 
@@ -197,11 +194,14 @@ public class AlunoControl {
 		cepProps.set("");
 		numProps.set("");
 
-		idPlano = null;
+		planoProps.set(null);
 		duracaoProps.set("");
 		dataInicioProps.set(Utils.formatarData(new Date()));
 		dataFimProps.set("");
 		precoProps.set("");
+
+		sexoProps.set("");
+		planoProps.set(null);
 
 		observacaoProps.set("");
 	}
@@ -215,7 +215,7 @@ public class AlunoControl {
 			}
 		});
 
-		// CONSUMINDO DADOS API VIA CEP
+		// EVENTO DE CEP
 		cepProps.addListener((obs, oldValue, newValue) -> {
 			if (newValue.length() == 8) {
 
@@ -238,7 +238,7 @@ public class AlunoControl {
 			}
 		});
 
-		// ORDENAR LISTA CAMPO PESQUISAR
+		// ORDENAR LISTA
 		pesquisaProps.addListener((obs, oldValue, newValue) -> {
 
 			filteredAlunos.setPredicate(p -> {
@@ -311,7 +311,6 @@ public class AlunoControl {
 
 	private Assinatura assinaturaFromBoundary() throws ParseException {
 
-		// NÃO SEI SE ESSA É A MELHOR FORMA
 		Assinatura assinatura = new Assinatura();
 		assinatura.setPlano(planoProps.get());
 		assinatura.setDataInicio(Utils.converterParaData(dataInicioProps.get()));
@@ -322,7 +321,7 @@ public class AlunoControl {
 	}
 
 	public ObservableList<Aluno> getAlunos() {
-		return sortedAlunos;
+		return filteredAlunos;
 	}
 
 	public void setAluno(Aluno aluno) {
@@ -351,7 +350,6 @@ public class AlunoControl {
 		}
 		this.observacaoProps.set(aluno.getObservacao());
 
-		// ALUNO PRECISA TRAZER A ASSINATURA JUNTO COM O PLANO
 		this.planoProps.set(aluno.getAssinatura().getPlano());
 
 		this.precoProps.set("R$ " + String.valueOf(aluno.getAssinatura().getPlano().getPreco()));

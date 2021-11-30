@@ -94,13 +94,13 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 		adicionarPlanoBoundary.addListener(this);
 
-		Scene sceneTeste = new Scene(adicionarPlanoBoundary.render(), 500, 400);
-		sceneTeste.getStylesheets().add("style.css");
+		Scene scene = new Scene(adicionarPlanoBoundary.render(), 500, 400);
+		scene.getStylesheets().add("style.css");
 
-		s1.initOwner(MenuBarExemplo.getRoot());
+		s1.initOwner(MenuBarBoundary.getRoot());
 		s1.initModality(Modality.APPLICATION_MODAL);
 		s1.setTitle("SELECIONE OS PLANOS");
-		s1.setScene(sceneTeste);
+		s1.setScene(scene);
 
 	}
 
@@ -110,9 +110,7 @@ public class GerenciarInstrutorBoundary implements Listener {
 		tblInstrutores.setPrefHeight(300d);
 		tblInstrutores.setMaxHeight(300d);
 		tblInstrutores.setMinHeight(300d);
-
-		// gridGerenciarInstrutores.setGridLinesVisible(true);
-
+		
 		gridGerenciarInstrutores.addRow(0, lblGerenciarInstrutores);
 		gridGerenciarInstrutores.addRow(1, lblCpf, txtCpf, lblEmail, txtEmail);
 		gridGerenciarInstrutores.addRow(2, lblNome, txtNome, lblSexo, cbSexo);
@@ -127,12 +125,12 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 		FlowPane fpListaPlanos = new FlowPane();
 		fpListaPlanos.getChildren().add(lvPlanos);
-		
+
 		lvPlanos.setPrefHeight(200d);
 		lvPlanos.setPrefWidth(350d);
 		lvPlanos.setMaxWidth(350d);
 		lvPlanos.setMinWidth(350d);
-		
+
 		fpListaPlanos.setAlignment(Pos.CENTER);
 		gridGerenciarInstrutores.addRow(5, fpListaPlanos);
 
@@ -183,13 +181,11 @@ public class GerenciarInstrutorBoundary implements Listener {
 
 				limparCampos();
 
-			} else {
-				System.out.println("DEU RUÍM kkkkkkk");
 			}
 
 		});
 
-		// BTN ALTERAR
+		// alterar instrutor
 		btnAlterar.setOnAction(event -> {
 
 			instrutorControl.planosBoundary = lvPlanos.getItems();

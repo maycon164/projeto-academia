@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class GeralControl {
-	
+
 	private GeralConexao conexao = DaoFactory.getGeralConexao();
 
 	public StringProperty qtdAlunos = new SimpleStringProperty("");
@@ -28,11 +28,16 @@ public class GeralControl {
 		qtdPlanos.set(String.valueOf(nums[2]));
 
 		InfoDTO info = conexao.planoMaisAssinado();
-		planoAssinado.set(info.getNomePlano() + ": " + info.getQtd() + " Alunos");
+		
+		if(info != null) {
+			planoAssinado.set(info.getNomePlano() + ": " + info.getQtd() + " Alunos");
+		}
 
 		info = conexao.planoComMaisInstrutores();
-		planoInstrutor.set(info.getNomePlano() + ": " + info.getQtd() + " Instrutores");
-
+		if(info != null) {
+			planoInstrutor.set(info.getNomePlano() + ": " + info.getQtd() + " Instrutores");	
+		}
+		
 		pendencias.set("Pendencias: " + conexao.infoPendencias() + " pagamentos em aberto");
 	}
 

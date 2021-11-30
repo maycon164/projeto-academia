@@ -123,11 +123,9 @@ public class AlunoCadastroBoundary {
 	private void iniciarTela() {
 		this.configurarGridCadastroAluno();
 		this.ajustarTamanhoTextFields();
-
 		this.iniciarChoiceBoxs();
 		this.iniciarControll();
 		this.iniciarEventos();
-
 		this.configurandoCSS();
 	}
 
@@ -153,7 +151,7 @@ public class AlunoCadastroBoundary {
 		txtDuracao.setDisable(true);
 
 		gridCadastroAluno.addRow(11, lblInicio, txtDataInicio, lblFim, txtDataFim);
-		// SETANDO UMA DATA DE INICIO (DATA ATUAL)
+
 		txtDataFim.setDisable(true);
 
 		gridCadastroAluno.addRow(12, lblObservacoes);
@@ -170,11 +168,11 @@ public class AlunoCadastroBoundary {
 		GridPane.setColumnSpan(lblObservacoes, 4);
 		GridPane.setColumnSpan(txtaObservacao, 4);
 		GridPane.setColumnSpan(messageError, 4);
-		// AJEITANDO O TEXTAREA
 
 	}
 
 	private void ajustarTamanhoTextFields() {
+		
 		List<TextField> textFields = gridCadastroAluno.getChildren().stream().filter(node -> node instanceof TextField)
 				.map(textField -> (TextField) textField).collect(Collectors.toList());
 
@@ -209,9 +207,6 @@ public class AlunoCadastroBoundary {
 			// ENVIAR O ID DO PLANO
 			if (cbPlano.getValue() != null) {
 
-				alunoControl.idPlano = cbPlano.getValue().getIdPlano();
-				alunoControl.nomePlano = cbPlano.getValue().getNome();
-
 				if (alunoControl.cadastrar()) {
 
 					UtilsGui.showAlert("AVISO", "CADASTRO DE ALUNO", "ALUNO CADASTRADO COM SUCESSO",
@@ -222,18 +217,20 @@ public class AlunoCadastroBoundary {
 				}
 
 			} else {
-				System.out.println("ERROR RONALDO");
+
 				messageError.setText("SELECIONE UM PLANO");
+
 			}
 
 		});
 
 		// ALTERAR
 		btnAlterar.setOnAction(event -> {
-			System.out.println("AOFDJHASOIDA OIJAOIDJASDOIJASIO");
+
 			if (alunoControl.alterar()) {
-				System.out.println("RONALDO");
+
 				UtilsGui.showAlert("ALUNO", "ALTERAR ALUNO", "ALUNO ALTERADO COM SUCESSO", AlertType.INFORMATION);
+
 			}
 
 			alunoControl.limparCampos();
@@ -256,7 +253,6 @@ public class AlunoCadastroBoundary {
 
 		});
 
-		
 		// FORMATANDO OS TXTS
 		UtilsGui.setTextFieldInteger(txtCpf);
 		UtilsGui.setTextFieldMaxLength(txtCpf, 11);
@@ -281,7 +277,12 @@ public class AlunoCadastroBoundary {
 
 	private void atualizarComboBoxInstrutores(int idPlano) {
 
-		cbInstrutores.setItems(FXCollections.observableArrayList(instrutorControl.getInstrutoresByPlano(idPlano)));
+		try {
+			cbInstrutores.setItems(FXCollections.observableArrayList(instrutorControl.getInstrutoresByPlano(idPlano)));
+		} catch (NullPointerException e) {
+			System.out.println("SELECIONE UM PLANO");
+		}
+
 	}
 
 	private void iniciarControll() {
@@ -307,7 +308,7 @@ public class AlunoCadastroBoundary {
 		Bindings.bindBidirectional(txtDataFim.textProperty(), alunoControl.dataFimProps);
 		Bindings.bindBidirectional(txtaObservacao.textProperty(), alunoControl.observacaoProps);
 
-		// BINDING UM PLANO ?????
+		// BINDING DO PLANO
 		Bindings.bindBidirectional(cbPlano.valueProperty(), alunoControl.planoProps);
 
 		// MESSAGE ERROR

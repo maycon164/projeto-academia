@@ -9,7 +9,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class MenuBarExemplo extends Application {
+public class MenuBarBoundary extends Application {
 
 	private AlunoCadastroBoundary alunoCadastroBoundary = new AlunoCadastroBoundary();
 	private GerenciarAlunosBoundary gerenciarAlunosBoundary = new GerenciarAlunosBoundary();
@@ -21,7 +21,7 @@ public class MenuBarExemplo extends Application {
 	private static Stage root;
 
 	public static void main(String[] args) {
-		Application.launch(MenuBarExemplo.class, args);
+		Application.launch(MenuBarBoundary.class, args);
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class MenuBarExemplo extends Application {
 		scene.getStylesheets().add("style.css");
 
 		pane.setCenter(telaInicialBoundary.render());
-
+		root.setTitle("SISTEMA DE ACADEMIA");
 		root.setMaximized(true);
 		root.setScene(scene);
 		root.show();

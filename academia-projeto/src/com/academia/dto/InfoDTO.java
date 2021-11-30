@@ -3,6 +3,7 @@ package com.academia.dto;
 public class InfoDTO {
 
 	private String nomePlano;
+	
 	// instrutor ou aluno
 	private int qtd;
 

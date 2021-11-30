@@ -30,7 +30,7 @@ public class InstrutorControl {
 	private ObservableList<Instrutor> instrutores = FXCollections.observableArrayList(instrutorConn.findAll());
 	private FilteredList<Instrutor> filteredInstrutores = new FilteredList<>(instrutores, i -> true);
 
-	// teste
+	// PLANOS SELECIONADOS
 	public List<Plano> planosBoundary = null;
 
 	public List<InstrutorDTO> getInstrutoresByPlano(int idPlano) {
@@ -71,12 +71,12 @@ public class InstrutorControl {
 			i.setSexo(aux.getSexo());
 			i.setEmail(aux.getEmail());
 			i.getPlanos().clear();
-			
-			for(Plano plano: aux.getPlanos()) {
+
+			for (Plano plano : aux.getPlanos()) {
 				i.getPlanos().add(plano);
 			}
-			
-			return(instrutorConn.update(i));
+			atualizarLista();
+			return (instrutorConn.update(i));
 
 		} catch (EmptyFieldException e) {
 			e.printStackTrace();

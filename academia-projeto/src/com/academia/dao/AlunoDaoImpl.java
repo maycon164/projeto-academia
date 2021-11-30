@@ -5,18 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.academia.db.DB;
-import com.academia.dto.AlunoPlanoDTO;
 import com.academia.entities.Aluno;
 import com.academia.entities.Assinatura;
 import com.academia.entities.Pagamento;
-import com.academia.exception.CpfRegisteredException;
+import com.academia.exception.CpfException;
 import com.academia.factory.DaoFactory;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
@@ -29,6 +26,47 @@ public class AlunoDaoImpl implements AlunoDao {
 
 	public AlunoDaoImpl(Connection conn) {
 		this.conn = conn;
+	}
+
+	@Override
+	public List<Aluno> findAll() {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String sql = "SELECT * FROM vw_aluno";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+
+				if (!alunos.containsKey(rs.getString("cpf"))) {
+
+					Aluno aluno = instantiateAluno(rs);
+					alunos.put(aluno.getCpf(), aluno);
+				}
+
+			}
+
+			List<Aluno> aux = new ArrayList<>();
+
+			for (Aluno aluno : alunos.values()) {
+				aux.add(aluno);
+			}
+
+			return aux;
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			DB.closeStatement(ps);
+			DB.closeResultSet(rs);
+
+		}
+
+		return null;
 	}
 
 	@Override
@@ -72,34 +110,8 @@ public class AlunoDaoImpl implements AlunoDao {
 		return null;
 	}
 
-	// AINDA ME SERÁ UTIL
-	private Set<Assinatura> findAllAssinaturasFromAluno(String cpf) {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-
-		try {
-			String sql = "SELECT * FROM vw_aluno_plano WHERE cpf = ?";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, cpf);
-			rs = ps.executeQuery();
-
-			Set<Assinatura> assinaturas = new HashSet<>();
-
-			while (rs.next()) {
-				assinaturas.add(instantiateAssinatura(rs));
-			}
-			return assinaturas;
-
-		} catch (Exception e) {
-
-		}
-
-		return null;
-	}
-
 	@Override
-	// NA VERDADE É O PROCESSO DE INSERIR PESSOA
-	public void insert(Aluno aluno) throws CpfRegisteredException {
+	public void insert(Aluno aluno) throws CpfException {
 		PreparedStatement ps = null;
 
 		try {
@@ -136,18 +148,13 @@ public class AlunoDaoImpl implements AlunoDao {
 			}
 
 		} catch (SQLServerException e) {
-
 			// ERRO AO INSERIR (PRIMARY KEY DUPLICADA);
-			throw new CpfRegisteredException("Cpf já cadastrado");
+			throw new CpfException("Cpf já cadastrado");
 
 		} catch (SQLException e) {
-
-			System.out.println("PROBLEMAS COM O SQL: " + e.getMessage());
-
+			e.printStackTrace();
 		} finally {
-
 			DB.closeStatement(ps);
-
 		}
 
 	}
@@ -185,43 +192,6 @@ public class AlunoDaoImpl implements AlunoDao {
 		pagamentoConn.insert(Pagamento.fromAluno(aluno));
 	}
 
-	@Override
-	public List<AlunoPlanoDTO> findAllAlunoPlano() {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-
-		try {
-			String sql = "SELECT * FROM vw_aluno_plano ";
-			ps = conn.prepareStatement(sql);
-			rs = ps.executeQuery();
-
-			List<AlunoPlanoDTO> alunosPlanos = new ArrayList<>();
-
-			while (rs.next()) {
-				alunosPlanos.add(instantiateAlunoPlanoDTO(rs));
-			}
-
-			return alunosPlanos;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-
-			DB.closeStatement(ps);
-			DB.closeResultSet(rs);
-
-		}
-
-		return null;
-	}
-
-	private AlunoPlanoDTO instantiateAlunoPlanoDTO(ResultSet rs) throws SQLException {
-
-		return new AlunoPlanoDTO(rs.getString("aluno"), rs.getString("cpf"), rs.getString("plano"),
-				rs.getInt("id_plano"), rs.getInt("duracao"), rs.getDate("data_inicio"), rs.getDate("data_expiracao"));
-
-	}
-
 	private Aluno instantiateAluno(ResultSet rs) throws SQLException {
 
 		Aluno aluno = new Aluno(rs.getString("cpf"), rs.getString("aluno"), rs.getDate("nascimento"),
@@ -234,6 +204,50 @@ public class AlunoDaoImpl implements AlunoDao {
 		aluno.setAssinatura(assinatura);
 
 		return aluno;
+	}
+
+	@Override
+	public boolean update(Aluno aluno) {
+
+		PreparedStatement ps = null;
+
+		try {
+			String sql = "UPDATE pessoa SET cpf = ?, nome = ?, nascimento = ?, email = ?, telefone = ?, cep =?, "
+					+ "bairro = ?, rua = ?, num = ?, sexo = ? WHERE cpf = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, aluno.getCpf());
+			ps.setString(2, aluno.getNome());
+			ps.setDate(3, new java.sql.Date(aluno.getNascimento().getTime()));
+			ps.setString(4, aluno.getEmail());
+			ps.setString(5, aluno.getTelefone());
+			ps.setString(6, aluno.getCep());
+			ps.setString(7, aluno.getBairro());
+			ps.setString(8, aluno.getRua());
+			ps.setString(9, aluno.getNum());
+			ps.setString(10, aluno.getSexo().toString());
+			ps.setString(11, aluno.getCpf());
+
+			ps.execute();
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.closeStatement(ps);
+		}
+
+		return false;
+	}
+
+	private Assinatura instantiateAssinatura(ResultSet rs) throws SQLException {
+
+		Assinatura assinatura = new Assinatura();
+		assinatura.setId(rs.getInt("id_aluno_plano"));
+		assinatura.setPlano(planoConn.findById(rs.getInt("id_plano")));
+		assinatura.setDataInicio(rs.getDate("data_inicio"));
+		assinatura.setDataExpiracao(rs.getDate("data_expiracao"));
+
+		return assinatura;
 	}
 
 	private Assinatura findAssinaturaByCpf(String cpf) {
@@ -287,91 +301,6 @@ public class AlunoDaoImpl implements AlunoDao {
 			DB.closeStatement(ps);
 		}
 		return excluir;
-	}
-
-	@Override
-	public boolean update(Aluno aluno) {
-
-		PreparedStatement ps = null;
-
-		try {
-			String sql = "UPDATE pessoa SET cpf = ?, nome = ?, nascimento = ?, email = ?, telefone = ?, cep =?, "
-					+ "bairro = ?, rua = ?, num = ?, sexo = ? WHERE cpf = ?";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, aluno.getCpf());
-			ps.setString(2, aluno.getNome());
-			ps.setDate(3, new java.sql.Date(aluno.getNascimento().getTime()));
-			ps.setString(4, aluno.getEmail());
-			ps.setString(5, aluno.getTelefone());
-			ps.setString(6, aluno.getCep());
-			ps.setString(7, aluno.getBairro());
-			ps.setString(8, aluno.getRua());
-			ps.setString(9, aluno.getNum());
-			ps.setString(10, aluno.getSexo().toString());
-			ps.setString(11, aluno.getCpf());
-
-			ps.execute();
-
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DB.closeStatement(ps);
-		}
-
-		return false;
-	}
-
-	private Assinatura instantiateAssinatura(ResultSet rs) throws SQLException {
-
-		Assinatura assinatura = new Assinatura();
-		assinatura.setId(rs.getInt("id_aluno_plano"));
-		assinatura.setPlano(planoConn.findById(rs.getInt("id_plano")));
-		assinatura.setDataInicio(rs.getDate("data_inicio"));
-		assinatura.setDataExpiracao(rs.getDate("data_expiracao"));
-
-		return assinatura;
-	}
-
-	@Override
-	public List<Aluno> findAll() {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-
-		try {
-			String sql = "SELECT * FROM vw_aluno";
-			ps = conn.prepareStatement(sql);
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-
-				if (!alunos.containsKey(rs.getString("cpf"))) {
-
-					Aluno aluno = instantiateAluno(rs);
-					alunos.put(aluno.getCpf(), aluno);
-				}
-
-			}
-
-			List<Aluno> aux = new ArrayList<>();
-
-			for (Aluno aluno : alunos.values()) {
-				aux.add(aluno);
-			}
-
-			return aux;
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			DB.closeStatement(ps);
-			DB.closeResultSet(rs);
-
-		}
-
-		return null;
 	}
 
 }

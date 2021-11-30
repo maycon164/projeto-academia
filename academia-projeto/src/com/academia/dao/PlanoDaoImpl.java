@@ -16,7 +16,7 @@ public class PlanoDaoImpl implements PlanoDao {
 
 	public Connection conn;
 
-	// GARANTINDO QUE NÃO HAJA MULTIPLAS INSTANCIAS DESNECESSARIAS
+	// GARANTINDO QUE NÃO HAJA MULTIPLAS INSTANCIAS
 	public static Map<Integer, Plano> planos = new LinkedHashMap<>();
 
 	public PlanoDaoImpl(Connection conn) {
@@ -117,7 +117,7 @@ public class PlanoDaoImpl implements PlanoDao {
 	public Plano insert(Plano plano) {
 
 		PreparedStatement ps = null;
-
+		ResultSet rs = null;
 		try {
 			String sql = "INSERT INTO plano(nome, descricao, preco, duracao) VALUES (?, ?, ?, ?)";
 			ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -129,16 +129,13 @@ public class PlanoDaoImpl implements PlanoDao {
 			int rows = ps.executeUpdate();
 
 			if (rows > 0) {
-				ResultSet rs = ps.getGeneratedKeys();
+				rs = ps.getGeneratedKeys();
 
 				while (rs.next()) {
 					plano.setIdPlano(rs.getInt(1));
 				}
 
 				planos.put(plano.getIdPlano(), plano);
-
-				DB.closeResultSet(rs);
-
 			}
 
 			return plano;
@@ -147,6 +144,7 @@ public class PlanoDaoImpl implements PlanoDao {
 			e.printStackTrace();
 		} finally {
 			DB.closeStatement(ps);
+			DB.closeResultSet(rs);
 		}
 
 		return null;

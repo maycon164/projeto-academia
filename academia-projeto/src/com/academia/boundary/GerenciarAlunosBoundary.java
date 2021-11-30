@@ -53,7 +53,9 @@ public class GerenciarAlunosBoundary {
 	private Button btnDetalhes = new Button("DETALHES");
 	private Button btnExcluir = new Button("EXCLUIR");
 
+	// BOUNDARY ALTERAR ALUNO
 	private AlunoCadastroBoundary alunoAlterarBoundary = new AlunoCadastroBoundary();
+	
 
 	public GerenciarAlunosBoundary() {
 		this.iniciarTela();
@@ -76,21 +78,13 @@ public class GerenciarAlunosBoundary {
 	}
 
 	private void iniciarEventos() {
-		// EVENTO DE ORDENAR O FILTERED LIST
-		cbPlano.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-
-			System.out.println("SELECIONADO: " + cbPlano.getValue().getNome());
-
-		});
 
 		// EVENTO DE TROCA DE TELA
 		btnDetalhes.setOnAction((event) -> {
 
 			alunoControl.setAluno(tblAlunoPlano.getSelectionModel().getSelectedItem());
-
 			alunoAlterarBoundary.iniciarAlterar();
-
-			BorderPane bpPrincipal = (BorderPane) MenuBarExemplo.getRoot().getScene().getRoot();
+			BorderPane bpPrincipal = (BorderPane) MenuBarBoundary.getRoot().getScene().getRoot();
 			bpPrincipal.setCenter(alunoAlterarBoundary.render());
 
 		});
