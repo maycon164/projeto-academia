@@ -27,6 +27,14 @@ AND ip.id_plano = pl.id_plano
 
 SELECT * FROM vw_instrutor_plano vip 
 
+-----VIEW DE TREINO
+CREATE VIEW  vw_treino as 
+select t.id_treino, ex.nome, ex.repeticoes, ex.quantidade 
+from exercicio ex, treino t, treino_exercicio te 
+where t.id_treino = te.id_treino 
+and te.id_exercicio = ex.id_exercicio 
+
+
 -----FUNCTION PARA RETORNAR INSTRUTORESDTO DE UM PLANO (id_plano)
 
 CREATE FUNCTION func_instrutoresDTO_por_plano(@id_plano AS INT)
@@ -65,8 +73,12 @@ BEGIN
 	DELETE FROM aluno_plano WHERE cpf_aluno = @cpf
 	DELETE FROM aluno WHERE cpf = @cpf
 	DELETE FROM pessoa WHERE cpf = @cpf
+	UPDATE pagamento SET status = 'CANCELADO'
+	WHERE cpf_aluno = @cpf
 	
 END
+
+SELECT * FROM vw_aluno va 
 
 EXECUTE deletar_aluno @cpf = '2'
 

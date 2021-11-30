@@ -16,8 +16,7 @@ CREATE TABLE pessoa(
 	
 	PRIMARY KEY(cpf)
 )
-ALTER TABLE pessoa
-ADD 
+
 
 CREATE TABLE aluno(
 	cpf VARCHAR(12) NOT NULL,
@@ -86,34 +85,6 @@ CREATE TABLE pagamento(
 	
 	PRIMARY KEY(id_pagamento)
 )
-
-
----- erro com pk rss
------ o campo imc deve ser gerado na propria aplicaca
------ os campos de altura e medidas (cm), peso(g) serão convertidos na applicação
-
-CREATE TABLE avaliacao(
-	id_avaliacao INT IDENTITY,
-	cpf_aluno VARCHAR(12) NOT NULL,
-	cpf_instrutor VARCHAR(12) NOT NULL,
-	data_avaliacao DATE,
-	descricao VARCHAR(200),
-	peso INT NOT NULL,
-	altura INT NOT NULL,
-	tipo VARCHAR(100),
-	medida_cintura INT NOT NULL,
-	medida_braco INT NOT NULL,
-	medida_quadril INT NOT NULL,
-	medida_coxa INT NOT NULL,
-	imc INT NOT NULL
-	
-	PRIMARY KEY (id_avaliacao),
-	FOREIGN KEY (cpf_aluno) REFERENCES aluno(cpf),
-	FOREIGN KEY (cpf_instrutor) REFERENCES instrutor(cpf)
-)
-
-
-
 
 
 
